@@ -17,6 +17,31 @@ const Page2 = () => {
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const generateImage = async () => {
+    if (form.prompt) {
+      try {
+        setGeneratingImg(true);
+        const res = await fetch("http://localhost:8080/api/v1/dalle", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: form.prompt }),
+        });
+
+        const data = await res.json();
+        // setForm({ ...form, photo: data.photo.data[0].url });
+        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+      } catch (error) {
+        alert(error);
+      } finally {
+        setGeneratingImg(false);
+      }
+    } else {
+      alert("Please enter a prompt");
+    }
+  };
+
   const handleSubmit = () => {
     console.log("submitting");
   };
@@ -25,7 +50,7 @@ const Page2 = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSupriseMe = () => {
+  const handleSurpriseMe = () => {
     const randomPromp = getRandomPrompt(form.prompt);
     setForm({ ...form, prompt: randomPromp });
   };
@@ -58,8 +83,8 @@ const Page2 = () => {
             placeholder="A asian dragon flying over a city"
             value={form.prompt}
             handleChange={handleChange}
-            isSupriseMe
-            handleSupriseMe={handleSupriseMe}
+            isSurpriseMe={true}
+            handleSurpriseMe={handleSurpriseMe}
           />
 
           <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
