@@ -42,8 +42,35 @@ const Page2 = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("submitting");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (form.photo && form.prompt) {
+      setLoading(true);
+
+      try {
+        const res = await fetch("http://localhost:8080/api/v1/post", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: form.name,
+            prompt: form.prompt,
+            photo: form.photo,
+          }),
+        });
+
+        await res.json();
+        navigate("/");
+      } catch (err) {
+        alert(err);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      alert("Please enter a prompt and generate an image");
+    }
   };
 
   const handleChange = (e) => {
