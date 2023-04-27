@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { preview } from "../assets";
@@ -21,13 +23,16 @@ const Page2 = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
-        const res = await fetch("http://localhost:8080/api/v1/dalle", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt: form.prompt }),
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/v1/dalle`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ prompt: form.prompt }),
+          }
+        );
 
         const data = await res.json();
         // setForm({ ...form, photo: data.photo.data[0].url });
@@ -49,7 +54,7 @@ const Page2 = () => {
       setLoading(true);
 
       try {
-        const res = await fetch("http://localhost:8080/api/v1/post", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

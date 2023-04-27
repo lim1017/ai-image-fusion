@@ -1,8 +1,13 @@
 import Modal from "react-modal";
-import React, { useState } from "react";
 import "./Modal.css";
 
-const SimpleModal = ({ isOpen, closeModal, children }) => {
+interface ModalProps {
+  isOpen: boolean;
+  closeModal: () => void;
+  children: React.ReactNode;
+}
+
+const SimpleModal = ({ isOpen, closeModal, children }: ModalProps) => {
   return (
     <Modal
       closeTimeoutMS={750}

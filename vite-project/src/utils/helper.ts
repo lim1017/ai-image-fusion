@@ -1,7 +1,7 @@
 import { surpriseMePrompts } from "../constants";
 import FileSaver from "file-saver";
 
-export const getRandomPrompt = (prompt) => {
+export const getRandomPrompt = (prompt: string): string => {
   const randomIndex = Math.floor(Math.random() * surpriseMePrompts.length);
   const randomPrompt = surpriseMePrompts[randomIndex];
 
@@ -11,11 +11,11 @@ export const getRandomPrompt = (prompt) => {
   } else return randomPrompt;
 };
 
-export const downloadImage = async (imgId, photo) => {
+export const downloadImage = async (imgId: string, photo: string) => {
   FileSaver.saveAs(photo, `download-${imgId}.jpg`);
 };
 
-export const truncateString = (str, length) => {
+export const truncateString = (str: string, length: number) => {
   if (str.length > length) {
     return str.substring(0, length) + "...";
   } else {

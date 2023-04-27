@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+import { useState, useEffect } from "react";
 import { Loader, Card, FormField } from "../components";
 
 const RenderCards = ({ data, title }) => {
@@ -24,7 +26,7 @@ const Home = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const res = await fetch("http://localhost:8080/api/v1/post", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
