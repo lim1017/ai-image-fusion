@@ -1,6 +1,5 @@
 import Modal from "react-modal";
 import React, { useState } from "react";
-import { CSSTransition } from "react-transition-group";
 import "./Modal.css";
 
 const SimpleModal = ({ isOpen, closeModal, children }) => {

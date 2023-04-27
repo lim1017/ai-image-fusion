@@ -14,3 +14,11 @@ export const getRandomPrompt = (prompt) => {
 export const downloadImage = async (imgId, photo) => {
   FileSaver.saveAs(photo, `download-${imgId}.jpg`);
 };
+
+export const truncateString = (str, length) => {
+  if (str.length > length) {
+    return str.substring(0, length) + "...";
+  } else {
+    return str;
+  }
+};
