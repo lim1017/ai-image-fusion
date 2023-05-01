@@ -15,7 +15,7 @@ const RenderCards = ({ data, title }) => {
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
-
+  const [showLoadingMsg, setShowLoadingMsg] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState(null);
@@ -46,6 +46,15 @@ const Home = () => {
 
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loading) {
+        setShowLoadingMsg(true);
+      }
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
@@ -88,7 +97,12 @@ const Home = () => {
 
       <div className="mt-10">
         {loading ? (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center flex-col">
+            {showLoadingMsg && (
+              <h3 className="mb-4 font-extrabold text-[#222328] text-[32px]">
+                Sorry free database 😄... few more seconds!{" "}
+              </h3>
+            )}
             <Loader />
           </div>
         ) : (
