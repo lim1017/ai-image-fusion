@@ -2,14 +2,21 @@
 //@ts-nocheck
 import React from "react";
 import { truncateString } from "../utils/helper";
-import { download } from "../assets";
-import { downloadImage } from "../utils/helper";
 import Modal from "./Modal";
 import { useModal } from "../hooks/useModal";
 import "./Modal.css";
+import ShareComponent from "./ShareComponent";
 
-const Card = ({ _id, name, prompt, photo }) => {
+interface CardProps {
+  _id: string;
+  name: string;
+  prompt: string;
+  photo: string;
+}
+
+const Card = ({ _id, name, prompt, photo }: CardProps) => {
   const { isOpen, openModal, closeModal } = useModal();
+
   return (
     <div className="rounded-xl group relative shadow-card hover:shadow-cardhover card">
       <img
@@ -18,6 +25,7 @@ const Card = ({ _id, name, prompt, photo }) => {
         src={photo}
         alt={prompt}
       />
+
       <div
         style={{ width: "85%" }}
         className="group-hover:flex flex-col max-h-[94.5%] hidden absolute bottom-0 left-0 right-0 mx-auto  bg-[#10131f] m-2 p-4 rounded-md"
@@ -33,17 +41,7 @@ const Card = ({ _id, name, prompt, photo }) => {
             </div>
             <p className="text-white text-sm">{truncateString(name, 15)}</p>
           </div>
-          <button
-            type="button"
-            onClick={() => downloadImage(_id, photo)}
-            className="outline-none bg-transparent border-none"
-          >
-            <img
-              src={download}
-              alt="download"
-              className="w-6 h-6 object-contain invert"
-            />
-          </button>
+          <ShareComponent id={_id} photo={photo} />
         </div>
       </div>
       <Modal isOpen={isOpen} closeModal={closeModal}>

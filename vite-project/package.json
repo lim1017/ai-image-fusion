@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/twilio": "^3.19.3",
     "dotenv": "^16.0.3",
     "file-saver": "^2.0.5",
     "react": "^18.2.0",
@@ -17,7 +18,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.10.0",
     "react-transition-group": "^4.4.5",
-    "styled-components": "^5.3.10"
+    "styled-components": "^5.3.10",
+    "twilio": "^4.10.0"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.5",
