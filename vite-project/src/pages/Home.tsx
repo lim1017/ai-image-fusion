@@ -2,6 +2,9 @@
 //@ts-nocheck
 import { useState, useEffect } from "react";
 import { Loader, Card, FormField } from "../components";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const RenderCards = ({ data, title }) => {
   if (data?.length > 0) {
@@ -126,6 +129,7 @@ const Home = () => {
           </>
         )}
       </div>
+      <div id="modal"></div>
     </section>
   );
 };

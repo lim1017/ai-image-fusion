@@ -50,6 +50,7 @@ const Card = ({ _id, name, prompt, photo }: CardProps) => {
           className="mx-auto"
           src={photo}
           alt={prompt}
+          onClick={() => closeModal()}
         />
       </Modal>
     </div>
