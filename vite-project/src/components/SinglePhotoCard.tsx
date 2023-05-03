@@ -18,8 +18,8 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
   const { isOpen, openModal, closeModal } = useModal();
 
   return (
-    <>
-      <div className="rounded-xl group relative shadow-card hover:shadow-cardhover card">
+    <div className="card">
+      <div className="rounded-xl group relative shadow-card hover:shadow-cardhover">
         <img
           onClick={openModal}
           className="w-full h-auto object-cover rounded-xl hover:cursor-pointer"
@@ -58,7 +58,7 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
           onClick={() => closeModal()}
         />
       </Modal>
-    </>
+    </div>
   );
 };
 
