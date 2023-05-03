@@ -1,8 +1,4 @@
-export const sendTwilioText = async (phone, msg, img) => {
-  if (!phone) {
-    alert("please enter phone #");
-  }
-
+export const sendTwilioText = async (phone, msg, img, name) => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/api/v1/twilio/send-text`,
@@ -11,7 +7,7 @@ export const sendTwilioText = async (phone, msg, img) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ phone, msg, img }),
+        body: JSON.stringify({ phone, msg, img, name }),
       }
     );
     console.log(res, " res of twilio text");

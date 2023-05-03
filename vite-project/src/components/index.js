@@ -1,5 +1,5 @@
-import Card from "./Card";
+import SinglePhotoCard from "./SinglePhotoCard";
 import FormField from "./FormField";
 import Loader from "./Loader";
 
-export { Card, FormField, Loader };
+export { SinglePhotoCard, FormField, Loader };

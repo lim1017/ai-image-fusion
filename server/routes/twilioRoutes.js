@@ -12,25 +12,20 @@ const authToken = process.env.TWILIO_TOKEN;
 const client = twilio(accountSid, authToken);
 
 router.route("/send-text").post(async (req, res) => {
-  console.log(accountSid, "accountSid");
-  console.log(authToken, "authToken");
   try {
-    const { msg, phone, img } = req.body;
-
-    console.log(req.body, "reeeeeeeeeeeeeeqqqq body");
+    const { name, msg, phone, img } = req.body;
 
     client.messages
       .create({
-        body: `${msg} - Your Friend`,
+        body: `${msg} - Your Friend ${name}`,
         mediaUrl: [img],
         to: phone,
         from: "+12269185064",
       })
-      .then((message) => console.log(message.sid));
+      .then((message) => console.log(message.sid, "sid"));
 
     res.status(201).json({ success: true, data: "message sent" });
   } catch (err) {
-    console.log(err, "err in twilio route");
     res.status(500).json({ success: true, message: err });
   }
 });

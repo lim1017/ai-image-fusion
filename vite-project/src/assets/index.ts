@@ -5,5 +5,15 @@ import menu from "./menu.svg";
 import shareIcon from "./share-icon.svg";
 import closeIcon from "./close-icon.svg";
 import textMsgIcon from "./chat-icon.png";
+import emailIcon from "./email-icon.png";
 
-export { download, logo, preview, menu, shareIcon, closeIcon, textMsgIcon };
+export {
+  download,
+  logo,
+  preview,
+  menu,
+  emailIcon,
+  shareIcon,
+  closeIcon,
+  textMsgIcon,
+};

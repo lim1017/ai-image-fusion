@@ -1,29 +1,35 @@
-import Modal from "react-modal";
-import "./Modal.css";
-
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
   children: React.ReactNode;
 }
 
-const customStyles = {
-  content: {},
-  overlay: {
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "75%",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
 };
 
 const SimpleModal = ({ isOpen, closeModal, children }: ModalProps) => {
   return (
-    <Modal
-      style={customStyles}
-      closeTimeoutMS={750}
-      isOpen={isOpen}
-      onRequestClose={closeModal}
-    >
-      {children}
-    </Modal>
+    <div>
+      <Modal
+        open={isOpen}
+        onClose={closeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>{children}</Box>
+      </Modal>
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { preview } from "../assets";
 import { getRandomPrompt } from "../utils/helper";
 import { FormField, Loader } from "../components";
+import Button from "../components/Button";
 
 const Page2 = () => {
   const navigate = useNavigate();
@@ -35,7 +36,6 @@ const Page2 = () => {
         );
 
         const data = await res.json();
-        // setForm({ ...form, photo: data.photo.data[0].url });
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
       } catch (error) {
         alert(error);
@@ -143,13 +143,9 @@ const Page2 = () => {
         </div>
 
         <div className="mt-5 flex gap-5">
-          <button
-            type="button"
-            onClick={generateImage}
-            className=" text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-          >
+          <Button type="button" intent="action" onClick={generateImage}>
             {generatingImg ? "Generating..." : "Generate"}
-          </button>
+          </Button>
         </div>
 
         <div className="mt-10">
@@ -157,12 +153,9 @@ const Page2 = () => {
             ** Once you have created the image you want, you can share it with
             others in the community **
           </p>
-          <button
-            type="submit"
-            className="mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-          >
+          <Button type="submit" intent="primary" className="mt-3 ">
             {loading ? "Sharing..." : "Share with the Community"}
-          </button>
+          </Button>
         </div>
       </form>
     </section>

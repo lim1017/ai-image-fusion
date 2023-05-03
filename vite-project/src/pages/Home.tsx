@@ -1,14 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 import { useState, useEffect } from "react";
-import { Loader, Card, FormField } from "../components";
+import { Loader, SinglePhotoCard, FormField } from "../components";
 import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
 const RenderCards = ({ data, title }) => {
   if (data?.length > 0) {
-    return data.map((post) => <Card key={post._id} {...post} />);
+    return data.map((post) => <SinglePhotoCard key={post._id} {...post} />);
   }
 
   return (

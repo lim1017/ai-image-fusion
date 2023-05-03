@@ -33,7 +33,10 @@ router.route("/").post(async (req, res) => {
 
     res.status(200).json({ photo: image });
   } catch (error) {
-    console.log(error, " from open AI");
+    console.log(
+      error?.response.data.error.message,
+      "open ai ERRORRRRRRRRRRRRRRRRRRRRR"
+    );
     res.status(500).send(error?.response.data.error.message);
   }
 });
