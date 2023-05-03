@@ -4,7 +4,6 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "noEmitOnError": false, // ignores ts error on build
 
     /* Bundler mode */
     "moduleResolution": "bundler",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { menu } from "../assets";
 
 const DropdownMenu = () => {

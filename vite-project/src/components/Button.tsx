@@ -58,9 +58,6 @@ export interface ButtonProps
   extends React.HTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonClasses> {}
 
-const defaultBtnStyles =
-  "font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center";
-
 const Button: FC<ButtonProps> = ({
   children,
   className,

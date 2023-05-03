@@ -1,6 +1,11 @@
 import clsx from "clsx";
 
-const Card = ({ className, children }) => {
+interface CardProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Card = ({ className, children }: CardProps) => {
   return (
     <div
       className={clsx(

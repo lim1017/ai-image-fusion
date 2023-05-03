@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  shareIcon,
-  closeIcon,
-  download,
-  textMsgIcon,
-  emailIcon,
-} from "../assets";
+import { shareIcon, closeIcon, download, textMsgIcon } from "../assets";
 import { downloadImage } from "../utils/helper";
 import { sendTwilioText } from "../lib/api";
 import Modal from "./Modal";
@@ -39,7 +33,13 @@ const ShareComponent = ({
     setShowShareOptions((prev) => !prev);
   };
 
-  const handleSendText = async ({ mobile, message }) => {
+  const handleSendText = async ({
+    mobile,
+    message,
+  }: {
+    mobile: string;
+    message: string;
+  }) => {
     //mobile is to number so if letters = NaN
     if (!Number(mobile)) {
       alert("Please enter a valid phone number");

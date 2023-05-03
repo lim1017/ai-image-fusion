@@ -1,8 +1,15 @@
-import { useCallback, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import Input from "./Input";
 import { ShareOptions } from "./ShareComponent";
 import Card from "./Card";
 import Button from "./Button";
+
+interface ShareFormProps {
+  mode: ShareOptions | undefined;
+  photo: string;
+  executeAction: any;
+  closeModal: () => void;
+}
 
 const textContent = {
   linkText: "Already have an account?",
@@ -22,13 +29,18 @@ const initialForm = { mobile: "", email: "", message: "" };
 
 const defaultTextMsg = "Check out this AI generated image!";
 
-const ShareForm = ({ mode, photo, executeAction, closeModal }) => {
+const ShareForm = ({
+  mode,
+  photo,
+  executeAction,
+  closeModal,
+}: ShareFormProps) => {
   const [formState, setFormState] = useState(initialForm);
 
   const content = mode === ShareOptions.TEXT ? textContent : emailContent;
 
   const handleSubmit = useCallback(
-    async (e) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (mode === ShareOptions.TEXT) {
         executeAction({
@@ -65,12 +77,11 @@ const ShareForm = ({ mode, photo, executeAction, closeModal }) => {
                   Mobile (Include country code):
                 </div>
                 <Input
-                  number
                   required
                   placeholder="14169999999"
                   value={formState.mobile}
                   className="border-solid border-gray border-2 px-6 py-2 text-lg rounded-3xl w-full"
-                  onChange={(e) =>
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setFormState((s) => ({ ...s, mobile: e.target.value }))
                   }
                 />
@@ -84,7 +95,7 @@ const ShareForm = ({ mode, photo, executeAction, closeModal }) => {
                   placeholder="Default: Check this out!!"
                   value={formState.message}
                   className="border-solid border-gray border-2 px-6 py-2 text-lg rounded-3xl w-full"
-                  onChange={(e) =>
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setFormState((s) => ({ ...s, message: e.target.value }))
                   }
                 />
@@ -94,6 +105,7 @@ const ShareForm = ({ mode, photo, executeAction, closeModal }) => {
             <div>email</div>
           )}
           <div className="mt-4">
+            {/* @ts-expect-error temp */}
             <Button type="submit" intent="primary" className="mr-1">
               Send
             </Button>

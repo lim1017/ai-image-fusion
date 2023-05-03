@@ -7,9 +7,12 @@ import { preview } from "../assets";
 import { getRandomPrompt } from "../utils/helper";
 import { FormField, Loader } from "../components";
 import Button from "../components/Button";
+import Modal from "../components/Modal";
+import { useModal } from "../hooks/useModal";
 
 const Page2 = () => {
   const navigate = useNavigate();
+  const { isOpen, openModal, closeModal } = useModal();
 
   const [form, setForm] = useState({
     name: "",
@@ -122,6 +125,7 @@ const Page2 = () => {
           <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
             {form.photo ? (
               <img
+                onClick={openModal}
                 src={form.photo}
                 alt={form.prompt}
                 className="w-full h-full object-contain"
@@ -158,6 +162,16 @@ const Page2 = () => {
           </Button>
         </div>
       </form>
+
+      <Modal isOpen={isOpen} closeModal={closeModal}>
+        <img
+          style={{ width: "65%" }}
+          className="mx-auto"
+          src={form.photo}
+          alt={prompt}
+          onClick={() => closeModal()}
+        />
+      </Modal>
     </section>
   );
 };
