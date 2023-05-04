@@ -8,10 +8,9 @@ interface ChipInputProps {
   name: string;
   placeholder: string;
   chips: string[];
-  // handleChange: (newValue: string[]) => void;
+
   handleChange: any;
   handleBtnClick: () => void;
-  loading?: boolean;
 }
 
 const ChipInput = ({
@@ -21,7 +20,6 @@ const ChipInput = ({
   chips = [],
   handleChange,
   handleBtnClick,
-  loading,
 }: ChipInputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [timer, setTimer] = useState(0);
@@ -60,7 +58,7 @@ const ChipInput = ({
         </label>
 
         <button
-          disabled={chips.length === 0 || timer}
+          disabled={chips.length === 0 || timer !== 0}
           type="button"
           onClick={handleBtnClickWrapper}
           className="font-semibold text-xs bg-[#6469ff] py-1 px-2 rounded-[5px] text-black disabled:opacity-50 disabled:bg-gray-300"

@@ -105,7 +105,6 @@ const ShareForm = ({
             <div>email</div>
           )}
           <div className="mt-4">
-            {/* @ts-expect-error temp */}
             <Button type="submit" intent="primary" className="mr-1">
               Send
             </Button>

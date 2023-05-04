@@ -3,6 +3,18 @@
 
 import Input from "./Input";
 
+interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  labelName: string;
+  type: string;
+  name: string;
+  placeholder?: string;
+  value: string;
+  handleChange: (e: any) => void;
+  isSurpriseMe?: boolean;
+  handleSurpriseMe?: () => void;
+  error?: boolean;
+}
+
 const FormField = ({
   labelName,
   type,
@@ -13,7 +25,7 @@ const FormField = ({
   isSurpriseMe,
   handleSurpriseMe,
   ...rest
-}) => {
+}: FormFieldProps) => {
   return (
     <div>
       <div className="flex items-center gap-2 mb-2">

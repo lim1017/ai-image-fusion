@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { preview } from "../assets";
 import { getRandomPrompt, removeTextBeforeColon } from "../utils/helper";
-import { FormField, Loader } from "../components";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
 import { getGptPrompt } from "../lib/api";
 import ChipInput from "../components/ChipInput";
+import FormField from "../components/FormField";
+import Loader from "../components/Loader";
 
 const initialErrorObj = { name: false, prompt: false };
 
@@ -24,7 +25,6 @@ const Page2 = () => {
 
   const [errors, setErrors] = useState(initialErrorObj);
 
-  const [isGptLoading, setIsGptLoading] = useState(false);
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false); //submit loading
 
@@ -80,7 +80,7 @@ const Page2 = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (form.photo && form.prompt) {
@@ -111,7 +111,7 @@ const Page2 = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: false });
   };
@@ -128,16 +128,12 @@ const Page2 = () => {
   };
 
   const handleAskGpt = async () => {
-    setIsGptLoading(true);
-
     try {
       const res = await getGptPrompt(chips);
 
       setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
     } catch (err) {
       alert(err);
-    } finally {
-      setIsGptLoading(false);
     }
   };
 
@@ -181,7 +177,6 @@ const Page2 = () => {
             placeholder="Enter up to 5 keywords and ask Gpt to generate a prompt"
             handleChange={handleChipChange}
             handleBtnClick={handleAskGpt}
-            loading={isGptLoading}
           />
 
           <FormField
@@ -253,7 +248,7 @@ const Page2 = () => {
           style={{ width: "65%" }}
           className="mx-auto"
           src={form.photo}
-          alt={prompt}
+          alt={form.prompt}
           onClick={() => closeModal()}
         />
       </Modal>
