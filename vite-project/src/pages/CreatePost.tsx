@@ -1,14 +1,16 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { preview } from "../assets";
-import { getRandomPrompt } from "../utils/helper";
+import { getRandomPrompt, removeTextBeforeColon } from "../utils/helper";
 import { FormField, Loader } from "../components";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
+import { getGptPrompt } from "../lib/api";
+import ChipInput from "../components/ChipInput";
+
+const initialErrorObj = { name: false, prompt: false };
 
 const Page2 = () => {
   const navigate = useNavigate();
@@ -20,10 +22,37 @@ const Page2 = () => {
     photo: "",
   });
 
+  const [errors, setErrors] = useState(initialErrorObj);
+
+  const [isGptLoading, setIsGptLoading] = useState(false);
   const [generatingImg, setGeneratingImg] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); //submit loading
+
+  const [chips, setChips] = useState<string[]>([]);
+
+  const validateForm = () => {
+    let isError = false;
+    if (!form.name.trim()) {
+      setErrors((prev) => {
+        return { ...prev, name: true };
+      });
+      isError = true;
+    }
+
+    if (!form.prompt.trim()) {
+      setErrors((prev) => {
+        return { ...prev, prompt: true };
+      });
+      isError = true;
+    }
+
+    if (isError) return true;
+    return false;
+  };
 
   const generateImage = async () => {
+    if (validateForm()) return;
+
     if (form.prompt) {
       try {
         setGeneratingImg(true);
@@ -43,6 +72,7 @@ const Page2 = () => {
       } catch (error) {
         alert(error);
       } finally {
+        setChips([]);
         setGeneratingImg(false);
       }
     } else {
@@ -83,6 +113,7 @@ const Page2 = () => {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: false });
   };
 
   const handleSurpriseMe = () => {
@@ -90,36 +121,79 @@ const Page2 = () => {
     setForm({ ...form, prompt: randomPromp });
   };
 
+  const handleChipChange = (chips: string[]) => {
+    if (chips.length <= 5) {
+      setChips(chips);
+    }
+  };
+
+  const handleAskGpt = async () => {
+    setIsGptLoading(true);
+
+    try {
+      const res = await getGptPrompt(chips);
+
+      setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
+    } catch (err) {
+      alert(err);
+    } finally {
+      setIsGptLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (form.prompt) {
+      setErrors((prev) => {
+        return { ...prev, prompt: false };
+      });
+    }
+  }, [form.prompt]);
   return (
     <section className="max-w-7xl mx-auto">
-      <div>
-        <h1 className="font-extrabold text-[#222328] text-[32px]">Create</h1>
-        <p className="mt-2 text-[#666e75] text-[14px] max-w-[500px]">
+      <div className="flex justify-center flex-col">
+        <h1 className="font-extrabold text-[#666e75] text-[22px]">
           Create an imaginative image through DALL-E AI and share it with the
           community
-        </p>
+        </h1>
+
+        <h1 className="font-extrabold text-[#666a00] text-[18px]">
+          Enter keywords, and have chatGPT generate a prompt for DALL-E, or
+          enter your own prompt
+        </h1>
       </div>
 
       <form className="mt-16 m-w-3x1" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-5">
           <FormField
-            labelName="Name"
+            labelName="Name*"
             type="text"
             name="name"
             placeholder="Enter your name"
             value={form.name}
             handleChange={handleChange}
+            error={errors.name}
+          />
+
+          <ChipInput
+            chips={chips}
+            labelName="Keywords for AI Prompt"
+            name="gptPrompt"
+            placeholder="Enter up to 5 keywords and ask Gpt to generate a prompt"
+            handleChange={handleChipChange}
+            handleBtnClick={handleAskGpt}
+            loading={isGptLoading}
           />
 
           <FormField
-            labelName="Prompt"
+            labelName="Prompt*"
             type="text"
             name="prompt"
-            placeholder="A asian dragon flying over a city"
+            placeholder="Prompt for AI to generate image"
             value={form.prompt}
             handleChange={handleChange}
             isSurpriseMe={true}
             handleSurpriseMe={handleSurpriseMe}
+            error={errors.prompt}
           />
 
           <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
@@ -147,7 +221,13 @@ const Page2 = () => {
         </div>
 
         <div className="mt-5 flex gap-5">
-          <Button type="button" intent="action" onClick={generateImage}>
+          <Button
+            disabled={generatingImg}
+            type="button"
+            intent="action"
+            onClick={generateImage}
+            className=""
+          >
             {generatingImg ? "Generating..." : "Generate"}
           </Button>
         </div>
@@ -157,7 +237,12 @@ const Page2 = () => {
             ** Once you have created the image you want, you can share it with
             others in the community **
           </p>
-          <Button type="submit" intent="primary" className="mt-3 ">
+          <Button
+            disabled={loading}
+            type="submit"
+            intent="primary"
+            className="mt-3 "
+          >
             {loading ? "Sharing..." : "Share with the Community"}
           </Button>
         </div>
