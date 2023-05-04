@@ -10,7 +10,6 @@ import path from "path";
 //create formdata objects
 import FormData from "form-data";
 import fs from "fs";
-import { transcode } from "buffer";
 
 //set storage engine
 const storage = multer.diskStorage({
@@ -59,7 +58,7 @@ router.route("/").post(async (req, res) => {
       return;
     }
 
-    const whisperResult = await transcribeAudio(req.session.filePath);
+    const whisperResult = await getTranscribedAudio(req.session.filePath);
 
     res.status(200).json({ message: "success", data: whisperResult.text });
   } catch (err) {
@@ -71,7 +70,7 @@ router.route("/").post(async (req, res) => {
   }
 });
 
-async function transcribeAudio(filePath) {
+async function getTranscribedAudio(filePath) {
   const formData = new FormData();
   formData.append("audio", fs.createReadStream(filePath));
   formData.append("model", model);

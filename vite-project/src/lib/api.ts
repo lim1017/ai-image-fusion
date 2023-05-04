@@ -7,6 +7,31 @@ export const initalGptPrompt = () => {
   });
 };
 
+export const uploadAudioFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append("audio", file);
+
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/v1/whisper/upload`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  return res.json();
+};
+
+export const getWhisperTranscript = async () => {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/whisper/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  const data = await res.json();
+  console.log(data);
+  return data;
+};
+
 export const getGptPrompt = async (chips: string[]) => {
   const prompt = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/gpt`, {
     method: "POST",

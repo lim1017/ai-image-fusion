@@ -6,10 +6,11 @@ import { getRandomPrompt, removeTextBeforeColon } from "../utils/helper";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
-import { getGptPrompt } from "../lib/api";
+import { getGptPrompt, uploadAudioFile } from "../lib/api";
 import ChipInput from "../components/ChipInput";
 import FormField from "../components/FormField";
 import Loader from "../components/Loader";
+import DragDropFileUploader from "../components/DragDropFileUploader";
 
 const initialErrorObj = { name: false, prompt: false };
 
@@ -137,6 +138,13 @@ const Page2 = () => {
     }
   };
 
+  const handleUpload = async (file: File) => {
+    console.log(`Uploading ${file.name}`);
+
+    const res = await uploadAudioFile(file);
+    console.log(res);
+  };
+
   useEffect(() => {
     if (form.prompt) {
       setErrors((prev) => {
@@ -190,6 +198,8 @@ const Page2 = () => {
             handleSurpriseMe={handleSurpriseMe}
             error={errors.prompt}
           />
+
+          <DragDropFileUploader handleUpload={handleUpload} />
 
           <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
             {form.photo ? (
