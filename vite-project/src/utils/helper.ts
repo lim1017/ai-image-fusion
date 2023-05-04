@@ -22,3 +22,13 @@ export const truncateString = (str: string, length: number) => {
     return str;
   }
 };
+
+export const removeTextBeforeColon = (text: string) => {
+  const colonIndex = text.indexOf(":");
+  if (colonIndex === -1) {
+    // If there's no colon in the text, return it as-is
+    return text;
+  }
+  // Return the substring starting from the character after the colon
+  return text.substring(colonIndex + 1).trim();
+};

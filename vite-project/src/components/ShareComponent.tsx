@@ -68,7 +68,7 @@ const ShareComponent = ({
               <img
                 src={download}
                 alt="download"
-                className="w-6 h-6 object-contain invert"
+                className="w-4 h-4 object-contain invert"
               />
             </button>
           </Tooltip>
@@ -80,7 +80,7 @@ const ShareComponent = ({
               }}
               src={textMsgIcon}
               alt="logo"
-              className="w-8 hover:cursor-pointer"
+              className="w-5 hover:cursor-pointer"
             />
           </Tooltip>
 
@@ -100,7 +100,7 @@ const ShareComponent = ({
               onClick={handleToggleShare}
               src={closeIcon}
               alt="logo"
-              className="w-8 hover:cursor-pointer"
+              className="w-5 hover:cursor-pointer"
             />
           </Tooltip>
         </div>
@@ -110,7 +110,7 @@ const ShareComponent = ({
             onClick={handleToggleShare}
             src={shareIcon}
             alt="logo"
-            className="w-8 hover:cursor-pointer"
+            className="w-5 hover:cursor-pointer"
           />
         </Tooltip>
       )}

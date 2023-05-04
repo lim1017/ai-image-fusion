@@ -43,7 +43,7 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
               <div className="w-7 h-7 rounded-full object-cover bg-green-700 flex justify-center items-center text-white text-xs font-bold">
                 {name[0]}
               </div>
-              <p className="text-white text-sm">{truncateString(name, 15)}</p>
+              <p className="text-white text-sm">{truncateString(name, 10)}</p>
             </div>
             <ShareComponent id={_id} photo={photo} name={name} />
           </div>

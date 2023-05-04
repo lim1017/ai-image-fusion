@@ -1,14 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { preview } from "../assets";
-import { getRandomPrompt } from "../utils/helper";
+import { getRandomPrompt, removeTextBeforeColon } from "../utils/helper";
 import { FormField, Loader } from "../components";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
+import { getGptPrompt } from "../lib/api";
+import ChipInput from "../components/ChipInput";
 
 const Page2 = () => {
   const navigate = useNavigate();
@@ -22,6 +22,8 @@ const Page2 = () => {
 
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [chips, setChips] = useState<string[]>([]);
 
   const generateImage = async () => {
     if (form.prompt) {
@@ -90,6 +92,20 @@ const Page2 = () => {
     setForm({ ...form, prompt: randomPromp });
   };
 
+  const handleChipChange = (chips: string[]) => {
+    if (chips.length <= 5) {
+      setChips(chips);
+    }
+  };
+
+  const handleAskGpt = () => {
+    getGptPrompt(chips)
+      .then((res) => {
+        setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <section className="max-w-7xl mx-auto">
       <div>
@@ -111,8 +127,17 @@ const Page2 = () => {
             handleChange={handleChange}
           />
 
+          <ChipInput
+            chips={chips}
+            labelName="GPT Prompt"
+            name="gptPrompt"
+            placeholder="AI will generate a prompt for based on your keywords (5 max)"
+            handleChange={handleChipChange}
+            handleBtnClick={handleAskGpt}
+          />
+
           <FormField
-            labelName="Prompt"
+            labelName="Manual Prompt"
             type="text"
             name="prompt"
             placeholder="A asian dragon flying over a city"

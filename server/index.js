@@ -6,6 +6,7 @@ import connectDB from "./mongodb/connect.js";
 import postRoutes from "./routes/postRoutes.js";
 import dalleRoutes from "./routes/dalleRoutes.js";
 import twilioRoutes from "./routes/twilioRoutes.js";
+import chatGptRoutes from "./routes/chatGptRoutes.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use("/api/v1/post", postRoutes);
 app.use("/api/v1/dalle", dalleRoutes);
 app.use("/api/v1/twilio", twilioRoutes);
+app.use("/api/v1/gpt", chatGptRoutes);
 
 // Security headers
 app.use((req, res, next) => {

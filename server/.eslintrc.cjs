@@ -3,15 +3,14 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'airbnb-base',
-  ],
+  extends: ["airbnb-base"],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
   rules: {
-    'no-console': 'off',
-    'import/extensions': 'off',
+    "no-console": "off",
+    "import/extensions": "off",
+    quotes: [2, "single", "double"],
   },
 };
