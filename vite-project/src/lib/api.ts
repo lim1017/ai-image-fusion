@@ -9,7 +9,7 @@ export const initalGptPrompt = () => {
 
 export const uploadAudioFile = async (file: File) => {
   const formData = new FormData();
-  formData.append("audio", file);
+  formData.append("file", file);
 
   const res = await fetch(
     `${import.meta.env.VITE_API_URL}/api/v1/whisper/upload`,

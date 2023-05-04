@@ -1,6 +1,6 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import { Configuration, OpenAIApi } from "openai";
+import fetch from "node-fetch";
 
 //handle file uploads
 import multer from "multer";
@@ -34,25 +34,17 @@ router.route("/").get((req, res) => {
   res.status(200).json({ message: "Hello from whisper routess!" });
 });
 
-//audio upload
-router.route("/upload").post(upload.single("audio"), async (req, res) => {
+//audio upload and sent to whisperer
+router.route("/upload").post(upload.single("file"), async (req, res) => {
   try {
     req.session.filePath = req.file.path;
-
-    res.status(200).send({ message: "File uploaded successfully" });
   } catch (err) {
     console.log(err);
     res.status(500).send({ message: "File upload failed", err });
   }
-});
 
-const OPENAI_KEY = process.env.OPENAI_API_KEY;
-const model = "whisper-1";
-
-//sends the file to whisper to transcribe
-router.route("/").post(async (req, res) => {
+  //call whisperer
   try {
-    //check if file is uploaded
     if (!req.session.filePath) {
       res.status(400).send({ message: "No file uploaded" });
       return;
@@ -62,17 +54,16 @@ router.route("/").post(async (req, res) => {
 
     res.status(200).json({ message: "success", data: whisperResult.text });
   } catch (err) {
-    console.log(
-      error?.response.data.error.message,
-      "open ai ERRORRRRRRRRRRRRRRRRRRRRR"
-    );
     res.status(500).send({ message: "Transcription failed", err });
   }
 });
 
+const OPENAI_KEY = process.env.OPENAI_API_KEY;
+const model = "whisper-1";
+
 async function getTranscribedAudio(filePath) {
   const formData = new FormData();
-  formData.append("audio", fs.createReadStream(filePath));
+  formData.append("file", fs.createReadStream(filePath));
   formData.append("model", model);
 
   try {
@@ -88,10 +79,13 @@ async function getTranscribedAudio(filePath) {
       }
     );
 
-    console.log(openAIres.data, "res from openai whisperer");
-    return openAIres.data;
+    const data = await openAIres.json();
+    return data;
   } catch (error) {
-    console.log(error, "error from openai whisperer");
+    console.log(
+      error?.response.data.error.message,
+      "error from openai whisperer"
+    );
     throw error;
   }
 }
