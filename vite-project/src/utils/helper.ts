@@ -1,6 +1,10 @@
 import { surpriseMePrompts } from "../constants";
 import FileSaver from "file-saver";
 
+interface Obj {
+  [key: string]: boolean;
+}
+
 export const getRandomPrompt = (prompt: string): string => {
   const randomIndex = Math.floor(Math.random() * surpriseMePrompts.length);
   const randomPrompt = surpriseMePrompts[randomIndex];
@@ -31,4 +35,13 @@ export const removeTextBeforeColon = (text: string) => {
   }
   // Return the substring starting from the character after the colon
   return text.substring(colonIndex + 1).trim();
+};
+
+export const checkForError = (errorObj: Obj) => {
+  for (const key in errorObj) {
+    if (errorObj[key]) {
+      return true;
+    }
+  }
+  return false;
 };

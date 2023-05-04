@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Chip } from "@mui/material";
+import Input from "./Input";
 interface ChipInputProps {
   labelName: string;
   name: string;
@@ -22,7 +23,6 @@ const ChipInput = ({
   const [inputValue, setInputValue] = useState("");
 
   const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(event.key);
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       if (inputValue.trim()) {
@@ -57,8 +57,7 @@ const ChipInput = ({
         </button>
       </div>
 
-      <input
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#6469ff] focus:border-[#6469ff] outline-none block w-full p-3"
+      <Input
         id={name}
         name={name}
         placeholder={placeholder}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { preview } from "../assets";
@@ -10,6 +10,8 @@ import { useModal } from "../hooks/useModal";
 import { getGptPrompt } from "../lib/api";
 import ChipInput from "../components/ChipInput";
 
+const initialErrorObj = { name: false, prompt: false };
+
 const Page2 = () => {
   const navigate = useNavigate();
   const { isOpen, openModal, closeModal } = useModal();
@@ -20,12 +22,31 @@ const Page2 = () => {
     photo: "",
   });
 
+  const [errors, setErrors] = useState(initialErrorObj);
+
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [chips, setChips] = useState<string[]>([]);
 
   const generateImage = async () => {
+    let isError = false;
+    if (!form.name.trim()) {
+      setErrors((prev) => {
+        return { ...prev, name: true };
+      });
+      isError = true;
+    }
+
+    if (!form.prompt.trim()) {
+      setErrors((prev) => {
+        return { ...prev, prompt: true };
+      });
+      isError = true;
+    }
+
+    if (isError) return;
+
     if (form.prompt) {
       try {
         setGeneratingImg(true);
@@ -45,6 +66,7 @@ const Page2 = () => {
       } catch (error) {
         alert(error);
       } finally {
+        setChips([]);
         setGeneratingImg(false);
       }
     } else {
@@ -85,6 +107,7 @@ const Page2 = () => {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: false });
   };
 
   const handleSurpriseMe = () => {
@@ -99,6 +122,7 @@ const Page2 = () => {
   };
 
   const handleAskGpt = () => {
+    console.log(chips);
     getGptPrompt(chips)
       .then((res) => {
         setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
@@ -106,14 +130,25 @@ const Page2 = () => {
       .catch((err) => console.log(err));
   };
 
+  useEffect(() => {
+    if (form.prompt) {
+      setErrors((prev) => {
+        return { ...prev, prompt: false };
+      });
+    }
+  }, [form.prompt]);
   return (
     <section className="max-w-7xl mx-auto">
-      <div>
-        <h1 className="font-extrabold text-[#222328] text-[32px]">Create</h1>
-        <p className="mt-2 text-[#666e75] text-[14px] max-w-[500px]">
+      <div className="flex justify-center flex-col">
+        <h1 className="font-extrabold text-[#666e75] text-[22px]">
           Create an imaginative image through DALL-E AI and share it with the
           community
-        </p>
+        </h1>
+
+        <h1 className="font-extrabold text-[#666a00] text-[18px]">
+          Enter keywords, and have chatGPT generate a prompt for DALL-E, or
+          enter your own prompt
+        </h1>
       </div>
 
       <form className="mt-16 m-w-3x1" onSubmit={handleSubmit}>
@@ -125,13 +160,14 @@ const Page2 = () => {
             placeholder="Enter your name"
             value={form.name}
             handleChange={handleChange}
+            error={errors.name}
           />
 
           <ChipInput
             chips={chips}
-            labelName="GPT Prompt"
+            labelName="Keywords for AI Prompt"
             name="gptPrompt"
-            placeholder="AI will generate a prompt for based on your keywords (5 max)"
+            placeholder="Enter up to 5 keywords and ask Gpt to generate a prompt"
             handleChange={handleChipChange}
             handleBtnClick={handleAskGpt}
           />
@@ -140,11 +176,12 @@ const Page2 = () => {
             labelName="Manual Prompt"
             type="text"
             name="prompt"
-            placeholder="A asian dragon flying over a city"
+            placeholder="Prompt for AI to generate image"
             value={form.prompt}
             handleChange={handleChange}
             isSurpriseMe={true}
             handleSurpriseMe={handleSurpriseMe}
+            error={errors.prompt}
           />
 
           <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
