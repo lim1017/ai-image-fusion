@@ -24,12 +24,13 @@ const Page2 = () => {
 
   const [errors, setErrors] = useState(initialErrorObj);
 
+  const [isGptLoading, setIsGptLoading] = useState(false);
   const [generatingImg, setGeneratingImg] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); //submit loading
 
   const [chips, setChips] = useState<string[]>([]);
 
-  const generateImage = async () => {
+  const validateForm = () => {
     let isError = false;
     if (!form.name.trim()) {
       setErrors((prev) => {
@@ -45,7 +46,12 @@ const Page2 = () => {
       isError = true;
     }
 
-    if (isError) return;
+    if (isError) return true;
+    return false;
+  };
+
+  const generateImage = async () => {
+    if (validateForm()) return;
 
     if (form.prompt) {
       try {
@@ -121,13 +127,18 @@ const Page2 = () => {
     }
   };
 
-  const handleAskGpt = () => {
-    console.log(chips);
-    getGptPrompt(chips)
-      .then((res) => {
-        setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
-      })
-      .catch((err) => console.log(err));
+  const handleAskGpt = async () => {
+    setIsGptLoading(true);
+
+    try {
+      const res = await getGptPrompt(chips);
+
+      setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
+    } catch (err) {
+      alert(err);
+    } finally {
+      setIsGptLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -154,7 +165,7 @@ const Page2 = () => {
       <form className="mt-16 m-w-3x1" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-5">
           <FormField
-            labelName="Name"
+            labelName="Name*"
             type="text"
             name="name"
             placeholder="Enter your name"
@@ -170,10 +181,11 @@ const Page2 = () => {
             placeholder="Enter up to 5 keywords and ask Gpt to generate a prompt"
             handleChange={handleChipChange}
             handleBtnClick={handleAskGpt}
+            loading={isGptLoading}
           />
 
           <FormField
-            labelName="Manual Prompt"
+            labelName="Prompt*"
             type="text"
             name="prompt"
             placeholder="Prompt for AI to generate image"
@@ -209,7 +221,13 @@ const Page2 = () => {
         </div>
 
         <div className="mt-5 flex gap-5">
-          <Button type="button" intent="action" onClick={generateImage}>
+          <Button
+            disabled={generatingImg}
+            type="button"
+            intent="action"
+            onClick={generateImage}
+            className=""
+          >
             {generatingImg ? "Generating..." : "Generate"}
           </Button>
         </div>
@@ -219,7 +237,12 @@ const Page2 = () => {
             ** Once you have created the image you want, you can share it with
             others in the community **
           </p>
-          <Button type="submit" intent="primary" className="mt-3 ">
+          <Button
+            disabled={loading}
+            type="submit"
+            intent="primary"
+            className="mt-3 "
+          >
             {loading ? "Sharing..." : "Share with the Community"}
           </Button>
         </div>

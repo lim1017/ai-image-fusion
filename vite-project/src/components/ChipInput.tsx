@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Chip } from "@mui/material";
 import Input from "./Input";
+import Countdown from "./Countdown";
 interface ChipInputProps {
   labelName: string;
   name: string;
@@ -10,6 +11,7 @@ interface ChipInputProps {
   // handleChange: (newValue: string[]) => void;
   handleChange: any;
   handleBtnClick: () => void;
+  loading?: boolean;
 }
 
 const ChipInput = ({
@@ -19,9 +21,10 @@ const ChipInput = ({
   chips = [],
   handleChange,
   handleBtnClick,
+  loading,
 }: ChipInputProps) => {
   const [inputValue, setInputValue] = useState("");
-
+  const [timer, setTimer] = useState(0);
   const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -38,6 +41,14 @@ const ChipInput = ({
     handleChange(newChips);
   };
 
+  const handleBtnClickWrapper = () => {
+    setTimer(5);
+    setTimeout(() => {
+      setTimer(0);
+    }, 5000);
+    handleBtnClick();
+  };
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-2">
@@ -49,11 +60,12 @@ const ChipInput = ({
         </label>
 
         <button
+          disabled={chips.length === 0 || timer}
           type="button"
-          onClick={handleBtnClick}
-          className="font-semibold text-xs bg-[#6469ff] py-1 px-2 rounded-[5px] text-black"
+          onClick={handleBtnClickWrapper}
+          className="font-semibold text-xs bg-[#6469ff] py-1 px-2 rounded-[5px] text-black disabled:opacity-50 disabled:bg-gray-300"
         >
-          Ask Gpt
+          <Countdown seconds={timer}>Ask Gpt</Countdown>
         </button>
       </div>
 
@@ -64,7 +76,6 @@ const ChipInput = ({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleInputKeyDown}
-        required
       />
       <div className="mt-2 flex justify-start">
         {chips.map((chip) => (

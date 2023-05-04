@@ -11,6 +11,9 @@ const buttonClasses = cva(
     "ease-in-out",
     "font-medium",
     "rounded-xl",
+    "disabled:opacity-50 ",
+    "disabled:cursor-not-allowed",
+    "disabled:bg-gray-300",
   ],
   {
     variants: {
@@ -56,7 +59,10 @@ const buttonClasses = cva(
 
 export interface ButtonProps
   extends React.HTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonClasses> {}
+    VariantProps<typeof buttonClasses> {
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+}
 
 const Button: FC<ButtonProps> = ({
   children,
