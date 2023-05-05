@@ -6,7 +6,7 @@ import { getRandomPrompt, removeTextBeforeColon } from "../utils/helper";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
-import { getGptPrompt, uploadAudioFile } from "../lib/api";
+import { getGptPrompt } from "../lib/api";
 import FormField from "../components/FormField";
 import Loader from "../components/Loader";
 import TabComponent from "../components/TabComponent";
@@ -140,11 +140,8 @@ const Page2 = () => {
     }
   };
 
-  const handleUpload = async (file: File) => {
-    console.log(`Uploading ${file.name}`);
-
-    const res = await uploadAudioFile(file);
-    console.log(res);
+  const retrieveWhipserText = async (text: string) => {
+    setForm({ ...form, prompt: text });
   };
 
   useEffect(() => {
@@ -198,7 +195,9 @@ const Page2 = () => {
               },
               {
                 name: "Whisper(Audio)",
-                content: <WhisperPrompt handleUpload={handleUpload} />,
+                content: (
+                  <WhisperPrompt retrieveWhipserText={retrieveWhipserText} />
+                ),
               },
             ]}
           />

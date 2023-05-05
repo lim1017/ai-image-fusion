@@ -11,6 +11,9 @@ import path from "path";
 import FormData from "form-data";
 import fs from "fs";
 
+//convert audio to mp3
+import ffmpeg from "fluent-ffmpeg";
+
 //set storage engine
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -34,24 +37,29 @@ router.route("/").get((req, res) => {
   res.status(200).json({ message: "Hello from whisper routess!" });
 });
 
-//audio upload and sent to whisperer
 router.route("/upload").post(upload.single("file"), async (req, res) => {
-  console.log(req.file, "from whisper post upload routeeeeeeeee");
   try {
-    req.session.filePath = req.file.path;
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({ message: "File upload failed", err });
-  }
+    const inputFile = req.file.path;
+    const outputFile = `uploads/file-${new Date().valueOf()}.mp3`;
+    console.log(req.file, "req.file");
+    const conversionPromise = new Promise((resolve, reject) => {
+      console.log("inside conversion promise");
+      ffmpeg(inputFile)
+        .audioCodec("libmp3lame")
+        .format("mp3")
+        .on("end", () => {
+          resolve();
+        })
+        .on("error", (err) => {
+          console.log("An error occurred: " + err.message);
+          reject(err);
+        })
+        .save(outputFile);
+    });
 
-  //call whisperer
-  try {
-    if (!req.session.filePath) {
-      res.status(400).send({ message: "No file uploaded" });
-      return;
-    }
+    await conversionPromise.catch((err) => console.log("rejected", err));
 
-    const whisperResult = await getTranscribedAudio(req.session.filePath);
+    const whisperResult = await getTranscribedAudio(outputFile);
     console.log(whisperResult, "whispperrrrrrrrrrrrrrrr");
     res.status(200).json({ message: "success", data: whisperResult.text });
   } catch (err) {

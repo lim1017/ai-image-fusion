@@ -5,6 +5,35 @@ interface Obj {
   [key: string]: boolean;
 }
 
+export const checkNavigatorMic = async () => {
+  if (navigator.userAgent.indexOf("Firefox") != -1) {
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      return true;
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+      return false;
+    }
+  } else {
+    // Chrome + others
+    try {
+      const permissionStatus = await navigator.permissions.query({
+        //ts-expect-error - typescript doesn't know about the microphone permission
+        name: "microphone",
+      });
+      console.log(permissionStatus);
+      if (permissionStatus.state === "granted") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+};
+
 export const getRandomPrompt = (prompt: string): string => {
   const randomIndex = Math.floor(Math.random() * surpriseMePrompts.length);
   const randomPrompt = surpriseMePrompts[randomIndex];

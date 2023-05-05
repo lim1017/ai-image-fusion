@@ -1,18 +1,13 @@
 import AudioRecorder from "../AudioRecorder";
-import Button from "../Button";
 
 type Props = {
-  handleUpload: (file: File) => void;
+  retrieveWhipserText: (text: string) => void;
 };
 
-export default function WhisperPrompt({ handleUpload }: Props) {
-  const handleFileUpload = (file: File) => {
-    handleUpload(file);
-  };
-
+export default function WhisperPrompt({ retrieveWhipserText }: Props) {
   return (
     <div style={{ minHeight: 100 }}>
-      <AudioRecorder handleUpload={handleUpload} />
+      <AudioRecorder retrieveWhipserText={retrieveWhipserText} />
     </div>
   );
 }

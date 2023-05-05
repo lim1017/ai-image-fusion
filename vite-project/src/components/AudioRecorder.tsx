@@ -1,16 +1,23 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Button from "./Button";
 import { uploadAudioFile } from "../lib/api";
+import { checkNavigatorMic } from "../utils/helper";
 
 const mimeType = "audio/webm";
 
-const AudioRecorder = () => {
+const AudioRecorder = ({
+  retrieveWhipserText,
+}: {
+  retrieveWhipserText: (text: string) => void;
+}) => {
   const [recording, setRecording] = useState<boolean>(false);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
 
   const [permission, setPermission] = useState(false);
+
+  console.log({ permission });
   const [stream, setStream] = useState<MediaStream | undefined>(undefined);
 
   const getMicrophonePermission = async () => {
@@ -23,6 +30,9 @@ const AudioRecorder = () => {
   };
 
   const startRecording = async () => {
+    //clear at bgn
+    setAudioChunks([]);
+
     //start the recording
     setRecording(true);
     //create new Media recorder instance using the stream
@@ -52,7 +62,6 @@ const AudioRecorder = () => {
         //creates a playable URL from the blob file.
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudioUrl(audioUrl);
-        setAudioChunks([]);
       };
     }
   };
@@ -60,21 +69,40 @@ const AudioRecorder = () => {
   const handleUpload = async () => {
     if (audioUrl) {
       const audioBlob = new Blob(audioChunks, { type: mimeType });
-      console.log(audioBlob);
       const res = await uploadAudioFile(audioBlob);
-      console.log(res);
+      retrieveWhipserText(res.data);
     }
   };
+
+  useEffect(() => {
+    checkNavigatorMic().then((res) => setPermission(res));
+  }, []);
+
   return (
-    <div className="border-solid border-gray border-2 px-6 py-2 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none">
+    <div className="border-solid border-gray border-2 px-6 py-3 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none">
       {audioUrl ? (
         <div>
           <audio
-            className="w-full flex flex-col items-center"
+            className="w-full flex flex-col items-center rounded-lg"
             controls
             src={audioUrl}
           />
-          <Button onClick={handleUpload}>Upload</Button>
+          <Button className="mt-3 mr-3" type="button" onClick={handleUpload}>
+            Upload
+          </Button>
+
+          <Button
+            className="ml-3"
+            intent="secondary"
+            type="button"
+            onClick={() => setAudioUrl(null)}
+          >
+            Retry
+          </Button>
+          {/* <a download href={audioUrl}>
+            {" "}
+            download{" "}
+          </a> */}
         </div>
       ) : (
         <>
@@ -99,7 +127,7 @@ const AudioRecorder = () => {
             </>
           ) : (
             <button type="button" onClick={getMicrophonePermission}>
-              get permission
+              Get Microphone Permission
             </button>
           )}
         </>
