@@ -4,6 +4,16 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
+interface TabOptions {
+  name: string;
+  icon?: React.ReactNode;
+  content: React.ReactNode;
+}
+
+interface BasicTabsProps {
+  tabs: TabOptions[];
+}
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -37,7 +47,7 @@ const a11yProps = (index: number) => {
   };
 };
 
-export default function BasicTabs() {
+export default function BasicTabs({ tabs }: BasicTabsProps) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -52,20 +62,19 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          {tabs.map((tab, index) => {
+            return <Tab label={tab.name} {...a11yProps(index)} />;
+          })}
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
+
+      {tabs.map((tab, index) => {
+        return (
+          <TabPanel value={value} index={index}>
+            {tab.content}
+          </TabPanel>
+        );
+      })}
     </Box>
   );
 }

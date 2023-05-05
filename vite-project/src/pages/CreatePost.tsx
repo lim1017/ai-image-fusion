@@ -12,6 +12,10 @@ import FormField from "../components/FormField";
 import Loader from "../components/Loader";
 import DragDropFileUploader from "../components/DragDropFileUploader";
 import AudioRecorder from "../components/AudioRecorder";
+import TabComponent from "../components/TabComponent";
+import RandomPrompt from "../components/promptTypes/RandomPrompt";
+import GptPrompt from "../components/promptTypes/GptPrompt";
+import WhisperPrompt from "../components/promptTypes/WhisperPrompt";
 
 const initialErrorObj = { name: false, prompt: false };
 
@@ -179,13 +183,27 @@ const Page2 = () => {
             error={errors.name}
           />
 
-          <ChipInput
-            chips={chips}
-            labelName="Keywords for AI Prompt"
-            name="gptPrompt"
-            placeholder="Enter up to 5 keywords and ask Gpt to generate a prompt"
-            handleChange={handleChipChange}
-            handleBtnClick={handleAskGpt}
+          <TabComponent
+            tabs={[
+              {
+                name: "Basic",
+                content: <RandomPrompt handleRandomPrompt={handleSurpriseMe} />,
+              },
+              {
+                name: "chatGpt",
+                content: (
+                  <GptPrompt
+                    chips={chips}
+                    handleChipChange={handleChipChange}
+                    handleAskGpt={handleAskGpt}
+                  />
+                ),
+              },
+              {
+                name: "Whisper(Audio)",
+                content: <WhisperPrompt handleUpload={handleUpload} />,
+              },
+            ]}
           />
 
           <FormField
@@ -195,13 +213,9 @@ const Page2 = () => {
             placeholder="Prompt for AI to generate image"
             value={form.prompt}
             handleChange={handleChange}
-            isSurpriseMe={true}
-            handleSurpriseMe={handleSurpriseMe}
             error={errors.prompt}
           />
 
-          <DragDropFileUploader handleUpload={handleUpload} />
-          <AudioRecorder />
           <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
             {form.photo ? (
               <img
