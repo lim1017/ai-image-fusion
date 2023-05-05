@@ -1,17 +1,18 @@
-import React from "react";
 import AudioRecorder from "../AudioRecorder";
-import DragDropFileUploader from "../DragDropFileUploader";
+import Button from "../Button";
 
 type Props = {
   handleUpload: (file: File) => void;
 };
 
 export default function WhisperPrompt({ handleUpload }: Props) {
+  const handleFileUpload = (file: File) => {
+    handleUpload(file);
+  };
+
   return (
     <div style={{ minHeight: 100 }}>
-      {" "}
-      <AudioRecorder />
-      <DragDropFileUploader handleUpload={handleUpload} />
+      <AudioRecorder handleUpload={handleUpload} />
     </div>
   );
 }

@@ -36,6 +36,7 @@ router.route("/").get((req, res) => {
 
 //audio upload and sent to whisperer
 router.route("/upload").post(upload.single("file"), async (req, res) => {
+  console.log(req.file, "from whisper post upload routeeeeeeeee");
   try {
     req.session.filePath = req.file.path;
   } catch (err) {
@@ -51,7 +52,7 @@ router.route("/upload").post(upload.single("file"), async (req, res) => {
     }
 
     const whisperResult = await getTranscribedAudio(req.session.filePath);
-
+    console.log(whisperResult, "whispperrrrrrrrrrrrrrrr");
     res.status(200).json({ message: "success", data: whisperResult.text });
   } catch (err) {
     res.status(500).send({ message: "Transcription failed", err });

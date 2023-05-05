@@ -7,9 +7,11 @@ export const initalGptPrompt = () => {
   });
 };
 
-export const uploadAudioFile = async (file: File) => {
+export const uploadAudioFile = async (file: File | Blob) => {
   const formData = new FormData();
   formData.append("file", file);
+
+  console.log("before upload");
 
   const res = await fetch(
     `${import.meta.env.VITE_API_URL}/api/v1/whisper/upload`,

@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
+import Button from "./Button";
+import { uploadAudioFile } from "../lib/api";
 
 const mimeType = "audio/webm";
 
-const AudioRecorder: React.FC = () => {
+const AudioRecorder = () => {
   const [recording, setRecording] = useState<boolean>(false);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -55,19 +57,31 @@ const AudioRecorder: React.FC = () => {
     }
   };
 
+  const handleUpload = async () => {
+    if (audioUrl) {
+      const audioBlob = new Blob(audioChunks, { type: mimeType });
+      console.log(audioBlob);
+      const res = await uploadAudioFile(audioBlob);
+      console.log(res);
+    }
+  };
   return (
     <div className="border-solid border-gray border-2 px-6 py-2 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none">
       {audioUrl ? (
-        <audio
-          className="w-full flex flex-col items-center"
-          controls
-          src={audioUrl}
-        />
+        <div>
+          <audio
+            className="w-full flex flex-col items-center"
+            controls
+            src={audioUrl}
+          />
+          <Button onClick={handleUpload}>Upload</Button>
+        </div>
       ) : (
         <>
           {permission ? (
             <>
               <button
+                type="button"
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={startRecording}
                 disabled={recording}
@@ -75,6 +89,7 @@ const AudioRecorder: React.FC = () => {
                 Record
               </button>
               <button
+                type="button"
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={stopRecording}
                 disabled={!recording}
@@ -83,7 +98,9 @@ const AudioRecorder: React.FC = () => {
               </button>
             </>
           ) : (
-            <button onClick={getMicrophonePermission}>get permission</button>
+            <button type="button" onClick={getMicrophonePermission}>
+              get permission
+            </button>
           )}
         </>
       )}
