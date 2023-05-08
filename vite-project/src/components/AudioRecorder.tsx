@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Button from "./Button";
 import { uploadAudioFile } from "../lib/api";
-import { checkNavigatorMic } from "../utils/helper";
+import Timer from "./Timer";
+import { useTimer } from "../hooks/useTimer";
 
 const mimeType = "audio/webm";
 
+//TODO check mic permissions not working as intended removed 4 now.
 const AudioRecorder = ({
   retrieveWhipserText,
 }: {
@@ -14,11 +16,10 @@ const AudioRecorder = ({
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
-
   const [permission, setPermission] = useState(false);
-
-  console.log({ permission });
   const [stream, setStream] = useState<MediaStream | undefined>(undefined);
+
+  const { handleStartTimer, seconds } = useTimer();
 
   const getMicrophonePermission = async () => {
     const streamData = await navigator.mediaDevices.getUserMedia({
@@ -30,24 +31,27 @@ const AudioRecorder = ({
   };
 
   const startRecording = async () => {
-    //clear at bgn
-    setAudioChunks([]);
+    if (stream) {
+      //clear at bgn
+      setAudioChunks([]);
 
-    //start the recording
-    setRecording(true);
-    //create new Media recorder instance using the stream
-    const media = new MediaRecorder(stream, { mimeType });
-    //set the MediaRecorder instance to the mediaRecorder ref
-    mediaRecorder.current = media;
-    //invokes the start method to start the recording process
-    mediaRecorder.current.start();
-    const localAudioChunks: Blob[] = [];
-    mediaRecorder.current.ondataavailable = (event) => {
-      if (typeof event.data === "undefined") return;
-      if (event.data.size === 0) return;
-      localAudioChunks.push(event.data);
-    };
-    setAudioChunks(localAudioChunks);
+      //start the recording
+      setRecording(true);
+      handleStartTimer();
+      //create new Media recorder instance using the stream
+      const media = new MediaRecorder(stream, { mimeType });
+      //set the MediaRecorder instance to the mediaRecorder ref
+      mediaRecorder.current = media;
+      //invokes the start method to start the recording process
+      mediaRecorder.current.start();
+      const localAudioChunks: Blob[] = [];
+      mediaRecorder.current.ondataavailable = (event) => {
+        if (typeof event.data === "undefined") return;
+        if (event.data.size === 0) return;
+        localAudioChunks.push(event.data);
+      };
+      setAudioChunks(localAudioChunks);
+    }
   };
 
   const stopRecording = () => {
@@ -73,10 +77,6 @@ const AudioRecorder = ({
       retrieveWhipserText(res.data);
     }
   };
-
-  useEffect(() => {
-    checkNavigatorMic().then((res) => setPermission(res));
-  }, []);
 
   return (
     <div className="border-solid border-gray border-2 px-6 py-3 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none">
@@ -107,24 +107,33 @@ const AudioRecorder = ({
       ) : (
         <>
           {permission ? (
-            <>
-              <button
-                type="button"
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={startRecording}
-                disabled={recording}
-              >
-                Record
-              </button>
-              <button
-                type="button"
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={stopRecording}
-                disabled={!recording}
-              >
-                Stop Recording
-              </button>
-            </>
+            <div>
+              <h2 className="mb-4">
+                Record an audio prompt for Whisper to transcribe to text
+              </h2>
+
+              <div>
+                <Button
+                  type="button"
+                  intent="action"
+                  className="mr-3"
+                  onClick={startRecording}
+                  disabled={recording}
+                >
+                  Record
+                </Button>
+                <Button
+                  type="button"
+                  intent="error"
+                  className="ml-3"
+                  onClick={stopRecording}
+                  disabled={!recording}
+                >
+                  Stop Recording
+                </Button>
+              </div>
+              <div>seconds:{seconds}</div>
+            </div>
           ) : (
             <button type="button" onClick={getMicrophonePermission}>
               Get Microphone Permission
