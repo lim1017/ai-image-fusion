@@ -7,9 +7,12 @@ import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
 import { getGptPrompt } from "../lib/api";
-import ChipInput from "../components/ChipInput";
 import FormField from "../components/FormField";
 import Loader from "../components/Loader";
+import TabComponent from "../components/TabComponent";
+import RandomPrompt from "../components/promptTypes/RandomPrompt";
+import GptPrompt from "../components/promptTypes/GptPrompt";
+import WhisperPrompt from "../components/promptTypes/WhisperPrompt";
 
 const initialErrorObj = { name: false, prompt: false };
 
@@ -137,6 +140,10 @@ const Page2 = () => {
     }
   };
 
+  const retrieveWhipserText = async (text: string) => {
+    setForm({ ...form, prompt: text });
+  };
+
   useEffect(() => {
     if (form.prompt) {
       setErrors((prev) => {
@@ -147,14 +154,13 @@ const Page2 = () => {
   return (
     <section className="max-w-7xl mx-auto">
       <div className="flex justify-center flex-col">
-        <h1 className="font-extrabold text-[#666e75] text-[22px]">
-          Create an imaginative image through DALL-E AI and share it with the
-          community
+        <h1 className="font-extrabold text-[#666e75] text-[32px]">
+          Three exciting ways to generate an image... More to come!
         </h1>
 
         <h1 className="font-extrabold text-[#666a00] text-[18px]">
-          Enter keywords, and have chatGPT generate a prompt for DALL-E, or
-          enter your own prompt
+          Create an imaginative image through DALL-E AI and share it with the
+          community
         </h1>
       </div>
 
@@ -170,13 +176,29 @@ const Page2 = () => {
             error={errors.name}
           />
 
-          <ChipInput
-            chips={chips}
-            labelName="Keywords for AI Prompt"
-            name="gptPrompt"
-            placeholder="Enter up to 5 keywords and ask Gpt to generate a prompt"
-            handleChange={handleChipChange}
-            handleBtnClick={handleAskGpt}
+          <TabComponent
+            tabs={[
+              {
+                name: "Basic",
+                content: <RandomPrompt handleRandomPrompt={handleSurpriseMe} />,
+              },
+              {
+                name: "chatGpt",
+                content: (
+                  <GptPrompt
+                    chips={chips}
+                    handleChipChange={handleChipChange}
+                    handleAskGpt={handleAskGpt}
+                  />
+                ),
+              },
+              {
+                name: "Whisper(Audio)",
+                content: (
+                  <WhisperPrompt retrieveWhipserText={retrieveWhipserText} />
+                ),
+              },
+            ]}
           />
 
           <FormField
@@ -186,8 +208,6 @@ const Page2 = () => {
             placeholder="Prompt for AI to generate image"
             value={form.prompt}
             handleChange={handleChange}
-            isSurpriseMe={true}
-            handleSurpriseMe={handleSurpriseMe}
             error={errors.prompt}
           />
 

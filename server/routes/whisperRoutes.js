@@ -1,52 +1,99 @@
-//incomeplete
 import express from "express";
 import * as dotenv from "dotenv";
-import { Configuration, OpenAIApi } from "openai";
+import fetch from "node-fetch";
+
+//handle file uploads
+import multer from "multer";
+
+//dealing with file and directory paths
+import path from "path";
+//create formdata objects
+import FormData from "form-data";
+import fs from "fs";
+
+//convert audio to mp3
+import ffmpeg from "fluent-ffmpeg";
+
+//set storage engine
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const basename = path.basename(file.originalname, ext);
+    cb(null, `${basename}-${new Date().valueOf()}-${ext}`);
+  },
+});
+
+//multer middleware
+const upload = multer({ storage: storage });
 
 dotenv.config();
 
 const router = express.Router();
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
-
 router.route("/").get((req, res) => {
   res.status(200).json({ message: "Hello from whisper routess!" });
+});
+
+router.route("/upload").post(upload.single("file"), async (req, res) => {
+  try {
+    const inputFile = req.file.path;
+    const outputFile = `uploads/file-${new Date().valueOf()}.mp3`;
+    const conversionPromise = new Promise((resolve, reject) => {
+      ffmpeg(inputFile)
+        .audioCodec("libmp3lame")
+        .format("mp3")
+        .on("end", () => {
+          resolve();
+        })
+        .on("error", (err) => {
+          console.log("An error occurred: " + err.message);
+          reject(err);
+        })
+        .save(outputFile);
+    });
+
+    await conversionPromise.catch((err) => console.log("rejected", err));
+
+    const whisperResult = await getTranscribedAudio(outputFile);
+    res.status(200).json({ message: "success", data: whisperResult.text });
+  } catch (err) {
+    res.status(500).send({ message: "Transcription failed", err });
+  }
 });
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY;
 const model = "whisper-1";
 
-router.route("/").post(async (req, res) => {
+async function getTranscribedAudio(filePath) {
   const formData = new FormData();
-  formData.append("audio", req.body.audio);
+  formData.append("file", fs.createReadStream(filePath));
   formData.append("model", model);
 
   try {
     const openAIres = await fetch(
       "https://api.openai.com/v1/audio/transcriptions",
-      formData,
       {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${OPENAI_KEY}`,
           "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
         },
+        body: formData,
       }
     );
 
-    console.log(openAIres, "res from openai whisperer");
-
-    res.status(200).json("success");
+    const data = await openAIres.json();
+    return data;
   } catch (error) {
     console.log(
       error?.response.data.error.message,
-      "open ai ERRORRRRRRRRRRRRRRRRRRRRR"
+      "error from openai whisperer"
     );
-    res.status(500).send(error?.response.data.error.message);
+    throw error;
   }
-});
+}
 
 export default router;
