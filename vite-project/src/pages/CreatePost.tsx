@@ -154,14 +154,13 @@ const Page2 = () => {
   return (
     <section className="max-w-7xl mx-auto">
       <div className="flex justify-center flex-col">
-        <h1 className="font-extrabold text-[#666e75] text-[22px]">
-          Create an imaginative image through DALL-E AI and share it with the
-          community
+        <h1 className="font-extrabold text-[#666e75] text-[32px]">
+          Three exciting ways to generate an image... More to come!
         </h1>
 
         <h1 className="font-extrabold text-[#666a00] text-[18px]">
-          Enter keywords, and have chatGPT generate a prompt for DALL-E, or
-          enter your own prompt
+          Create an imaginative image through DALL-E AI and share it with the
+          community
         </h1>
       </div>
 

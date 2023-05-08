@@ -48,7 +48,7 @@ const ChipInput = ({
   };
 
   return (
-    <div>
+    <div className="">
       <div className="flex items-center gap-2 mb-2">
         <label
           htmlFor={name}
@@ -74,6 +74,7 @@ const ChipInput = ({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleInputKeyDown}
+        className="mt-2"
       />
       <div className="mt-2 flex justify-start">
         {chips.map((chip) => (

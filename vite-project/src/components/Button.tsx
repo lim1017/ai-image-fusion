@@ -4,16 +4,18 @@ import { FC } from "react";
 const buttonClasses = cva(
   [
     "font-bold",
-    "hover:scale-110",
-    "active:scale-100",
     "transition",
     "duration-200",
     "ease-in-out",
     "font-medium",
     "rounded-xl",
-    "disabled:opacity-50 ",
+    "cursor-pointer",
+    "disabled:opacity-50",
     "disabled:cursor-not-allowed",
     "disabled:bg-gray-300",
+    "hover:scale-110",
+    "disabled:scale-100",
+    "active:scale-100",
   ],
   {
     variants: {

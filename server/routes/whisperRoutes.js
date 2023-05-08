@@ -41,9 +41,7 @@ router.route("/upload").post(upload.single("file"), async (req, res) => {
   try {
     const inputFile = req.file.path;
     const outputFile = `uploads/file-${new Date().valueOf()}.mp3`;
-    console.log(req.file, "req.file");
     const conversionPromise = new Promise((resolve, reject) => {
-      console.log("inside conversion promise");
       ffmpeg(inputFile)
         .audioCodec("libmp3lame")
         .format("mp3")
@@ -60,7 +58,6 @@ router.route("/upload").post(upload.single("file"), async (req, res) => {
     await conversionPromise.catch((err) => console.log("rejected", err));
 
     const whisperResult = await getTranscribedAudio(outputFile);
-    console.log(whisperResult, "whispperrrrrrrrrrrrrrrr");
     res.status(200).json({ message: "success", data: whisperResult.text });
   } catch (err) {
     res.status(500).send({ message: "Transcription failed", err });

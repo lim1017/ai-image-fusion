@@ -22,7 +22,7 @@ export const useTimer = () => {
     setIsActive(false);
   };
 
-  const handleReset = () => {
+  const handleResetTimer = () => {
     setSeconds(0);
     setIsActive(false);
   };
@@ -40,6 +40,6 @@ export const useTimer = () => {
     seconds: formatTime(seconds),
     handleStartTimer,
     handlePause,
-    handleReset,
+    handleResetTimer,
   };
 };

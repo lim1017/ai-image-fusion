@@ -1,10 +1,17 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "./Button";
 import { uploadAudioFile } from "../lib/api";
-import Timer from "./Timer";
 import { useTimer } from "../hooks/useTimer";
+import Card from "./Card";
 
 const mimeType = "audio/webm";
+const LoadingEnum = {
+  idle: "idle",
+  loading: "loading",
+  success: "success",
+};
+
+type LoadingStatus = (typeof LoadingEnum)[keyof typeof LoadingEnum];
 
 //TODO check mic permissions not working as intended removed 4 now.
 const AudioRecorder = ({
@@ -19,7 +26,9 @@ const AudioRecorder = ({
   const [permission, setPermission] = useState(false);
   const [stream, setStream] = useState<MediaStream | undefined>(undefined);
 
-  const { handleStartTimer, seconds } = useTimer();
+  const [isUploaded, setIsUploaded] = useState<LoadingStatus>(LoadingEnum.idle);
+
+  const { handleStartTimer, seconds, handleResetTimer } = useTimer();
 
   const getMicrophonePermission = async () => {
     const streamData = await navigator.mediaDevices.getUserMedia({
@@ -56,7 +65,7 @@ const AudioRecorder = ({
 
   const stopRecording = () => {
     setRecording(false);
-
+    handleResetTimer();
     if (mediaRecorder.current) {
       //stops the recording instance
       mediaRecorder.current.stop();
@@ -72,14 +81,29 @@ const AudioRecorder = ({
 
   const handleUpload = async () => {
     if (audioUrl) {
+      setIsUploaded(LoadingEnum.loading);
       const audioBlob = new Blob(audioChunks, { type: mimeType });
       const res = await uploadAudioFile(audioBlob);
       retrieveWhipserText(res.data);
+      setIsUploaded(LoadingEnum.success);
     }
   };
 
+  const handleRetryAudioRecord = () => {
+    setIsUploaded(LoadingEnum.idle);
+    setAudioUrl(null);
+  };
+
+  //if seconds hit 30 seconds auto stop the recording
+  useEffect(() => {
+    if (seconds === "00:30") {
+      console.log("stop recording");
+      stopRecording();
+    }
+  }, [seconds]);
+  console.log({ isUploaded });
   return (
-    <div className="border-solid border-gray border-2 px-6 py-3 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none">
+    <Card>
       {audioUrl ? (
         <div>
           <audio
@@ -87,15 +111,25 @@ const AudioRecorder = ({
             controls
             src={audioUrl}
           />
-          <Button className="mt-3 mr-3" type="button" onClick={handleUpload}>
-            Upload
+          <Button
+            className="mt-3 mr-3"
+            type="button"
+            disabled={
+              isUploaded === LoadingEnum.loading ||
+              isUploaded === LoadingEnum.success
+            }
+            onClick={handleUpload}
+          >
+            {isUploaded === LoadingEnum.loading ? "Upload..." : "Upload"}
           </Button>
 
           <Button
             className="ml-3"
-            intent="secondary"
+            intent={
+              isUploaded === LoadingEnum.success ? "primary" : "secondary"
+            }
             type="button"
-            onClick={() => setAudioUrl(null)}
+            onClick={handleRetryAudioRecord}
           >
             Retry
           </Button>
@@ -109,7 +143,8 @@ const AudioRecorder = ({
           {permission ? (
             <div>
               <h2 className="mb-4">
-                Record an audio prompt for Whisper to transcribe to text
+                Record an audio prompt for Whisper to transcribe to text (30
+                second limit)
               </h2>
 
               <div>
@@ -132,7 +167,7 @@ const AudioRecorder = ({
                   Stop Recording
                 </Button>
               </div>
-              <div>seconds:{seconds}</div>
+              <div className="mt-3">{seconds}</div>
             </div>
           ) : (
             <button type="button" onClick={getMicrophonePermission}>
@@ -141,7 +176,7 @@ const AudioRecorder = ({
           )}
         </>
       )}
-    </div>
+    </Card>
   );
 };
 
