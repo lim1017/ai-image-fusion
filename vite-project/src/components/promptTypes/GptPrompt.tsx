@@ -1,4 +1,3 @@
-import React from "react";
 import ChipInput from "../ChipInput";
 import Card from "../Card";
 
