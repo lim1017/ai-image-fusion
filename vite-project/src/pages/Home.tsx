@@ -158,7 +158,7 @@ const Home = () => {
           <div className="flex items-center justify-center flex-col">
             {showLoadingMsg && (
               <h3 className="mb-4 font-extrabold text-[#222328] text-[32px]">
-                Sorry free database 😄... few more seconds (20)!{" "}
+                Sorry free database 😄... Sometimes it needs a refresh.{" "}
               </h3>
             )}
             <Loader />

@@ -2,22 +2,50 @@ import { logo } from "../assets";
 import { Link } from "react-router-dom";
 
 import Button from "../components/Button";
+import SimpleModal from "./Modal";
+import { useModal } from "../hooks/useModal";
 
 export default function Header() {
-  return (
-    <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
-      <div className="flex items-center">
-        <Link to="/" className="mr-2">
-          <img src={logo} alt="logo" className="w-28 object-contain" />
-        </Link>
-        {/* <Button className="ml-2" intent="action">
-          About
-        </Button> */}
-      </div>
+  const { isOpen, openModal, closeModal } = useModal();
 
-      <Link to="/create-post">
-        <Button intent="primary">Create</Button>
-      </Link>
-    </header>
+  return (
+    <>
+      <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
+        <div className="flex items-center">
+          <Link to="/" className="mr-2">
+            <img src={logo} alt="logo" className="w-28 object-contain" />
+          </Link>
+          <Button className="ml-2" intent="action" onClick={openModal}>
+            About
+          </Button>
+        </div>
+
+        <Link to="/create-post">
+          <Button intent="primary">Create</Button>
+        </Link>
+      </header>
+      <SimpleModal isOpen={isOpen} closeModal={closeModal}>
+        <div>
+          <div className="flex flex-col items-center">
+            <h1 className="text-2xl font-bold">About</h1>
+            <p className="mt-2 text-[#666e75] text-[14px]">
+              MERN stack app with Vite, Tailwind, & Typescript. Utilizing
+              openAI's GPT-3, Whisper, & Dall-e to create some fun content.
+            </p>
+          </div>
+          <div className="mt-4">
+            <ul style={{ listStyleType: "disc", padding: 20 }}>
+              <li className="mt-4">Integrating /w openAI's API</li>
+              <li className="mt-4">Upload/Storage/Serving Images</li>
+              <li className="mt-4">Audio recording/upload</li>
+              <li className="mt-4">Twilio Image Sharing</li>
+              <li className="mt-4">Pagination</li>
+              <li className="mt-4">More to come...</li>
+              {/* <li className="mt-4">Code Splitting</li> */}
+            </ul>
+          </div>
+        </div>
+      </SimpleModal>
+    </>
   );
 }

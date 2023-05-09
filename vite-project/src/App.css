@@ -44,3 +44,14 @@
 .read-the-docs {
   color: #888;
 }
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+li {
+  flex-basis: calc(50% - 10px); /* Subtract the gap between columns */
+  margin-bottom: 20px;
+}
