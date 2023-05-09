@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
+//@ts-nocheck  TODO types later
 import { useState, useEffect } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import Modal from "react-modal";
