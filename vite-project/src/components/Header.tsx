@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import SimpleModal from "./Modal";
 import { useModal } from "../hooks/useModal";
+import PaypalBtn from "./PaypalBtn";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
@@ -18,6 +19,7 @@ export default function Header() {
           <Button className="ml-2" intent="action" onClick={openModal}>
             About
           </Button>
+          <PaypalBtn />
         </div>
 
         <Link to="/create-post">
