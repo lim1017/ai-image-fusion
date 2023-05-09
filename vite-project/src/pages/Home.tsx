@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
+//@ts-nocheck  TODO types later
 import { useState, useEffect } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import Modal from "react-modal";
@@ -53,8 +53,8 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchMorePosts = (currPg: number, totalPgs: number) => {
-    if (currPg < totalPgs) {
+  const fetchMorePosts = () => {
+    if (currentPage < totalPages) {
       setPostsLoading(true);
       fetchPosts(currentPage + 1, 10)
         .then((result) => {
@@ -64,7 +64,6 @@ const Home = () => {
         })
         .finally(() => {
           setPostsLoading(false);
-          //
         });
     }
   };
@@ -119,7 +118,7 @@ const Home = () => {
       window.innerHeight + document.documentElement.scrollTop >=
       document.documentElement.offsetHeight - 100
     ) {
-      fetchMorePosts(currentPage, totalPages);
+      fetchMorePosts();
     }
   }, 500);
 
@@ -158,7 +157,7 @@ const Home = () => {
           <div className="flex items-center justify-center flex-col">
             {showLoadingMsg && (
               <h3 className="mb-4 font-extrabold text-[#222328] text-[32px]">
-                Sorry free database 😄... few more seconds (20)!{" "}
+                Sorry free database 😄... Sometimes it needs a refresh.{" "}
               </h3>
             )}
             <Loader />
