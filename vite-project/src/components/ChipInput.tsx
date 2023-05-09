@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import { Chip } from "@mui/material";
 import Input from "./Input";
 import Countdown from "./Countdown";
+import { Loader } from ".";
 interface ChipInputProps {
   labelName: string;
   name: string;
   placeholder: string;
   chips: string[];
-
+  gptLoading: boolean;
   handleChange: any;
   handleBtnClick: () => void;
 }
@@ -20,6 +21,7 @@ const ChipInput = ({
   chips = [],
   handleChange,
   handleBtnClick,
+  gptLoading,
 }: ChipInputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [timer, setTimer] = useState(0);
@@ -40,10 +42,10 @@ const ChipInput = ({
   };
 
   const handleBtnClickWrapper = () => {
-    setTimer(5);
+    setTimer(10);
     setTimeout(() => {
       setTimer(0);
-    }, 5000);
+    }, 10000);
     handleBtnClick();
   };
 
@@ -63,7 +65,11 @@ const ChipInput = ({
           onClick={handleBtnClickWrapper}
           className="font-semibold text-xs bg-[#6469ff] py-1 px-2 rounded-[5px] text-black disabled:opacity-50 disabled:bg-gray-300"
         >
-          <Countdown seconds={timer}>Ask Gpt</Countdown>
+          {gptLoading ? (
+            <Loader size={4} />
+          ) : (
+            <Countdown seconds={timer}>Ask Gpt</Countdown>
+          )}
         </button>
       </div>
 

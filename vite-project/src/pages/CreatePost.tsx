@@ -29,6 +29,8 @@ const Page2 = () => {
   const [errors, setErrors] = useState(initialErrorObj);
 
   const [generatingImg, setGeneratingImg] = useState(false);
+
+  const [gptLoading, setGptLoading] = useState(false);
   const [loading, setLoading] = useState(false); //submit loading
 
   const [chips, setChips] = useState<string[]>([]);
@@ -124,11 +126,14 @@ const Page2 = () => {
 
   const handleAskGpt = async () => {
     try {
+      setGptLoading(true);
       const res = await getGptPrompt(chips);
 
       setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
     } catch (err) {
       alert(err);
+    } finally {
+      setGptLoading(false);
     }
   };
 
@@ -178,6 +183,7 @@ const Page2 = () => {
                 name: "chatGpt",
                 content: (
                   <GptPrompt
+                    gptLoading={gptLoading}
                     chips={chips}
                     handleChipChange={handleChipChange}
                     handleAskGpt={handleAskGpt}
