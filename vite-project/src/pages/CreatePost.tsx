@@ -35,26 +35,18 @@ const Page2 = () => {
 
   const validateForm = () => {
     let isError = false;
-    if (!form.name.trim()) {
-      setErrors((prev) => {
-        return { ...prev, name: true };
-      });
-      isError = true;
-    }
-
-    if (!form.prompt.trim()) {
-      setErrors((prev) => {
-        return { ...prev, prompt: true };
-      });
-      isError = true;
-    }
 
     if (isError) return true;
     return false;
   };
 
   const generateImage = async () => {
-    if (validateForm()) return;
+    if (!form.prompt.trim()) {
+      setErrors((prev) => {
+        return { ...prev, prompt: true };
+      });
+      return;
+    }
 
     if (form.prompt) {
       try {
@@ -85,6 +77,13 @@ const Page2 = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!form.name.trim()) {
+      setErrors((prev) => {
+        return { ...prev, name: true };
+      });
+      return;
+    }
 
     if (form.photo && form.prompt) {
       setLoading(true);

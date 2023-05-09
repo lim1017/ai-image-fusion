@@ -1,3 +1,22 @@
+export const fetchPosts = async (page = 1, limit = 8) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/v1/post?page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (res.ok) {
+    const result = await res.json();
+    return result;
+  } else {
+    throw new Error("Something went wrong");
+  }
+};
+
 export const initalGptPrompt = () => {
   return fetch(`${import.meta.env.VITE_API_URL}/api/v1/gpt/initial`, {
     method: "GET",
