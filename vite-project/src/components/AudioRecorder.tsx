@@ -97,11 +97,9 @@ const AudioRecorder = ({
   //if seconds hit 30 seconds auto stop the recording
   useEffect(() => {
     if (seconds === "00:30") {
-      console.log("stop recording");
       stopRecording();
     }
   }, [seconds]);
-  console.log({ isUploaded });
   return (
     <Card>
       {audioUrl ? (
