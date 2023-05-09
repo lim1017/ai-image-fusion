@@ -16,8 +16,22 @@ cloudinary.config({
 
 router.route("/").get(async (req, res) => {
   try {
-    const posts = await Post.find();
-    res.status(200).json({ success: true, data: posts });
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit) || 10;
+
+    const count = await Post.countDocuments();
+    const totalPages = Math.ceil(count / limit);
+
+    const startIndex = (page - 1) * limit;
+
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(startIndex)
+      .limit(limit);
+
+    res
+      .status(200)
+      .json({ success: true, data: posts, currentPage: page, totalPages });
   } catch (error) {
     res.status(500).json({ success: false, message: error });
   }
