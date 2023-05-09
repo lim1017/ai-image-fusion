@@ -53,8 +53,8 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchMorePosts = (currPg: number, totalPgs: number) => {
-    if (currPg < totalPgs) {
+  const fetchMorePosts = () => {
+    if (currentPage < totalPages) {
       setPostsLoading(true);
       fetchPosts(currentPage + 1, 10)
         .then((result) => {
@@ -64,7 +64,6 @@ const Home = () => {
         })
         .finally(() => {
           setPostsLoading(false);
-          //
         });
     }
   };
@@ -119,7 +118,7 @@ const Home = () => {
       window.innerHeight + document.documentElement.scrollTop >=
       document.documentElement.offsetHeight - 100
     ) {
-      fetchMorePosts(currentPage, totalPages);
+      fetchMorePosts();
     }
   }, 500);
 
