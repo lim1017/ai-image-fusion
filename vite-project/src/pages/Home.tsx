@@ -9,17 +9,26 @@ import { debounce } from "lodash";
 
 Modal.setAppElement("#root");
 
-const RenderCards = ({ data, title, postsLoading }) => {
-  if (postsLoading) {
+interface RenderCardsProp {
+  data: any;
+  title: string;
+  postsLoading: boolean;
+}
+
+const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
+  if (data?.length > 0) {
     return (
       <>
-        <Loader />
+        {data.map((post, i) => (
+          <SinglePhotoCard key={i} {...post} />
+        ))}
+        {postsLoading && (
+          <div className="flex justify-center items-center">
+            <Loader />
+          </div>
+        )}
       </>
     );
-  }
-
-  if (data?.length > 0) {
-    return data.map((post, i) => <SinglePhotoCard key={i} {...post} />);
   }
 
   return (
@@ -44,7 +53,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchMorePosts = (currPg, totalPgs) => {
+  const fetchMorePosts = (currPg: number, totalPgs: number) => {
     if (currPg < totalPgs) {
       setPostsLoading(true);
       fetchPosts(currentPage + 1, 10)
@@ -55,6 +64,7 @@ const Home = () => {
         })
         .finally(() => {
           setPostsLoading(false);
+          //
         });
     }
   };
@@ -107,11 +117,11 @@ const Home = () => {
   const handleScroll = debounce(() => {
     if (
       window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 5
+      document.documentElement.offsetHeight - 100
     ) {
       fetchMorePosts(currentPage, totalPages);
     }
-  }, 1000);
+  }, 500);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -169,7 +179,11 @@ const Home = () => {
                   postsLoading={postsLoading}
                 />
               ) : (
-                <RenderCards data={allPosts} title="No Posts Yet" />
+                <RenderCards
+                  postsLoading={postsLoading}
+                  data={allPosts}
+                  title="No Posts Yet"
+                />
               )}
             </div>
           </>
