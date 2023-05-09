@@ -33,13 +33,6 @@ const Page2 = () => {
 
   const [chips, setChips] = useState<string[]>([]);
 
-  const validateForm = () => {
-    let isError = false;
-
-    if (isError) return true;
-    return false;
-  };
-
   const generateImage = async () => {
     if (!form.prompt.trim()) {
       setErrors((prev) => {
