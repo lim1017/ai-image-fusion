@@ -3,12 +3,14 @@ import Input from "./Input";
 import { ShareOptions } from "./ShareComponent";
 import Card from "./Card";
 import Button from "./Button";
+import { Loader } from ".";
 
 interface ShareFormProps {
   mode: ShareOptions | undefined;
   photo: string;
   executeAction: any;
   closeModal: () => void;
+  loading: boolean;
 }
 
 const textContent = {
@@ -34,6 +36,7 @@ const ShareForm = ({
   photo,
   executeAction,
   closeModal,
+  loading,
 }: ShareFormProps) => {
   const [formState, setFormState] = useState(initialForm);
 
@@ -106,8 +109,9 @@ const ShareForm = ({
           )}
           <div className="mt-4">
             <Button type="submit" intent="primary" className="mr-1">
-              Send
+              {loading ? <Loader size={7} /> : "Send"}
             </Button>
+
             <Button onClick={closeModal} intent="secondary" className="ml-1">
               Cancel
             </Button>

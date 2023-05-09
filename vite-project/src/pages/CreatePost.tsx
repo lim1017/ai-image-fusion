@@ -6,13 +6,14 @@ import { getRandomPrompt, removeTextBeforeColon } from "../utils/helper";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
-import { getGptPrompt } from "../lib/api";
+import { createPost, getGptPrompt } from "../lib/api";
 import FormField from "../components/FormField";
 import Loader from "../components/Loader";
 import TabComponent from "../components/TabComponent";
 import RandomPrompt from "../components/promptTypes/RandomPrompt";
 import GptPrompt from "../components/promptTypes/GptPrompt";
 import WhisperPrompt from "../components/promptTypes/WhisperPrompt";
+import { create } from "domain";
 
 const initialErrorObj = { name: false, prompt: false };
 
@@ -84,19 +85,12 @@ const Page2 = () => {
       setLoading(true);
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: form.name,
-            prompt: form.prompt,
-            photo: form.photo,
-          }),
+        await createPost({
+          name: form.name,
+          prompt: form.prompt,
+          photo: form.photo,
         });
 
-        await res.json();
         navigate("/");
       } catch (err) {
         alert(err);

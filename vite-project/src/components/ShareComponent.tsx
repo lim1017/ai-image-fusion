@@ -29,6 +29,8 @@ const ShareComponent = ({
     ShareOptions | undefined
   >(undefined);
 
+  const [loading, setLoading] = React.useState(false);
+
   const handleToggleShare = () => {
     setShowShareOptions((prev) => !prev);
   };
@@ -47,10 +49,15 @@ const ShareComponent = ({
     }
 
     try {
-      await sendTwilioText(mobile, message, photo, name);
+      setLoading(true);
+
+      setTimeout(async () => {
+        await sendTwilioText(mobile, message, photo, name);
+      }, 1000);
     } catch (err) {
       console.log(err);
     } finally {
+      setLoading(false);
       closeModal();
     }
   };
@@ -117,6 +124,7 @@ const ShareComponent = ({
 
       <Modal isOpen={isOpen} closeModal={closeModal}>
         <ShareForm
+          loading={loading}
           mode={emailOrPhone}
           photo={photo}
           executeAction={

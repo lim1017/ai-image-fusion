@@ -1,3 +1,22 @@
+import { postData } from "./types";
+
+export const createPost = async (data: postData) => {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    return result;
+  } else {
+    throw new Error("Something went wrong");
+  }
+};
+
 export const fetchPosts = async (page = 1, limit = 8) => {
   const res = await fetch(
     `${import.meta.env.VITE_API_URL}/api/v1/post?page=${page}&limit=${limit}`,
