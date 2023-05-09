@@ -32,6 +32,16 @@ export default function Header() {
               MERN stack app with Vite, Tailwind, & Typescript. Utilizing
               openAI's GPT-3, Whisper, & Dall-e to create some fun content.
             </p>
+            <h3 className="mt-3">
+              Extended from JavaScript Mastery tutorial:{" "}
+              <a
+                className="text-[#148cf5] text-[16px]"
+                href="https://www.youtube.com/watch?v=EyIvuigqDoA"
+                target="_blank"
+              >
+                Link
+              </a>
+            </h3>
           </div>
           <div className="mt-4">
             <ul style={{ listStyleType: "disc", padding: 20 }}>
