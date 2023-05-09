@@ -4,12 +4,22 @@ import { useState, useEffect } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import Modal from "react-modal";
 import { Link } from "react-router-dom";
+import { fetchPosts } from "../lib/api";
+import { debounce } from "lodash";
 
 Modal.setAppElement("#root");
 
-const RenderCards = ({ data, title }) => {
+const RenderCards = ({ data, title, postsLoading }) => {
+  if (postsLoading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
+
   if (data?.length > 0) {
-    return data.map((post) => <SinglePhotoCard key={post._id} {...post} />);
+    return data.map((post, i) => <SinglePhotoCard key={i} {...post} />);
   }
 
   return (
@@ -18,7 +28,11 @@ const RenderCards = ({ data, title }) => {
 };
 
 const Home = () => {
+  //master page loading
   const [loading, setLoading] = useState(false);
+
+  const [postsLoading, setPostsLoading] = useState(false);
+
   const [showLoadingMsg, setShowLoadingMsg] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
@@ -26,39 +40,24 @@ const Home = () => {
 
   const [allPosts, setAllPosts] = useState(null);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchMorePosts = (currPg, totalPgs) => {
+    if (currPg < totalPgs) {
+      setPostsLoading(true);
+      fetchPosts(currentPage + 1, 10)
+        .then((result) => {
+          setAllPosts((prev) => [...prev, ...result.data]);
+          setCurrentPage(result.currentPage);
+          setTotalPages(result.totalPages);
+        })
+        .finally(() => {
+          setPostsLoading(false);
         });
-
-        if (res.ok) {
-          const result = await res.json();
-          setAllPosts(result.data.reverse());
-        }
-      } catch (error) {
-        alert(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (loading) {
-        setShowLoadingMsg(true);
-      }
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [loading]);
+    }
+  };
 
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
@@ -75,6 +74,49 @@ const Home = () => {
       }, 500)
     );
   };
+
+  useEffect(() => {
+    const fetchPostWrapper = async () => {
+      try {
+        setLoading(true);
+        const result = await fetchPosts(currentPage, 10);
+        return result;
+      } catch (err) {
+        alert(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPostWrapper().then((result) => {
+      setAllPosts(result.data);
+      setCurrentPage(1);
+      setTotalPages(result.totalPages);
+    });
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loading) {
+        setShowLoadingMsg(true);
+      }
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [loading]);
+
+  const handleScroll = debounce(() => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight - 5
+    ) {
+      fetchMorePosts(currentPage, totalPages);
+    }
+  }, 1000);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [currentPage, totalPages]);
 
   return (
     <section className="max-w-7xl mx-auto">
@@ -106,7 +148,7 @@ const Home = () => {
           <div className="flex items-center justify-center flex-col">
             {showLoadingMsg && (
               <h3 className="mb-4 font-extrabold text-[#222328] text-[32px]">
-                Sorry free database 😄... few more seconds!{" "}
+                Sorry free database 😄... few more seconds (20)!{" "}
               </h3>
             )}
             <Loader />
@@ -124,6 +166,7 @@ const Home = () => {
                 <RenderCards
                   data={searchedResults}
                   title="No Search Results Found"
+                  postsLoading={postsLoading}
                 />
               ) : (
                 <RenderCards data={allPosts} title="No Posts Yet" />
