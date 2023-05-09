@@ -13,7 +13,6 @@ import TabComponent from "../components/TabComponent";
 import RandomPrompt from "../components/promptTypes/RandomPrompt";
 import GptPrompt from "../components/promptTypes/GptPrompt";
 import WhisperPrompt from "../components/promptTypes/WhisperPrompt";
-import { create } from "domain";
 
 const initialErrorObj = { name: false, prompt: false };
 

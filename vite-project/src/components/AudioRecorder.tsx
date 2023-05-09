@@ -3,6 +3,7 @@ import Button from "./Button";
 import { uploadAudioFile } from "../lib/api";
 import { useTimer } from "../hooks/useTimer";
 import Card from "./Card";
+import { Loader } from ".";
 
 const mimeType = "audio/webm";
 const LoadingEnum = {
@@ -109,28 +110,36 @@ const AudioRecorder = ({
             controls
             src={audioUrl}
           />
-          <Button
-            className="mt-3 mr-3"
-            type="button"
-            disabled={
-              isUploaded === LoadingEnum.loading ||
-              isUploaded === LoadingEnum.success
-            }
-            onClick={handleUpload}
-          >
-            {isUploaded === LoadingEnum.loading ? "Upload..." : "Upload"}
-          </Button>
+          <div className="mt-3 flex justify-center items-end">
+            <Button
+              className="mt-3 mr-3"
+              type="button"
+              disabled={
+                isUploaded === LoadingEnum.loading ||
+                isUploaded === LoadingEnum.success
+              }
+              onClick={handleUpload}
+            >
+              {isUploaded === LoadingEnum.loading ? (
+                <div>
+                  <Loader size={7} />
+                </div>
+              ) : (
+                "Upload"
+              )}
+            </Button>
 
-          <Button
-            className="ml-3"
-            intent={
-              isUploaded === LoadingEnum.success ? "primary" : "secondary"
-            }
-            type="button"
-            onClick={handleRetryAudioRecord}
-          >
-            Retry
-          </Button>
+            <Button
+              className="ml-3"
+              intent={
+                isUploaded === LoadingEnum.success ? "primary" : "secondary"
+              }
+              type="button"
+              onClick={handleRetryAudioRecord}
+            >
+              Retry
+            </Button>
+          </div>
           {/* <a download href={audioUrl}>
             {" "}
             download{" "}
