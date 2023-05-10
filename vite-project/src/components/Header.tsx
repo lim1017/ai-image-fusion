@@ -52,7 +52,7 @@ export default function Header() {
               <li className="mt-4">Audio recording/upload</li>
               <li className="mt-4">Twilio Image Sharing</li>
               <li className="mt-4">Pagination</li>
-              <li className="mt-4">More to come...</li>
+              <li className="mt-4">Prompt Engineering</li>
               {/* <li className="mt-4">Code Splitting</li> */}
             </ul>
           </div>

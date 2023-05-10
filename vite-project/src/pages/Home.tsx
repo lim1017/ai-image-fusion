@@ -160,7 +160,7 @@ const Home = () => {
                 Sorry free database 😄... Sometimes it needs a refresh.{" "}
               </h3>
             )}
-            <Loader />
+            <Loader size={16} />
           </div>
         ) : (
           <>

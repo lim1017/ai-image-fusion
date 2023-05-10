@@ -20,10 +20,18 @@ router.route("/").post(async (req, res) => {
   try {
     const { chips } = req.body;
 
+    const words = chips.join();
+
     const gptRes = await openai.createCompletion({
       model: "text-curie-001",
-      prompt: `I will give you an array of words. use all the words in the array to build a sentence describing an image.  Number of words in the sentence should be less then 5x the length of the array.   
-      array= ${JSON.stringify(chips)}`,
+      prompt: `
+      Perform the following action:
+      Use the list of words delimited by triple asterisk. 
+      Generate a sentence containing all of these words that describe an image.  
+      
+      restrictions: The sentence should not start with things, such as "an image of" or "this image".
+
+      words: ***${words}***`,
       temperature: 0.9,
       max_tokens: 60,
       n: 1,
@@ -33,10 +41,7 @@ router.route("/").post(async (req, res) => {
 
     res.status(200).json(prompt);
   } catch (error) {
-    console.log(
-      error?.response.data.error.message,
-      "open ai ERRORRRRRRRRRRRRRRRRRRRRR"
-    );
+    console.log(error, "open ai ERRORRRRRRRRRRRRRRRRRRRRR");
     res.status(500).send(error?.response.data.error.message);
   }
 });

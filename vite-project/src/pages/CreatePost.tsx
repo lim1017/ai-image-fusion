@@ -120,6 +120,7 @@ const Page2 = () => {
   const handleAskGpt = async () => {
     try {
       setGptLoading(true);
+
       const res = await getGptPrompt(chips);
 
       setForm({ ...form, prompt: removeTextBeforeColon(res.trim()) });
