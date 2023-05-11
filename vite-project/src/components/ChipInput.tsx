@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { Chip } from "@mui/material";
 import Input from "./Input";
 import Countdown from "./Countdown";
-import { Loader } from ".";
+import MuiLoader from "./MuiLoader";
+
 interface ChipInputProps {
   labelName: string;
   name: string;
@@ -66,7 +67,7 @@ const ChipInput = ({
           className="font-semibold text-xs bg-[#6469ff] py-1 px-2 rounded-[5px] text-black disabled:opacity-50 disabled:bg-gray-300"
         >
           {gptLoading ? (
-            <Loader size={4} />
+            <MuiLoader size={12} thickness={4} />
           ) : (
             <Countdown seconds={timer}>Ask Gpt</Countdown>
           )}

@@ -3,7 +3,7 @@ import Input from "./Input";
 import { ShareOptions } from "./ShareComponent";
 import Card from "./Card";
 import Button from "./Button";
-import { Loader } from ".";
+import MuiLoader from "./MuiLoader";
 
 interface ShareFormProps {
   mode: ShareOptions | undefined;
@@ -109,7 +109,7 @@ const ShareForm = ({
           )}
           <div className="mt-4">
             <Button type="submit" intent="primary" className="mr-1">
-              {loading ? <Loader size={7} /> : "Send"}
+              {loading ? <MuiLoader /> : "Send"}
             </Button>
 
             <Button onClick={closeModal} intent="secondary" className="ml-1">
