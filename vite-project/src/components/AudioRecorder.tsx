@@ -3,8 +3,7 @@ import Button from "./Button";
 import { uploadAudioFile } from "../lib/api";
 import { useTimer } from "../hooks/useTimer";
 import Card from "./Card";
-import { Loader } from ".";
-
+import MuiLoader from "./MuiLoader";
 const mimeType = "audio/webm";
 const LoadingEnum = {
   idle: "idle",
@@ -122,7 +121,7 @@ const AudioRecorder = ({
             >
               {isUploaded === LoadingEnum.loading ? (
                 <div>
-                  <Loader size={7} />
+                  <MuiLoader />
                 </div>
               ) : (
                 "Upload"
