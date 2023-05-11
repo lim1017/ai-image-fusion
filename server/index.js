@@ -16,6 +16,8 @@ import whisperRoutes from "./routes/whisperRoutes.js";
 
 const app = express();
 
+const args = process.argv.slice(2);
+
 //serves static files from public folder
 app.use(express.static("public"));
 
@@ -34,17 +36,6 @@ app.use(
 dotenv.config();
 
 app.use(cors());
-
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:5173",
-//       "https://ai-image-tom.netlify.app/",
-//       "http://ai-image-tom.netlify.app/",
-//     ],
-//     credentials: true,
-//   })
-// );
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -69,7 +60,19 @@ app.get("/", async (req, res) => {
 const startServer = async () => {
   try {
     connectDB(process.env.MONGO_DB_URL);
-    app.listen(8080, () => console.log("Server started on port 8080"));
+
+    if (args.includes("--env=production")) {
+      console.log("Running in production mode!");
+      console.log(args);
+      app.listen(process.env.PORT, "0.0.0.0", () =>
+        console.log(`Server started on port ${process.env.PORT}`)
+      );
+    } else {
+      console.log("not in production");
+      app.listen(process.env.PORT, () =>
+        console.log(`Server started on port ${process.env.PORT}`)
+      );
+    }
   } catch (error) {
     console.log(error);
   }
