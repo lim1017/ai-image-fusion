@@ -61,14 +61,12 @@ const startServer = async () => {
   try {
     connectDB(process.env.MONGO_DB_URL);
 
-    if (args.includes("--env=production")) {
-      console.log("Running in production mode!");
-      console.log(args);
-      app.listen(process.env.PORT, "0.0.0.0", () =>
-        console.log(`Server started on port ${process.env.PORT}`)
+    if (process.env.NODE_ENV === "development") {
+      app.listen(8080, () =>
+        console.log(`Server started on port 8080, in development mode`)
       );
     } else {
-      console.log("not in production");
+      console.log("production");
       app.listen(process.env.PORT, () =>
         console.log(`Server started on port ${process.env.PORT}`)
       );
