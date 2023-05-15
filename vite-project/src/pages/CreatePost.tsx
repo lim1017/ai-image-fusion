@@ -13,11 +13,15 @@ import TabComponent from "../components/TabComponent";
 import RandomPrompt from "../components/promptTypes/RandomPrompt";
 import GptPrompt from "../components/promptTypes/GptPrompt";
 import WhisperPrompt from "../components/promptTypes/WhisperPrompt";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SinglePost, postData } from "../lib/types";
+import MuiLoader from "../components/MuiLoader";
 
 const initialErrorObj = { name: false, prompt: false };
 
 const Page2 = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { isOpen, openModal, closeModal } = useModal();
 
   const [form, setForm] = useState({
@@ -31,7 +35,6 @@ const Page2 = () => {
   const [generatingImg, setGeneratingImg] = useState(false);
 
   const [gptLoading, setGptLoading] = useState(false);
-  const [loading, setLoading] = useState(false); //submit loading
 
   const [chips, setChips] = useState<string[]>([]);
 
@@ -70,6 +73,22 @@ const Page2 = () => {
     }
   };
 
+  const { mutate, isLoading } = useMutation<SinglePost, unknown, postData>(
+    (newData: postData) => createPost(newData),
+    {
+      onSuccess: () => {
+        //@ts-expect-error passing in an array does not work
+        queryClient.invalidateQueries("posts");
+      },
+      onSettled: () => {
+        navigate("/");
+      },
+      onError(error) {
+        alert(error);
+      },
+    }
+  );
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -81,21 +100,11 @@ const Page2 = () => {
     }
 
     if (form.photo && form.prompt) {
-      setLoading(true);
-
-      try {
-        await createPost({
-          name: form.name,
-          prompt: form.prompt,
-          photo: form.photo,
-        });
-
-        navigate("/");
-      } catch (err) {
-        alert(err);
-      } finally {
-        setLoading(false);
-      }
+      mutate({
+        name: form.name,
+        prompt: form.prompt,
+        photo: form.photo,
+      });
     } else {
       alert("Please enter a prompt and generate an image");
     }
@@ -245,12 +254,12 @@ const Page2 = () => {
             others in the community **
           </p>
           <Button
-            disabled={loading}
+            disabled={isLoading}
             type="submit"
             intent="primary"
             className="mt-3 "
           >
-            {loading ? "Sharing..." : "Share with the Community"}
+            {isLoading ? <MuiLoader /> : "Share with the Community"}
           </Button>
         </div>
       </form>

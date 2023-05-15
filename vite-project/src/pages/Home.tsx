@@ -1,23 +1,22 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
 import { useState, useEffect } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import Modal from "react-modal";
 import { Link } from "react-router-dom";
 import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import { PostsResponse, SinglePost } from "../lib/types";
 
 Modal.setAppElement("#root");
 
 interface RenderCardsProp {
-  data: any;
+  data: SinglePost[] | null;
   title: string;
   postsLoading: boolean;
 }
 
 const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
-  if (data?.length > 0) {
+  if (data && data?.length > 0) {
     return (
       <>
         {data.map((post, i) => (
@@ -38,32 +37,39 @@ const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
 };
 
 const Home = () => {
-  //master page loading
-
   const [searchText, setSearchText] = useState("");
-  const [searchTimeout, setSearchTimeout] = useState(null);
-  const [searchedResults, setSearchedResults] = useState(null);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
+  const [searchedResults, setSearchedResults] = useState<null | SinglePost[]>(
+    null
+  );
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    isLoading,
-  } = useInfiniteQuery({
-    querryKey: ["posts"],
-    queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
-        return lastPage.currentPage + 1;
-      } else {
-        return undefined;
-      }
-    },
-  });
-
-  const allPostsz = data?.pages.flatMap((page) => page.data) ?? [];
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery<PostsResponse>({
+      //@ts-expect-error - need to fix
+      querryKey: ["posts"],
+      queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
+      getNextPageParam: (lastPage, allPages) => {
+        if (
+          lastPage.currentPage !== undefined &&
+          lastPage.totalPages !== undefined
+        ) {
+          if (lastPage.currentPage < lastPage.totalPages) {
+            return lastPage.currentPage + 1;
+          }
+        } else {
+          return undefined;
+        }
+      },
+      onError(err) {
+        console.log(err);
+        alert("Opps Something went wrong, Please try again later");
+      },
+    });
+  console.log(data);
+  const postData = data as InfiniteData<PostsResponse>;
+  const allPostsz = postData.pages.flatMap((page) => page.data) ?? [];
 
   const fetchMorePosts = () => {
     if (hasNextPage) {
@@ -71,8 +77,9 @@ const Home = () => {
     }
   };
 
-  const handleSearchChange = (e) => {
-    clearTimeout(searchTimeout);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+
     setSearchText(e.target.value);
 
     setSearchTimeout(
