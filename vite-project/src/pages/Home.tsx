@@ -50,7 +50,7 @@ const Home = () => {
       //@ts-expect-error - need to fix
       querryKey: ["posts"],
       queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
-      getNextPageParam: (lastPage, allPages) => {
+      getNextPageParam: (lastPage) => {
         if (
           lastPage.currentPage !== undefined &&
           lastPage.totalPages !== undefined
@@ -67,7 +67,6 @@ const Home = () => {
         alert("Opps Something went wrong, Please try again later");
       },
     });
-  console.log(data);
   const postData = data as InfiniteData<PostsResponse>;
   const allPostsz = postData.pages.flatMap((page) => page.data) ?? [];
 
