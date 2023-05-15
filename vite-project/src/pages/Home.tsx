@@ -68,7 +68,7 @@ const Home = () => {
       },
     });
   const postData = data as InfiniteData<PostsResponse>;
-  const allPostsz = postData.pages.flatMap((page) => page.data) ?? [];
+  const allPostsz = postData?.pages.flatMap((page) => page.data) ?? [];
 
   const fetchMorePosts = () => {
     if (hasNextPage) {
