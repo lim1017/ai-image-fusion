@@ -17,9 +17,11 @@ export const createPost = async (data: postData) => {
   }
 };
 
-export const fetchPosts = async (page = 1, limit = 8) => {
+export const fetchPosts = async ({ pageParam = 1, pageSize = 8 }) => {
   const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/v1/post?page=${page}&limit=${limit}`,
+    `${
+      import.meta.env.VITE_API_URL
+    }/api/v1/post?page=${pageParam}&limit=${pageSize}`,
     {
       method: "GET",
       headers: {

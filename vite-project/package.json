@@ -13,6 +13,7 @@
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@mui/material": "^5.12.3",
+    "@tanstack/react-query": "^4.29.5",
     "@types/twilio": "^3.19.3",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",

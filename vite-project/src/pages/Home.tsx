@@ -1,11 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck  TODO types later
+//@ts-nocheck
 import { useState, useEffect } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import Modal from "react-modal";
 import { Link } from "react-router-dom";
 import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 Modal.setAppElement("#root");
 
@@ -38,33 +39,35 @@ const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
 
 const Home = () => {
   //master page loading
-  const [loading, setLoading] = useState(false);
 
-  const [postsLoading, setPostsLoading] = useState(false);
-
-  const [showLoadingMsg, setShowLoadingMsg] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState(null);
 
-  const [allPosts, setAllPosts] = useState(null);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    isLoading,
+  } = useInfiniteQuery({
+    querryKey: ["posts"],
+    queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1;
+      } else {
+        return undefined;
+      }
+    },
+  });
 
-  //pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const allPostsz = data?.pages.flatMap((page) => page.data) ?? [];
 
   const fetchMorePosts = () => {
-    if (currentPage < totalPages) {
-      setPostsLoading(true);
-      fetchPosts(currentPage + 1, 10)
-        .then((result) => {
-          setAllPosts((prev) => [...prev, ...result.data]);
-          setCurrentPage(result.currentPage);
-          setTotalPages(result.totalPages);
-        })
-        .finally(() => {
-          setPostsLoading(false);
-        });
+    if (hasNextPage) {
+      fetchNextPage();
     }
   };
 
@@ -74,7 +77,7 @@ const Home = () => {
 
     setSearchTimeout(
       setTimeout(() => {
-        const searchResult = allPosts.filter(
+        const searchResult = allPostsz.filter(
           (item) =>
             item.name.toLowerCase().includes(searchText.toLowerCase()) ||
             item.prompt.toLowerCase().includes(searchText.toLowerCase())
@@ -83,35 +86,6 @@ const Home = () => {
       }, 500)
     );
   };
-
-  useEffect(() => {
-    const fetchPostWrapper = async () => {
-      try {
-        setLoading(true);
-        const result = await fetchPosts(currentPage, 10);
-        return result;
-      } catch (err) {
-        alert(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPostWrapper().then((result) => {
-      setAllPosts(result.data);
-      setCurrentPage(1);
-      setTotalPages(result.totalPages);
-    });
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (loading) {
-        setShowLoadingMsg(true);
-      }
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [loading]);
 
   const handleScroll = debounce(() => {
     if (
@@ -125,7 +99,7 @@ const Home = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [currentPage, totalPages]);
+  }, [hasNextPage]);
 
   return (
     <section className="max-w-7xl mx-auto">
@@ -153,13 +127,8 @@ const Home = () => {
       </div>
 
       <div className="mt-10">
-        {loading ? (
+        {isLoading ? (
           <div className="flex items-center justify-center flex-col">
-            {showLoadingMsg && (
-              <h3 className="mb-4 font-extrabold text-[#222328] text-[32px]">
-                Sorry free database 😄... Sometimes it needs a refresh.{" "}
-              </h3>
-            )}
             <Loader />
           </div>
         ) : (
@@ -175,12 +144,12 @@ const Home = () => {
                 <RenderCards
                   data={searchedResults}
                   title="No Search Results Found"
-                  postsLoading={postsLoading}
+                  postsLoading={isFetchingNextPage}
                 />
               ) : (
                 <RenderCards
-                  postsLoading={postsLoading}
-                  data={allPosts}
+                  postsLoading={isFetchingNextPage}
+                  data={allPostsz}
                   title="No Posts Yet"
                 />
               )}
