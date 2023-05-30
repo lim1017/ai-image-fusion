@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import SimpleModal from "./Modal";
 import { useModal } from "../hooks/useModal";
-import PaypalBtn from "./PaypalBtn";
+import LoginButton from "./LoginButton";
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutButton from "./LogoutButton";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
-
+  const { isAuthenticated, user } = useAuth0();
+  console.log({ user, isAuthenticated });
   return (
     <>
       <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
@@ -19,12 +22,13 @@ export default function Header() {
           <Button className="ml-2" intent="action" onClick={openModal}>
             About
           </Button>
-          <PaypalBtn />
         </div>
-
-        <Link to="/create-post">
-          <Button intent="primary">Create</Button>
-        </Link>
+        <div>
+          {isAuthenticated ? <LogoutButton /> : <LoginButton />}
+          <Link to="/create-post" className="ml-4">
+            <Button intent="primary">Create</Button>
+          </Link>
+        </div>
       </header>
       <SimpleModal isOpen={isOpen} closeModal={closeModal}>
         <div>

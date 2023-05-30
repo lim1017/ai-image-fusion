@@ -38,6 +38,12 @@ const buttonClasses = cva(
           "border-transparent",
           "hover:bg-gray-400",
         ],
+        alt: [
+          "bg-yellow-400",
+          "text-black",
+          "border-transparent",
+          "hover:bg-yellow-300",
+        ],
         error: [
           "bg-red-600",
           "text-white",
