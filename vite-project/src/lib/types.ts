@@ -2,6 +2,7 @@ export interface postData {
   name: string;
   prompt: string;
   photo: string;
+  email: string;
 }
 
 export interface SinglePost extends postData {

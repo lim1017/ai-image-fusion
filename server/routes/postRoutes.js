@@ -46,15 +46,16 @@ router.route("/").get(async (req, res) => {
 
 router.route("/").post(async (req, res) => {
   try {
-    const { name, prompt, photo } = req.body;
-
-    // const photoURL = await cloudinary.uploader.upload(photo);
-
-    // const newPost = await Post.create({ name, prompt, photo: photoURL.url });
+    const { name, prompt, photo, email } = req.body;
 
     const photoURL = await cloudinary.uploader.upload(photo, { secure: true });
     const securePhotoURL = photoURL.url.replace("http://", "https://");
-    const newPost = await Post.create({ name, prompt, photo: securePhotoURL });
+    const newPost = await Post.create({
+      name,
+      prompt,
+      photo: securePhotoURL,
+      email,
+    });
 
     res.status(201).json({ success: true, data: newPost });
   } catch (err) {

@@ -10,8 +10,7 @@ import LogoutButton from "./LogoutButton";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
-  const { isAuthenticated, user } = useAuth0();
-  console.log({ user, isAuthenticated });
+  const { isAuthenticated } = useAuth0();
   return (
     <>
       <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">

@@ -16,18 +16,22 @@ import WhisperPrompt from "../components/promptTypes/WhisperPrompt";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SinglePost, postData } from "../lib/types";
 import MuiLoader from "../components/MuiLoader";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const initialErrorObj = { name: false, prompt: false };
 
 const Page2 = () => {
+  const { user } = useAuth0();
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isOpen, openModal, closeModal } = useModal();
 
   const [form, setForm] = useState({
-    name: "",
+    name: user?.nickname || "",
     prompt: "",
     photo: "",
+    email: user?.email || "",
   });
 
   const [errors, setErrors] = useState(initialErrorObj);
@@ -104,6 +108,7 @@ const Page2 = () => {
         name: form.name,
         prompt: form.prompt,
         photo: form.photo,
+        email: form.email,
       });
     } else {
       alert("Please enter a prompt and generate an image");
@@ -174,6 +179,7 @@ const Page2 = () => {
             value={form.name}
             handleChange={handleChange}
             error={errors.name}
+            disabled={user?.nickname ? true : false}
           />
 
           <TabComponent

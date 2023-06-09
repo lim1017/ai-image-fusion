@@ -18,14 +18,14 @@ const queryClient = new QueryClient({
 const App = () => {
   return (
     <div>
-      <BrowserRouter>
-        <Auth0Provider
-          domain={import.meta.env.VITE_AUTH0_DOMAIN}
-          clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
-          authorizationParams={{
-            redirect_uri: window.location.origin,
-          }}
-        >
+      <Auth0Provider
+        domain={import.meta.env.VITE_AUTH0_DOMAIN}
+        clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+        authorizationParams={{
+          redirect_uri: window.location.origin,
+        }}
+      >
+        <BrowserRouter>
           <QueryClientProvider client={queryClient}>
             <Header />
             <main className="sm:p-8 px-4 py-8 w-full bg-[#f9fafe] min-h-[calc(100vh-73px)]">
@@ -35,8 +35,8 @@ const App = () => {
               </Routes>
             </main>
           </QueryClientProvider>
-        </Auth0Provider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </Auth0Provider>
     </div>
   );
 };
