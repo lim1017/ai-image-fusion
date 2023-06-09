@@ -6,13 +6,24 @@ import SimpleModal from "./Modal";
 import { useModal } from "../hooks/useModal";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
-import LogoutButton from "./LogoutButton";
 import DropdownMenu from "./DropdownMenu";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
   const { isAuthenticated, user } = useAuth0();
   console.log(user);
+
+  const userOptions = [
+    {
+      label: "My Posts",
+      onClick: () => console.log("My Posts"),
+    },
+    {
+      label: "Favourites",
+      onClick: () => console.log("Favourites"),
+    },
+  ];
+
   return (
     <>
       <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
@@ -28,7 +39,11 @@ export default function Header() {
           <Link to="/create-post" className="mr-4">
             <Button intent="primary">Create</Button>
           </Link>
-          {isAuthenticated ? <DropdownMenu /> : <LoginButton />}
+          {isAuthenticated ? (
+            <DropdownMenu options={userOptions} />
+          ) : (
+            <LoginButton />
+          )}
         </div>
       </header>
       <SimpleModal isOpen={isOpen} closeModal={closeModal}>
