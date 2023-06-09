@@ -7,10 +7,12 @@ import { useModal } from "../hooks/useModal";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import LogoutButton from "./LogoutButton";
+import DropdownMenu from "./DropdownMenu";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, user } = useAuth0();
+  console.log(user);
   return (
     <>
       <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
@@ -23,10 +25,10 @@ export default function Header() {
           </Button>
         </div>
         <div>
-          {isAuthenticated ? <LogoutButton /> : <LoginButton />}
-          <Link to="/create-post" className="ml-4">
+          <Link to="/create-post" className="mr-4">
             <Button intent="primary">Create</Button>
           </Link>
+          {isAuthenticated ? <DropdownMenu /> : <LoginButton />}
         </div>
       </header>
       <SimpleModal isOpen={isOpen} closeModal={closeModal}>
@@ -49,14 +51,17 @@ export default function Header() {
             </h3>
           </div>
           <div className="mt-4">
-            <ul style={{ listStyleType: "disc", padding: 20 }}>
-              <li className="mt-4">OpenAI's API</li>
-              <li className="mt-4">Twilio API</li>
-              <li className="mt-4">Upload/Storage/Serving Images</li>
-              <li className="mt-4">Audio recording/upload</li>
-              <li className="mt-4">Pagination</li>
-              <li className="mt-4">Prompt Engineering</li>
-              <li className="mt-4">React Query</li>
+            <ul
+              className="ul-about"
+              style={{ listStyleType: "disc", padding: 20 }}
+            >
+              <li className="mt-4 li-about">OpenAI's API</li>
+              <li className="mt-4 li-about">Twilio API</li>
+              <li className="mt-4 li-about">Upload/Storage/Serving Images</li>
+              <li className="mt-4 li-about">Audio recording/upload</li>
+              <li className="mt-4 li-about">Pagination</li>
+              <li className="mt-4 li-about">Prompt Engineering</li>
+              <li className="mt-4 li-about">React Query</li>
             </ul>
           </div>
         </div>
