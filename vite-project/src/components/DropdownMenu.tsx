@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import LogoutButton from "./LogoutButton";
 import { Link } from "react-router-dom";
 
@@ -11,14 +11,17 @@ interface DropdownMenuProps {
 
 const DropdownMenu = ({ options }: DropdownMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
       setIsOpen(false);
     }
   };
@@ -47,10 +50,7 @@ const DropdownMenu = ({ options }: DropdownMenuProps) => {
               return (
                 <li key={option.label}>
                   <Link to={`/${option.linkTo}`} className="mr-2">
-                    <button
-                      className="block text-left w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
-                      onClick={option.onClick}
-                    >
+                    <button className="block text-left w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
                       {option.label}
                     </button>
                   </Link>

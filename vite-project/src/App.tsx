@@ -1,5 +1,5 @@
 import "./App.css";
-
+import { useNavigate } from "react-router-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home, CreatePost } from "./pages";
 import Header from "./components/Header";
@@ -17,6 +17,12 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  const navigate = useNavigate();
+
+  const handleRedirectCallback = (appState: any) => {
+    navigate(appState?.returnTo || "/");
+  };
+
   return (
     <div>
       <Auth0Provider
@@ -25,19 +31,18 @@ const App = () => {
         authorizationParams={{
           redirect_uri: window.location.origin,
         }}
+        onRedirectCallback={handleRedirectCallback}
       >
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <Header />
-            <main className="sm:p-8 px-4 py-8 w-full bg-[#f9fafe] min-h-[calc(100vh-73px)]">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/create-post" element={<CreatePost />} />
-                <Route path="/my-posts" element={<MyPostsAndFavourite />} />
-              </Routes>
-            </main>
-          </QueryClientProvider>
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <Header />
+          <main className="sm:p-8 px-4 py-8 w-full bg-[#f9fafe] min-h-[calc(100vh-73px)]">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/my-posts" element={<MyPostsAndFavourite />} />
+            </Routes>
+          </main>
+        </QueryClientProvider>
       </Auth0Provider>
     </div>
   );

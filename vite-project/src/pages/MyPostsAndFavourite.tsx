@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Loader, SinglePhotoCard, FormField } from "../components";
+import { Loader, FormField } from "../components";
 import Modal from "react-modal";
 
 import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-import { PostsResponse, SinglePost } from "../lib/types";
+import { SinglePost } from "../lib/types";
 import { RenderCards } from "./Home";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -39,13 +38,11 @@ const MyPostsAndFavourite = () => {
         alert(`${err} askdfskajdfh`);
       } finally {
         setIsLoading(false);
-        console.log("done normal fetch");
       }
     };
 
     fetchPostWrapper().then((result) => {
       setUserPosts(result.data);
-      console.log(result.data);
     });
   }, []);
 
