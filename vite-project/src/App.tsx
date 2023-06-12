@@ -5,6 +5,7 @@ import { Home, CreatePost } from "./pages";
 import Header from "./components/Header";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Auth0Provider } from "@auth0/auth0-react";
+import MyPostsAndFavourite from "./pages/MyPostsAndFavourite";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create-post" element={<CreatePost />} />
+                <Route path="/my-posts" element={<MyPostsAndFavourite />} />
               </Routes>
             </main>
           </QueryClientProvider>

@@ -16,11 +16,11 @@ export default function Header() {
   const userOptions = [
     {
       label: "My Posts",
-      onClick: () => console.log("My Posts"),
+      linkTo: "my-posts",
     },
     {
       label: "Favourites",
-      onClick: () => console.log("Favourites"),
+      linkTo: "favourites",
     },
   ];
 

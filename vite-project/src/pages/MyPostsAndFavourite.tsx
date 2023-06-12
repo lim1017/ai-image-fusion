@@ -1,42 +1,22 @@
 import { useState, useEffect } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import Modal from "react-modal";
-import { Link } from "react-router-dom";
+
 import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, SinglePost } from "../lib/types";
+import { RenderCards } from "./Home";
+import { useAuth0 } from "@auth0/auth0-react";
 
 Modal.setAppElement("#root");
 
-interface RenderCardsProp {
-  data: SinglePost[] | null;
-  title: string;
-  postsLoading: boolean;
-}
+const MyPostsAndFavourite = () => {
+  const { user } = useAuth0();
 
-export const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
-  if (data && data?.length > 0) {
-    return (
-      <>
-        {data.map((post, i) => (
-          <SinglePhotoCard key={i} {...post} />
-        ))}
-        {postsLoading && (
-          <div className="flex justify-center items-center">
-            <Loader />
-          </div>
-        )}
-      </>
-    );
-  }
+  const [userPosts, setUserPosts] = useState<SinglePost[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  return (
-    <h2 className="mt-5 font-bold text-[#6469ff] text-xl uppercase">{title}</h2>
-  );
-};
-
-const Home = () => {
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
     null
@@ -45,36 +25,29 @@ const Home = () => {
     null
   );
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery<PostsResponse>({
-      //@ts-expect-error - need to fix
-      querryKey: ["posts"],
-      queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
-      getNextPageParam: (lastPage) => {
-        if (
-          lastPage.currentPage !== undefined &&
-          lastPage.totalPages !== undefined
-        ) {
-          if (lastPage.currentPage < lastPage.totalPages) {
-            return lastPage.currentPage + 1;
-          }
-        } else {
-          return undefined;
-        }
-      },
-      onError(err) {
-        console.log(err);
-        alert("Opps Something went wrong, Please try again later");
-      },
-    });
-  const postData = data as InfiniteData<PostsResponse>;
-  const allPostsz = postData?.pages.flatMap((page) => page.data) ?? [];
+  useEffect(() => {
+    const fetchPostWrapper = async () => {
+      setIsLoading(true);
+      try {
+        const result = await fetchPosts({
+          pageParam: 1,
+          pageSize: 100,
+          userEmail: user?.email || "",
+        });
+        return result;
+      } catch (err) {
+        alert(`${err} askdfskajdfh`);
+      } finally {
+        setIsLoading(false);
+        console.log("done normal fetch");
+      }
+    };
 
-  const fetchMorePosts = () => {
-    if (hasNextPage) {
-      fetchNextPage();
-    }
-  };
+    fetchPostWrapper().then((result) => {
+      setUserPosts(result.data);
+      console.log(result.data);
+    });
+  }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (searchTimeout) clearTimeout(searchTimeout);
@@ -83,7 +56,7 @@ const Home = () => {
 
     setSearchTimeout(
       setTimeout(() => {
-        const searchResult = allPostsz.filter(
+        const searchResult = userPosts.filter(
           (item) =>
             item.name.toLowerCase().includes(searchText.toLowerCase()) ||
             item.prompt.toLowerCase().includes(searchText.toLowerCase())
@@ -98,27 +71,25 @@ const Home = () => {
       window.innerHeight + document.documentElement.scrollTop >=
       document.documentElement.offsetHeight - 100
     ) {
-      fetchMorePosts();
+      console.log("");
     }
   }, 500);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasNextPage]);
+  }, []);
 
   return (
     <section className="max-w-7xl mx-auto">
       <div className="flex justify-center flex-col">
-        <h1 className="font-extrabold text-[#222328] text-[32px]">
-          The Community Showcase
-        </h1>
-        <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
+        <h1 className="font-extrabold text-[#222328] text-[32px]">My Posts</h1>
+        {/* <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
           Three exciting ways to create an image... Try it out{" "}
         </h4>
         <Link className="font-inter font-medium" to="/create-post">
           HERE!
-        </Link>
+        </Link> */}
       </div>
 
       <div className="mt-16">
@@ -150,12 +121,12 @@ const Home = () => {
                 <RenderCards
                   data={searchedResults}
                   title="No Search Results Found"
-                  postsLoading={isFetchingNextPage}
+                  postsLoading={isLoading}
                 />
               ) : (
                 <RenderCards
-                  postsLoading={isFetchingNextPage}
-                  data={allPostsz}
+                  postsLoading={isLoading}
+                  data={userPosts}
                   title="No Posts Yet"
                 />
               )}
@@ -168,4 +139,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default MyPostsAndFavourite;

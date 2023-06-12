@@ -17,18 +17,25 @@ export const createPost = async (data: postData) => {
   }
 };
 
-export const fetchPosts = async ({ pageParam = 1, pageSize = 8 }) => {
-  const res = await fetch(
-    `${
-      import.meta.env.VITE_API_URL
-    }/api/v1/post?page=${pageParam}&limit=${pageSize}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+export const fetchPosts = async ({
+  pageParam = 1,
+  pageSize = 8,
+  userEmail = "",
+}) => {
+  let url = `${import.meta.env.VITE_API_URL}/api/v1/post`;
+
+  if (userEmail) {
+    url += `?userEmail=${userEmail}&page=${pageParam}&limit=${pageSize}`;
+  } else {
+    url += `?page=${pageParam}&limit=${pageSize}`;
+  }
+  console.log(url, "url");
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (res.ok) {
     const result = await res.json();

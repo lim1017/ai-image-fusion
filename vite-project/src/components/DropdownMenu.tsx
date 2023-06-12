@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import LogoutButton from "./LogoutButton";
+import { Link } from "react-router-dom";
 
 interface DropdownMenuProps {
   options: {
     label: string;
-    onClick: () => void;
+    linkTo: string;
   }[];
 }
 
@@ -45,12 +46,14 @@ const DropdownMenu = ({ options }: DropdownMenuProps) => {
             {options.map((option) => {
               return (
                 <li key={option.label}>
-                  <button
-                    className="block text-left w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    onClick={option.onClick}
-                  >
-                    {option.label}
-                  </button>
+                  <Link to={`/${option.linkTo}`} className="mr-2">
+                    <button
+                      className="block text-left w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      onClick={option.onClick}
+                    >
+                      {option.label}
+                    </button>
+                  </Link>
                 </li>
               );
             })}
