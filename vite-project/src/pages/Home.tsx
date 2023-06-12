@@ -47,8 +47,7 @@ const Home = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery<PostsResponse>({
-      //@ts-expect-error - need to fix
-      querryKey: ["posts"],
+      queryKey: ["posts"],
       queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
       getNextPageParam: (lastPage) => {
         if (
