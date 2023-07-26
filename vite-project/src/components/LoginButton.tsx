@@ -5,15 +5,16 @@ const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
   const location = useLocation();
 
-  const handleLogin = () => {
-    loginWithRedirect({
+  const handleLogin = async () => {
+    await loginWithRedirect({
       appState: { returnTo: location.pathname },
     });
+    console.log("after login");
   };
 
   return (
     <Button intent="alt" onClick={handleLogin}>
-      Log In
+      Log Ins
     </Button>
   );
 };
