@@ -13,34 +13,9 @@ import dalleRoutes from "./routes/dalleRoutes.js";
 import twilioRoutes from "./routes/twilioRoutes.js";
 import chatGptRoutes from "./routes/chatGptRoutes.js";
 import whisperRoutes from "./routes/whisperRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
-
-//auth stuff not used yet
-import auth0 from "express-openid-connect";
-
-const { auth, requiresAuth } = auth0;
-
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  baseURL: process.env.AUTH_URL,
-  clientID: process.env.AUTH_CLIENT_ID,
-  issuerBaseURL: "https://ai-images.us.auth0.com",
-  secret: "LONG_RANDOM_STRING",
-};
-
-// The `auth` router attaches /login, /logout
-// and /callback routes to the baseURL
-app.use(auth(config));
-
-// req.oidc.isAuthenticated is provided from the auth router
-app.get("/", (req, res) => {
-  console.log("in get");
-  res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-});
-
-//**************** */
 
 //serves static files from public folder
 app.use(express.static("public"));
@@ -68,6 +43,7 @@ app.use("/api/v1/dalle", dalleRoutes);
 app.use("/api/v1/twilio", twilioRoutes);
 app.use("/api/v1/gpt", chatGptRoutes);
 app.use("/api/v1/whisper", whisperRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 // Security headers
 app.use((req, res, next) => {

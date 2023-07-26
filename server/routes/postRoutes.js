@@ -37,9 +37,6 @@ router.route("/").get(async (req, res) => {
       .limit(limit);
 
     const userPosts = await Post.find().where("email", userEmail);
-    console.log(userPosts, "user postssssssssss");
-
-    console.log(posts, "original posts");
 
     const securePosts = posts.map((post) => {
       const securePhotoUrl = post.photo.replace("http://", "https://");

@@ -28,6 +28,7 @@ const App = () => {
         clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
         authorizationParams={{
           redirect_uri: window.location.origin,
+          audience: "ai-server",
         }}
         onRedirectCallback={handleRedirectCallback}
         cacheLocation="localstorage"

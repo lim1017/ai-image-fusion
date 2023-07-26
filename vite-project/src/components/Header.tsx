@@ -7,11 +7,41 @@ import { useModal } from "../hooks/useModal";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import DropdownMenu from "./DropdownMenu";
+import { useEffect } from "react";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
-  const { isAuthenticated, user } = useAuth0();
-  console.log(user);
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+
+  useEffect(() => {
+    const getToken = async () => {
+      try {
+        const accessToken = await getAccessTokenSilently();
+        console.log(accessToken);
+        // Send the access token to your backend API
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/v1/auth`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Data received from the backend:", data);
+        } else {
+          console.log("Error response from the backend:", response.status);
+        }
+      } catch (e) {
+        console.log(e, "error");
+      }
+    };
+    if (isAuthenticated) getToken();
+  }, [getAccessTokenSilently, isAuthenticated, user]);
 
   const userOptions = [
     {
