@@ -45,13 +45,13 @@
   color: #888;
 }
 
-ul {
+.ul-about {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-li {
+.li-about {
   flex-basis: calc(50% - 10px); /* Subtract the gap between columns */
   margin-bottom: 20px;
 }

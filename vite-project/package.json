@@ -10,15 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.1.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@mui/material": "^5.12.3",
+    "@react-oauth/google": "^0.11.0",
     "@tanstack/react-query": "^4.29.5",
     "@types/twilio": "^3.19.3",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "dotenv": "^16.0.3",
     "file-saver": "^2.0.5",
+    "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

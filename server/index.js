@@ -13,10 +13,9 @@ import dalleRoutes from "./routes/dalleRoutes.js";
 import twilioRoutes from "./routes/twilioRoutes.js";
 import chatGptRoutes from "./routes/chatGptRoutes.js";
 import whisperRoutes from "./routes/whisperRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
-
-const args = process.argv.slice(2);
 
 //serves static files from public folder
 app.use(express.static("public"));
@@ -35,7 +34,11 @@ app.use(
 
 dotenv.config();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -44,6 +47,7 @@ app.use("/api/v1/dalle", dalleRoutes);
 app.use("/api/v1/twilio", twilioRoutes);
 app.use("/api/v1/gpt", chatGptRoutes);
 app.use("/api/v1/whisper", whisperRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 // Security headers
 app.use((req, res, next) => {

@@ -4,10 +4,60 @@ import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import SimpleModal from "./Modal";
 import { useModal } from "../hooks/useModal";
-import PaypalBtn from "./PaypalBtn";
+import LoginButton from "./LoginButton";
+import { useAuth0 } from "@auth0/auth0-react";
+import DropdownMenu from "./DropdownMenu";
+// import { useEffect } from "react";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
+  const { isAuthenticated } = useAuth0();
+
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     console.log(user);
+  //     try {
+  //       const accessToken = await getAccessTokenSilently({
+  //         authorizationParams: {
+  //           audience: import.meta.env.VITE_AUTH0_AUDIANCE,
+  //           scope: "openid profile email read:users",
+  //         },
+  //       });
+  //       console.log(accessToken);
+  //       // Send the access token to your backend API
+  //       const response = await fetch(
+  //         `${import.meta.env.VITE_API_URL}/api/v1/auth`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
+
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log("Data received from the backend:", data);
+  //       } else {
+  //         console.log("Error response from the backend:", response.status);
+  //       }
+  //     } catch (e) {
+  //       console.log(e, "error");
+  //     }
+  //   };
+  //   if (isAuthenticated) getToken();
+  // }, [getAccessTokenSilently, isAuthenticated, user]);
+
+  const userOptions = [
+    {
+      label: "My Posts",
+      linkTo: "my-posts",
+    },
+    // {
+    //   label: "Favourites",
+    //   linkTo: "favourites",
+    // },
+  ];
 
   return (
     <>
@@ -19,12 +69,17 @@ export default function Header() {
           <Button className="ml-2" intent="action" onClick={openModal}>
             About
           </Button>
-          <PaypalBtn />
         </div>
-
-        <Link to="/create-post">
-          <Button intent="primary">Create</Button>
-        </Link>
+        <div>
+          <Link to="/create-post" className="mr-4">
+            <Button intent="primary">Create</Button>
+          </Link>
+          {isAuthenticated ? (
+            <DropdownMenu options={userOptions} />
+          ) : (
+            <LoginButton />
+          )}
+        </div>
       </header>
       <SimpleModal isOpen={isOpen} closeModal={closeModal}>
         <div>
@@ -46,14 +101,17 @@ export default function Header() {
             </h3>
           </div>
           <div className="mt-4">
-            <ul style={{ listStyleType: "disc", padding: 20 }}>
-              <li className="mt-4">OpenAI's API</li>
-              <li className="mt-4">Twilio API</li>
-              <li className="mt-4">Upload/Storage/Serving Images</li>
-              <li className="mt-4">Audio recording/upload</li>
-              <li className="mt-4">Pagination</li>
-              <li className="mt-4">Prompt Engineering</li>
-              <li className="mt-4">React Query</li>
+            <ul
+              className="ul-about"
+              style={{ listStyleType: "disc", padding: 20 }}
+            >
+              <li className="mt-4 li-about">OpenAI's API</li>
+              <li className="mt-4 li-about">Twilio API</li>
+              <li className="mt-4 li-about">Upload/Storage/Serving Images</li>
+              <li className="mt-4 li-about">Audio recording/upload</li>
+              <li className="mt-4 li-about">Pagination</li>
+              <li className="mt-4 li-about">Prompt Engineering</li>
+              <li className="mt-4 li-about">React Query</li>
             </ul>
           </div>
         </div>
