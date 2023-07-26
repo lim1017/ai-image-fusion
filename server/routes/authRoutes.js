@@ -54,24 +54,4 @@ router.get("/", checkJwt, async (req, res) => {
   // });
 });
 
-// router.get("/", checkJwt, async (req, res) => {
-//   console.log("in authRoute post!!!!!!!!!!!");
-
-//   const response = await axios.post(
-//     `https://ai-images2.us.auth0.com/oauth/token`,
-//     {
-//       headers: { "Content-Type": "application/json" },
-//       body: {
-//         client_id: "ksSSi4UaOeZeAafITqGf8mOpdOBGv9Bp",
-//         client_secret:
-//           "uzekkSQ07L5OgvkVxM_PWp1WeIoy-djZ_qKfLC_XBpmDdfy4f_YrrBia2TwGoxGL",
-//         audience: "https://ai-images2.us.auth0.com/api/v2/",
-//         grant_type: "client_credentials",
-//       },
-//     }
-//   );
-
-//   console.log(response.data, "RESPONSE DATA");
-// });
-
 export default router;
