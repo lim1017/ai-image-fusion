@@ -53,5 +53,4 @@
 
 .li-about {
   flex-basis: calc(50% - 10px); /* Subtract the gap between columns */
-  margin-bottom: 20px;
 }

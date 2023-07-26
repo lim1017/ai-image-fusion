@@ -7,9 +7,10 @@ interface DropdownMenuProps {
     label: string;
     linkTo: string;
   }[];
+  data?: any;
 }
 
-const DropdownMenu = ({ options }: DropdownMenuProps) => {
+const DropdownMenu = ({ options, data }: DropdownMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +34,7 @@ const DropdownMenu = ({ options }: DropdownMenuProps) => {
       window.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
+  console.log(data);
   return (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
@@ -46,9 +47,10 @@ const DropdownMenu = ({ options }: DropdownMenuProps) => {
       {isOpen && (
         <div>
           <ul className="absolute right-0 mt-2 py-2 bg-white border border-gray-300 rounded shadow-lg w-40">
+            <p className="p-2 mb-2">{data.nickname}</p>
             {options.map((option) => {
               return (
-                <li key={option.label}>
+                <li className="mb-1" key={option.label}>
                   <Link to={`/${option.linkTo}`} className="mr-2">
                     <button className="block text-left w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
                       {option.label}
@@ -58,7 +60,7 @@ const DropdownMenu = ({ options }: DropdownMenuProps) => {
               );
             })}
 
-            <li className="mt-3 mb-2">
+            <li className="mb-2">
               <LogoutButton />
             </li>
           </ul>

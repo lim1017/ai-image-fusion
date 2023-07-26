@@ -11,7 +11,7 @@ import DropdownMenu from "./DropdownMenu";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, user } = useAuth0();
 
   // useEffect(() => {
   //   const getToken = async () => {
@@ -75,7 +75,7 @@ export default function Header() {
             <Button intent="primary">Create</Button>
           </Link>
           {isAuthenticated ? (
-            <DropdownMenu options={userOptions} />
+            <DropdownMenu options={userOptions} data={user} />
           ) : (
             <LoginButton />
           )}
