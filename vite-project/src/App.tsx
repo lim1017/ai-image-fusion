@@ -26,9 +26,11 @@ const App = () => {
       <Auth0Provider
         domain={import.meta.env.VITE_AUTH0_DOMAIN}
         clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+        useRefreshTokens={false}
         authorizationParams={{
           redirect_uri: window.location.origin,
-          audience: "ai-server",
+          audience: import.meta.env.VITE_AUTH0_AUDIANCE,
+          scope: "openid profile email read:users",
         }}
         onRedirectCallback={handleRedirectCallback}
         cacheLocation="localstorage"

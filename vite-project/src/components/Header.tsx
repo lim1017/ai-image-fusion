@@ -7,51 +7,56 @@ import { useModal } from "../hooks/useModal";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import DropdownMenu from "./DropdownMenu";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
-  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated } = useAuth0();
 
-  useEffect(() => {
-    const getToken = async () => {
-      try {
-        const accessToken = await getAccessTokenSilently();
-        console.log(accessToken);
-        // Send the access token to your backend API
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/v1/auth`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     console.log(user);
+  //     try {
+  //       const accessToken = await getAccessTokenSilently({
+  //         authorizationParams: {
+  //           audience: import.meta.env.VITE_AUTH0_AUDIANCE,
+  //           scope: "openid profile email read:users",
+  //         },
+  //       });
+  //       console.log(accessToken);
+  //       // Send the access token to your backend API
+  //       const response = await fetch(
+  //         `${import.meta.env.VITE_API_URL}/api/v1/auth`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Data received from the backend:", data);
-        } else {
-          console.log("Error response from the backend:", response.status);
-        }
-      } catch (e) {
-        console.log(e, "error");
-      }
-    };
-    if (isAuthenticated) getToken();
-  }, [getAccessTokenSilently, isAuthenticated, user]);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log("Data received from the backend:", data);
+  //       } else {
+  //         console.log("Error response from the backend:", response.status);
+  //       }
+  //     } catch (e) {
+  //       console.log(e, "error");
+  //     }
+  //   };
+  //   if (isAuthenticated) getToken();
+  // }, [getAccessTokenSilently, isAuthenticated, user]);
 
   const userOptions = [
     {
       label: "My Posts",
       linkTo: "my-posts",
     },
-    {
-      label: "Favourites",
-      linkTo: "favourites",
-    },
+    // {
+    //   label: "Favourites",
+    //   linkTo: "favourites",
+    // },
   ];
 
   return (
