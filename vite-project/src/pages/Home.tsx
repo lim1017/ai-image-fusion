@@ -115,7 +115,10 @@ const Home = () => {
         <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
           Three exciting ways to create an image... Try it out{" "}
         </h4>
-        <Link className="font-inter font-medium" to="/create-post">
+        <Link
+          className="font-inter font-medium text-purple-500 text-[22px] hover:opacity-50"
+          to="/create-post"
+        >
           HERE!
         </Link>
       </div>
@@ -144,7 +147,7 @@ const Home = () => {
                 <span className="text-[#222328]">{searchText}</span>:
               </h2>
             )}
-            <div className="grid lg:grid-cols-3 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3">
+            <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
               {searchText ? (
                 <RenderCards
                   data={searchedResults}

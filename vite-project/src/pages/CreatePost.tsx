@@ -224,7 +224,7 @@ const Page2 = () => {
                 onClick={openModal}
                 src={form.photo}
                 alt={form.prompt}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain animate075 zoomIn"
               />
             ) : (
               <img
