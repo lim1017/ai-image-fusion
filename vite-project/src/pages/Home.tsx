@@ -107,8 +107,8 @@ const Home = () => {
   }, [hasNextPage]);
 
   return (
-    <section className="max-w-7xl mx-auto">
-      <div className="flex justify-center flex-col">
+    <section className="max-w-7xl mx-auto ">
+      <div className="flex justify-center flex-col animate2 bounceZoomIn">
         <h1 className="font-extrabold text-[#222328] text-[32px]">
           The Community Showcase
         </h1>

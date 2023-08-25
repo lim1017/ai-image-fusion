@@ -13,8 +13,8 @@ const LoginButton = () => {
   };
 
   return (
-    <Button intent="alt" onClick={handleLogin}>
-      Log Ins
+    <Button className="animate slideInRight" intent="alt" onClick={handleLogin}>
+      Login
     </Button>
   );
 };
