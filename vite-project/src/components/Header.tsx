@@ -130,13 +130,15 @@ export default function Header() {
               className="ul-about"
               style={{ listStyleType: "disc", padding: 20 }}
             >
-              <li className="mt-4 li-about">OpenAI's API</li>
+              <li className="mt-4 li-about">OpenAI API</li>
               <li className="mt-4 li-about">Twilio API</li>
               <li className="mt-4 li-about">Upload/Storage/Serving Images</li>
               <li className="mt-4 li-about">Audio recording/upload</li>
               <li className="mt-4 li-about">Pagination</li>
               <li className="mt-4 li-about">Prompt Engineering</li>
               <li className="mt-4 li-about">React Query</li>
+              <li className="mt-4 li-about">CSS Animations</li>
+              <li className="mt-4 li-about">Responsive Design</li>
             </ul>
           </div>
         </div>
