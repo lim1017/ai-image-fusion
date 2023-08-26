@@ -7,46 +7,16 @@ import { useModal } from "../hooks/useModal";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import DropdownMenu from "./DropdownMenu";
-// import { useEffect } from "react";
+import { useState } from "react";
+
+import { FaHamburger } from "react-icons/fa";
+import LogoutButton from "./LogoutButton";
 
 export default function Header() {
   const { isOpen, openModal, closeModal } = useModal();
   const { isAuthenticated, user } = useAuth0();
 
-  // useEffect(() => {
-  //   const getToken = async () => {
-  //     console.log(user);
-  //     try {
-  //       const accessToken = await getAccessTokenSilently({
-  //         authorizationParams: {
-  //           audience: import.meta.env.VITE_AUTH0_AUDIANCE,
-  //           scope: "openid profile email read:users",
-  //         },
-  //       });
-  //       console.log(accessToken);
-  //       // Send the access token to your backend API
-  //       const response = await fetch(
-  //         `${import.meta.env.VITE_API_URL}/api/v1/auth`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
-
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log("Data received from the backend:", data);
-  //       } else {
-  //         console.log("Error response from the backend:", response.status);
-  //       }
-  //     } catch (e) {
-  //       console.log(e, "error");
-  //     }
-  //   };
-  //   if (isAuthenticated) getToken();
-  // }, [getAccessTokenSilently, isAuthenticated, user]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const userOptions = [
     {
@@ -63,24 +33,79 @@ export default function Header() {
     <>
       <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
         <div className="flex items-center">
-          <Link to="/" className="mr-2">
+          <Link to="/" className="mr-2 animate slideInLeft">
             <img src={logo} alt="logo" className="w-28 object-contain" />
           </Link>
-          <Button className="ml-2" intent="action" onClick={openModal}>
+          <Button
+            className="ml-2 slideInUp animate"
+            intent="action"
+            onClick={openModal}
+          >
             About
           </Button>
         </div>
-        <div>
+
+        {/* Hamburger menu */}
+        <div className="md:hidden relative">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="bg-white px-4 py-2 rounded-full"
+          >
+            {mobileMenuOpen ? (
+              <div className="border-solid border-gray-400 border-2 px-6 py-2 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none">
+                <FaHamburger
+                  className="inline-block opacity-50"
+                  size="2.25em"
+                />
+              </div>
+            ) : (
+              <div className="border-solid border-gray-400 border-2 px-6 py-2 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none">
+                <FaHamburger className="inline-block" size="2.25em" />
+              </div>
+            )}
+          </button>
+
+          {mobileMenuOpen && (
+            <nav className="mt-2 absolute bg-white py-2 px-4 rounded shadow-md z-20 left-[-5px] min-w-[170px] animate zoomIn">
+              <Link to="/create-post">
+                <Button intent="primary" className="mb-3 mt-3 text-[14px]">
+                  Create
+                </Button>
+              </Link>
+              {isAuthenticated ? (
+                <div>
+                  {userOptions.map((option) => {
+                    return (
+                      <Link to={`/${option.linkTo}`}>
+                        <Button intent="alt" className="mb-2">
+                          {option.label}
+                        </Button>
+                      </Link>
+                    );
+                  })}
+
+                  <LogoutButton />
+                </div>
+              ) : (
+                <LoginButton />
+              )}
+            </nav>
+          )}
+        </div>
+        <div className="hidden md:flex items-center">
           <Link to="/create-post" className="mr-4">
-            <Button intent="primary">Create</Button>
+            <Button intent="primary" className="animate slideInUp">
+              Create
+            </Button>
           </Link>
           {isAuthenticated ? (
             <DropdownMenu options={userOptions} data={user} />
           ) : (
-            <LoginButton />
+            <LoginButton animate />
           )}
         </div>
       </header>
+
       <SimpleModal isOpen={isOpen} closeModal={closeModal}>
         <div>
           <div className="flex flex-col items-center">

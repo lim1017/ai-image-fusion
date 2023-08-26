@@ -6,6 +6,7 @@ import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, SinglePost } from "../lib/types";
+import Button from "../components/Button";
 
 Modal.setAppElement("#root");
 
@@ -107,16 +108,21 @@ const Home = () => {
   }, [hasNextPage]);
 
   return (
-    <section className="max-w-7xl mx-auto">
-      <div className="flex justify-center flex-col">
+    <section className="max-w-7xl mx-auto ">
+      <div className="flex justify-center flex-col animate2 bounceZoomIn">
         <h1 className="font-extrabold text-[#222328] text-[32px]">
           The Community Showcase
         </h1>
         <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
           Three exciting ways to create an image... Try it out{" "}
         </h4>
-        <Link className="font-inter font-medium" to="/create-post">
-          HERE!
+        <Link
+          className="font-inter font-medium text-purple-500 text-[22px] hover:opacity-50"
+          to="/create-post"
+        >
+          <Button intent="primary" className="mb-3 mt-3 text-[14px]">
+            Create
+          </Button>
         </Link>
       </div>
 
@@ -144,7 +150,7 @@ const Home = () => {
                 <span className="text-[#222328]">{searchText}</span>:
               </h2>
             )}
-            <div className="grid lg:grid-cols-3 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3">
+            <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
               {searchText ? (
                 <RenderCards
                   data={searchedResults}

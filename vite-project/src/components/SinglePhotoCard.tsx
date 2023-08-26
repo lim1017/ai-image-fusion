@@ -14,7 +14,7 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
   const { isOpen, openModal, closeModal } = useModal();
 
   return (
-    <div className="card">
+    <div className="card animate075 zoomIn">
       <div className="rounded-xl group relative shadow-card hover:shadow-cardhover">
         <img
           onClick={openModal}
