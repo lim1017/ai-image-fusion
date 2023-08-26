@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import LogoutButton from "./LogoutButton";
 import { Link } from "react-router-dom";
 import { FaHamburger } from "react-icons/fa";
+import Button from "./Button";
 
 interface DropdownMenuProps {
   options: {
@@ -39,58 +40,37 @@ const DropdownMenu = ({ options, data, mobileMenuOpen }: DropdownMenuProps) => {
 
   return (
     <div>
-      {mobileMenuOpen ? (
-        <div>
-          {options.map((option) => {
-            return (
-              <Link to={`/${option.linkTo}`} className="mr-2">
-                <button className="block text-left w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  {option.label}
-                </button>
-              </Link>
-            );
-          })}
-
-          <LogoutButton className="text-[12px]" />
-        </div>
-      ) : (
-        <div
-          className="relative inline-block animate slideInRight"
-          ref={dropdownRef}
+      <div
+        className="relative inline-block animate slideInRight"
+        ref={dropdownRef}
+      >
+        <button
+          className="border-solid border-gray-400 border-2 px-6 py-2 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none"
+          onClick={toggleMenu}
         >
-          <button
-            className="border-solid border-gray-400 border-2 px-6 py-2 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none"
-            onClick={toggleMenu}
-          >
-            <FaHamburger
-              className="inline-block hover:opacity-50"
-              size="2.25em"
-            />
-          </button>
-          {isOpen && (
+          <FaHamburger
+            className="inline-block hover:opacity-50"
+            size="2.25em"
+          />
+        </button>
+        {isOpen && (
+          <nav className="mt-2 absolute bg-white py-2 px-4 rounded shadow-md z-20 left-[-5px] min-w-[170px] animate zoomIn">
             <div>
-              <ul className="absolute right-0 mt-2 py-2 bg-white border border-gray-300 rounded shadow-lg w-40">
-                <p className="p-2 mb-2">{data.nickname}</p>
-                {options.map((option) => {
-                  return (
-                    <li className="mb-1" key={option.label}>
-                      <Link to={`/${option.linkTo}`} className="mr-2">
-                        <button className="block text-left w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
-                          {option.label}
-                        </button>
-                      </Link>
-                    </li>
-                  );
-                })}
+              {options.map((option) => {
+                return (
+                  <Link to={`/${option.linkTo}`}>
+                    <Button intent="alt" className="mb-2">
+                      {option.label}
+                    </Button>
+                  </Link>
+                );
+              })}
 
-                <li className="mb-2">
-                  <LogoutButton />
-                </li>
-              </ul>
+              <LogoutButton />
             </div>
-          )}
-        </div>
-      )}
+          </nav>
+        )}
+      </div>
     </div>
   );
 };

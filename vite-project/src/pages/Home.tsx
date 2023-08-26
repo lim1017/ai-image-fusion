@@ -6,6 +6,7 @@ import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, SinglePost } from "../lib/types";
+import Button from "../components/Button";
 
 Modal.setAppElement("#root");
 
@@ -119,7 +120,9 @@ const Home = () => {
           className="font-inter font-medium text-purple-500 text-[22px] hover:opacity-50"
           to="/create-post"
         >
-          HERE!
+          <Button intent="primary" className="mb-3 mt-3 text-[14px]">
+            Create
+          </Button>
         </Link>
       </div>
 
