@@ -3,6 +3,7 @@ import SimpleModal from "../components/Modal";
 import { useModal } from "../hooks/useModal";
 import { wait } from "../utils/helper";
 import { Loader } from "../components";
+import ReactQueryContent from "../components/ModalComponents/ReactQueryContent";
 
 const LazyModalContent = lazy(() =>
   wait(1000).then(
@@ -47,7 +48,12 @@ const About = () => {
           <li className="mt-4 li-about">Audio recording/upload</li>
           <li className="mt-4 li-about">Pagination</li>
           <li className="mt-4 li-about">Prompt Engineering</li>
-          <li className="mt-4 li-about">React Query</li>
+          <li
+            className="mt-4 li-about text-blue-500 cursor-pointer hover:underline"
+            onClick={() => handleModalClick(<ReactQueryContent />)}
+          >
+            React Query
+          </li>
           <li className="mt-4 li-about">CSS Animations</li>
           <li className="mt-4 li-about">Responsive Design</li>
           <li
