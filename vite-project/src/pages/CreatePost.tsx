@@ -20,7 +20,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const initialErrorObj = { name: false, prompt: false };
 
-const Page2 = () => {
+const CreatePage = () => {
   const { user } = useAuth0();
 
   const navigate = useNavigate();
@@ -283,4 +283,4 @@ const Page2 = () => {
   );
 };
 
-export default Page2;
+export default CreatePage;
