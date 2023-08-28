@@ -3,10 +3,11 @@ import Header from "./components/Header";
 
 import { lazy, Suspense } from "react";
 import { Loader } from "./components";
+import About from "./pages/About";
 
 const Home = lazy(() => import("./pages/Home"));
 const CreatePost = lazy(() => import("./pages/CreatePost"));
-const About = lazy(() => import("./pages/About"));
+// const About = lazy(() => import("./pages/About"));
 const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
 
 export const Content = () => {

@@ -1,4 +1,24 @@
+import { ReactElement, useState, lazy, Suspense } from "react";
+import SimpleModal from "../components/Modal";
+import { useModal } from "../hooks/useModal";
+import { wait } from "../utils/helper";
+import { Loader } from "../components";
+
+const LazyModalContent = lazy(() =>
+  wait(1000).then(
+    () => import("../components/ModalComponents/LazyModalContent")
+  )
+);
+
 const About = () => {
+  const [modalContent, setModalContent] = useState<ReactElement | undefined>();
+  const { openModal, isOpen, closeModal } = useModal();
+
+  const handleModalClick = (content: ReactElement) => {
+    setModalContent(content);
+    openModal();
+  };
+
   return (
     <div>
       <div className="flex flex-col items-center">
@@ -19,6 +39,7 @@ const About = () => {
         </h3>
       </div>
       <div className="mt-4">
+        <h2 className="text-[32px] font-bold">Learning Outcomes</h2>
         <ul className="ul-about" style={{ listStyleType: "disc", padding: 20 }}>
           <li className="mt-4 li-about">OpenAI API</li>
           <li className="mt-4 li-about">Twilio API</li>
@@ -29,8 +50,26 @@ const About = () => {
           <li className="mt-4 li-about">React Query</li>
           <li className="mt-4 li-about">CSS Animations</li>
           <li className="mt-4 li-about">Responsive Design</li>
+          <li
+            onClick={() => handleModalClick(<LazyModalContent />)}
+            className="mt-4 li-about text-blue-500 cursor-pointer hover:underline"
+          >
+            Code Splitting /w lazy/Suspense
+          </li>
         </ul>
       </div>
+
+      <SimpleModal isOpen={isOpen} closeModal={closeModal}>
+        <Suspense
+          fallback={
+            <div className="flex justify-center pt-4 mt-4">
+              <Loader />
+            </div>
+          }
+        >
+          {modalContent}
+        </Suspense>
+      </SimpleModal>
     </div>
   );
 };
