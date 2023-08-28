@@ -74,3 +74,9 @@ export const checkForError = (errorObj: Obj) => {
   }
   return false;
 };
+
+export const wait = (time: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+};
