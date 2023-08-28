@@ -7,6 +7,7 @@ import { debounce } from "lodash";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, SinglePost } from "../lib/types";
 import Button from "../components/Button";
+import AnimatedWrapper from "../components/Containers/AnimatedWrapper";
 
 Modal.setAppElement("#root");
 
@@ -108,68 +109,70 @@ const Home = () => {
   }, [hasNextPage]);
 
   return (
-    <section className="max-w-7xl mx-auto ">
-      <div className="flex justify-center flex-col animate2 bounceZoomIn">
-        <h1 className="font-extrabold text-[#222328] text-[32px]">
-          The Community Showcase
-        </h1>
-        <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
-          Three exciting ways to create an image... Try it out{" "}
-        </h4>
-        <Link
-          className="font-inter font-medium text-purple-500 text-[22px] hover:opacity-50"
-          to="/create-post"
-        >
-          <Button intent="primary" className="mb-3 mt-3 text-[14px]">
-            Create
-          </Button>
-        </Link>
-      </div>
+    <AnimatedWrapper>
+      <section className="max-w-7xl mx-auto ">
+        <div className="flex justify-center flex-col">
+          <h1 className="font-extrabold text-[#222328] text-[32px]">
+            The Community Showcase
+          </h1>
+          <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
+            Three exciting ways to create an image... Try it out{" "}
+          </h4>
+          <Link
+            className="font-inter font-medium text-purple-500 text-[22px] hover:opacity-50"
+            to="/create-post"
+          >
+            <Button intent="primary" className="mb-3 mt-3 text-[14px]">
+              Create
+            </Button>
+          </Link>
+        </div>
 
-      <div className="mt-16">
-        <FormField
-          labelName="Search posts"
-          type="text"
-          name="text"
-          placeholder="Search something..."
-          value={searchText}
-          handleChange={handleSearchChange}
-        />
-      </div>
+        <div className="mt-16">
+          <FormField
+            labelName="Search posts"
+            type="text"
+            name="text"
+            placeholder="Search something..."
+            value={searchText}
+            handleChange={handleSearchChange}
+          />
+        </div>
 
-      <div className="mt-10">
-        {isLoading ? (
-          <div className="flex items-center justify-center flex-col">
-            <Loader />
-          </div>
-        ) : (
-          <>
-            {searchText && (
-              <h2 className="font-medium text-[#666e75] text-xl mb-3">
-                Showing Resuls for{" "}
-                <span className="text-[#222328]">{searchText}</span>:
-              </h2>
-            )}
-            <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
-              {searchText ? (
-                <RenderCards
-                  data={searchedResults}
-                  title="No Search Results Found"
-                  postsLoading={isFetchingNextPage}
-                />
-              ) : (
-                <RenderCards
-                  postsLoading={isFetchingNextPage}
-                  data={allPostsz}
-                  title="No Posts Yet"
-                />
-              )}
+        <div className="mt-10">
+          {isLoading ? (
+            <div className="flex items-center justify-center flex-col">
+              <Loader />
             </div>
-          </>
-        )}
-      </div>
-      <div id="modal"></div>
-    </section>
+          ) : (
+            <>
+              {searchText && (
+                <h2 className="font-medium text-[#666e75] text-xl mb-3">
+                  Showing Resuls for{" "}
+                  <span className="text-[#222328]">{searchText}</span>:
+                </h2>
+              )}
+              <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
+                {searchText ? (
+                  <RenderCards
+                    data={searchedResults}
+                    title="No Search Results Found"
+                    postsLoading={isFetchingNextPage}
+                  />
+                ) : (
+                  <RenderCards
+                    postsLoading={isFetchingNextPage}
+                    data={allPostsz}
+                    title="No Posts Yet"
+                  />
+                )}
+              </div>
+            </>
+          )}
+        </div>
+        <div id="modal"></div>
+      </section>
+    </AnimatedWrapper>
   );
 };
 
