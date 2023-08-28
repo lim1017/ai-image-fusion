@@ -33,14 +33,10 @@ export default function Header() {
     <>
       <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
         <div className="flex items-center">
-          <Link to="/" className="mr-2 animate slideInLeft">
+          <Link to="/" className="mr-2">
             <img src={logo} alt="logo" className="w-28 object-contain" />
           </Link>
-          <Button
-            className="ml-2 slideInUp animate"
-            intent="action"
-            onClick={openModal}
-          >
+          <Button className="ml-2" intent="action" onClick={openModal}>
             About
           </Button>
         </div>
@@ -94,14 +90,12 @@ export default function Header() {
         </div>
         <div className="hidden md:flex items-center">
           <Link to="/create-post" className="mr-4">
-            <Button intent="primary" className="animate slideInUp">
-              Create
-            </Button>
+            <Button intent="primary">Create</Button>
           </Link>
           {isAuthenticated ? (
-            <DropdownMenu options={userOptions} data={user} />
+            <DropdownMenu options={userOptions} string={user?.nickname} />
           ) : (
-            <LoginButton animate />
+            <LoginButton />
           )}
         </div>
       </header>

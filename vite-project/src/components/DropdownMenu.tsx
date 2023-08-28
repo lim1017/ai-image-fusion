@@ -9,11 +9,11 @@ interface DropdownMenuProps {
     label: string;
     linkTo: string;
   }[];
-  data?: any;
+  string?: string;
   mobileMenuOpen?: boolean;
 }
 
-const DropdownMenu = ({ options, data, mobileMenuOpen }: DropdownMenuProps) => {
+const DropdownMenu = ({ options, string }: DropdownMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -40,10 +40,7 @@ const DropdownMenu = ({ options, data, mobileMenuOpen }: DropdownMenuProps) => {
 
   return (
     <div>
-      <div
-        className="relative inline-block animate slideInRight"
-        ref={dropdownRef}
-      >
+      <div className="relative inline-block" ref={dropdownRef}>
         <button
           className="border-solid border-gray-400 border-2 px-6 py-2 text-lg rounded-3xl w-full focus:border-violet-500 focus:outline-none"
           onClick={toggleMenu}
@@ -56,6 +53,8 @@ const DropdownMenu = ({ options, data, mobileMenuOpen }: DropdownMenuProps) => {
         {isOpen && (
           <nav className="mt-2 absolute bg-white py-2 px-4 rounded shadow-md z-20 left-[-5px] min-w-[170px] animate zoomIn">
             <div>
+              <div className="p-2 text-[19px]">Hello, {string}</div>
+
               {options.map((option) => {
                 return (
                   <Link to={`/${option.linkTo}`}>
