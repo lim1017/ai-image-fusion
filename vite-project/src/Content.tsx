@@ -3,14 +3,17 @@ import Header from "./components/Header";
 
 import { lazy, Suspense } from "react";
 import { Loader } from "./components";
-import About from "./pages/About";
+import { useAuth0 } from "@auth0/auth0-react";
+import { ProtectedRoute } from "./components/Containers/ProtectedRoute";
 
 const Home = lazy(() => import("./pages/Home"));
 const CreatePost = lazy(() => import("./pages/CreatePost"));
-// const About = lazy(() => import("./pages/About"));
+const About = lazy(() => import("./pages/About"));
 const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
 
 export const Content = () => {
+  const { isAuthenticated } = useAuth0();
+
   return (
     <>
       <Header />
@@ -26,7 +29,16 @@ export const Content = () => {
             <Route path="/" element={<Home />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/about" element={<About />} />
-            <Route path="/my-posts" element={<MyPostsAndFavourite />} />
+            <Route
+              path="/my-posts"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <MyPostsAndFavourite />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Routes>
         </Suspense>
       </main>

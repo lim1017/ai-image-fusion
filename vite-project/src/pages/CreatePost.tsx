@@ -165,10 +165,10 @@ const CreatePage = () => {
             Three exciting ways to generate an image... More to come!
           </h1>
 
-          <h1 className="font-extrabold text-[#666a00] text-[18px]">
+          <h2 className="font-extrabold text-[#666a00] text-[18px]">
             Create an imaginative image through DALL-E AI and share it with the
             community
-          </h1>
+          </h2>
         </div>
 
         <form className="mt-16 m-w-3x1" onSubmit={handleSubmit}>
