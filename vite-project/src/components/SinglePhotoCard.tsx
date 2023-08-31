@@ -21,15 +21,22 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
           className="w-full h-auto object-cover rounded-xl hover:cursor-pointer"
           src={photo}
           alt={prompt}
+          tabIndex={0}
+          role="button"
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              openModal();
+            }
+          }}
         />
 
         <div
           style={{ width: "85%" }}
           className="group-hover:flex flex-col max-h-[94.5%] hidden absolute bottom-0 left-0 right-0 mx-auto  bg-[#10131f] m-2 p-4 rounded-md"
         >
-          <p className="text-white text-sm overflow-y-auto prompt">
+          <h3 className="text-white text-sm overflow-y-auto h3rompt">
             {truncateString(prompt, 50)}
-          </p>
+          </h3>
 
           <div className="mt-5 flex justify-between items-center">
             <div className="flex items-center gap-2">

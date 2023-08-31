@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
@@ -20,14 +21,16 @@ const style = {
 
 const SimpleModal = ({ isOpen, closeModal, children }: ModalProps) => {
   return (
-    <div>
+    <div className="animate075 zoomIn">
       <Modal
         open={isOpen}
         onClose={closeModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>{children}</Box>
+        <Fade timeout={{ enter: 1000, exit: 500 }} in={isOpen}>
+          <Box sx={style}>{children}</Box>
+        </Fade>
       </Modal>
     </div>
   );

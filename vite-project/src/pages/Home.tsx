@@ -123,7 +123,7 @@ const Home = () => {
             to="/create-post"
           >
             <Button intent="primary" className="mb-3 mt-3 text-[14px]">
-              Create
+              Create Post
             </Button>
           </Link>
         </div>
