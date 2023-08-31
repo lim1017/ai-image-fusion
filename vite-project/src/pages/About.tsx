@@ -61,7 +61,9 @@ const About = () => {
               React Query
             </li>
             <li className="mt-4 li-about">CSS Animations/Transitions</li>
-            <li className="mt-4 li-about">Responsive Design</li>
+            <li className="mt-4 li-about">
+              Responsive Design & Web Accessibility
+            </li>
             <li
               onClick={() => handleModalClick(<RouteGuardConent />)}
               className="mt-4 li-about text-blue-500 cursor-pointer hover:underline"
