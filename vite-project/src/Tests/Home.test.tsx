@@ -1,6 +1,6 @@
 import React from "react";
 import Home from "../pages/Home";
-import { customRender, screen, waitFor, fireEvent } from "../utils/test-utils";
+import { customRender, screen } from "../utils/test-utils";
 
 describe("Home component", () => {
   it("renders the main title", async () => {

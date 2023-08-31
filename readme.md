@@ -4,3 +4,4 @@ Back end: Railway
 TODO
 
 add ability favourite a post
+mock react query

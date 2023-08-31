@@ -36,6 +36,8 @@ export const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
 };
 
 const Home = () => {
+  console.log(process.env);
+
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
     null

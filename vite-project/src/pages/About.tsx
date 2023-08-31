@@ -6,6 +6,7 @@ import { Loader } from "../components";
 import ReactQueryContent from "../components/ModalComponents/ReactQueryContent";
 import AnimatedWrapper from "../components/Containers/AnimatedWrapper";
 import RouteGuardConent from "../components/ModalComponents/RouteGuardConent";
+import TestingModalContent from "../components/ModalComponents/TestingModalContent";
 
 const LazyModalContent = lazy(() =>
   wait(1000).then(
@@ -75,6 +76,12 @@ const About = () => {
               className="mt-4 li-about text-blue-500 cursor-pointer hover:underline"
             >
               Code Splitting /w lazy/Suspense
+            </li>
+            <li
+              onClick={() => handleModalClick(<TestingModalContent />)}
+              className="mt-4 li-about text-blue-500 cursor-pointer hover:underline"
+            >
+              React Testing Library/Jest
             </li>
           </ul>
         </div>
