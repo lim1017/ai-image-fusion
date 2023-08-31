@@ -1,5 +1,7 @@
 import React from "react";
-import { shareIcon, closeIcon, download, textMsgIcon } from "../assets";
+import { shareIcon, closeIcon, textMsgIcon } from "../assets";
+import { BiDownload } from "react-icons/bi";
+
 import { downloadImage } from "../utils/helper";
 import { sendTwilioText } from "../lib/api";
 import Modal from "./Modal";
@@ -72,10 +74,15 @@ const ShareComponent = ({
               onClick={() => downloadImage(id, photo)}
               className="outline-none bg-transparent border-none"
             >
-              <img
+              {/* <img
                 src={download}
                 alt="download"
                 className="w-4 h-4 object-contain invert"
+              /> */}
+              <BiDownload
+                className="inline-block mr-2"
+                color="white"
+                size={20}
               />
             </button>
           </Tooltip>

@@ -1,24 +1,36 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "jsx": "preserve",
+    "lib": ["dom", "ES2015", "ES2016", "ES2017", "ES2018"],
+    "module": "esnext",
+    "moduleResolution": "node",
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "pretty": true,
+    "rootDir": "src",
+    "paths": {
+      "test-utils": ["./utils/test-utils"]
+    },
+    "sourceMap": true,
+    "target": "es2015",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "types": ["node", "jest", "@testing-library/jest-dom"]
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./test-utils/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "./src/**/*.test.ts",
+    "src/test-utils/**.tsx",
+    "./test-utils/**"
+  ]
 }

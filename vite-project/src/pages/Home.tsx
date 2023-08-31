@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
-import Modal from "react-modal";
 import { Link } from "react-router-dom";
 import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
@@ -8,8 +7,6 @@ import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, SinglePost } from "../lib/types";
 import Button from "../components/Button";
 import AnimatedWrapper from "../components/Containers/AnimatedWrapper";
-
-Modal.setAppElement("#root");
 
 interface RenderCardsProp {
   data: SinglePost[] | null;

@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
 import { Loader, FormField } from "../components";
-import Modal from "react-modal";
-
 import { fetchPosts } from "../lib/api";
 import { debounce } from "lodash";
 import { SinglePost } from "../lib/types";
 import { RenderCards } from "./Home";
 import { useAuth0 } from "@auth0/auth0-react";
-
-Modal.setAppElement("#root");
 
 const MyPostsAndFavourite = () => {
   const { user } = useAuth0();
