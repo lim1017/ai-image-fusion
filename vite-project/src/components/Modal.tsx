@@ -14,7 +14,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: viewportWidth > 1500 ? "65%" : viewportWidth > 1800 ? "55%" : "75%",
+  width: viewportWidth > 1800 ? "55%" : viewportWidth > 1500 ? "65%" : "75%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -22,6 +22,7 @@ const style = {
 };
 
 const SimpleModal = ({ isOpen, closeModal, children }: ModalProps) => {
+  console.log(viewportWidth);
   return (
     <div className="animate075 zoomIn">
       <Modal
