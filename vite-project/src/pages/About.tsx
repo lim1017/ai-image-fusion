@@ -5,6 +5,7 @@ import { wait } from "../utils/helper";
 import { Loader } from "../components";
 import ReactQueryContent from "../components/ModalComponents/ReactQueryContent";
 import AnimatedWrapper from "../components/Containers/AnimatedWrapper";
+import RouteGuardConent from "../components/ModalComponents/RouteGuardConent";
 
 const LazyModalContent = lazy(() =>
   wait(1000).then(
@@ -61,6 +62,12 @@ const About = () => {
             </li>
             <li className="mt-4 li-about">CSS Animations/Transitions</li>
             <li className="mt-4 li-about">Responsive Design</li>
+            <li
+              onClick={() => handleModalClick(<RouteGuardConent />)}
+              className="mt-4 li-about text-blue-500 cursor-pointer hover:underline"
+            >
+              Route Guarding
+            </li>
             <li
               onClick={() => handleModalClick(<LazyModalContent />)}
               className="mt-4 li-about text-blue-500 cursor-pointer hover:underline"
