@@ -109,7 +109,7 @@ export const sendTwilioText = async (
       }
     );
     console.log(res, " res of twilio text");
-  } finally {
-    console.log(" finally twilio text");
+  } catch (err) {
+    console.log(err);
   }
 };

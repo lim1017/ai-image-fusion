@@ -2,6 +2,9 @@ import { truncateString } from "../utils/helper";
 import Modal from "./Modal";
 import { useModal } from "../hooks/useModal";
 import ShareComponent from "./ShareComponent";
+import { ShareOptionsComponent } from "./ShareOptionsComponent";
+import { ShareOptions, useShareMedia } from "../hooks/useShareMedia";
+import ShareForm from "./ShareForm";
 
 interface CardProps {
   _id: string;
@@ -12,6 +15,15 @@ interface CardProps {
 
 const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
   const { isOpen, openModal, closeModal } = useModal();
+
+  const shareMedia = useShareMedia({ id: _id, photo, name });
+  const {
+    handleToggleShare,
+    setEmailOrPhone,
+    emailOrPhone,
+    loading,
+    handleSendText,
+  } = shareMedia;
 
   return (
     <div className="card animate075 zoomIn">
@@ -45,24 +57,53 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
               </div>
               <p className="text-white text-sm">{truncateString(name, 10)}</p>
             </div>
-            <ShareComponent id={_id} photo={photo} name={name} />
+            <ShareComponent
+              id={_id}
+              photo={photo}
+              name={name}
+              {...shareMedia}
+            />
           </div>
         </div>
       </div>
       <Modal isOpen={isOpen} closeModal={closeModal}>
-        <div>
-          <img
-            style={{ width: "65%" }}
-            className="mx-auto"
-            src={photo}
-            alt={prompt}
-            onClick={() => closeModal()}
+        {emailOrPhone ? (
+          <ShareForm
+            loading={loading}
+            mode={emailOrPhone}
+            photo={photo}
+            executeAction={
+              emailOrPhone === ShareOptions.TEXT
+                ? handleSendText
+                : handleSendText
+            }
+            closeModal={closeModal}
           />
+        ) : (
+          <div>
+            <div className="flex justify-end">
+              <ShareOptionsComponent
+                id={_id}
+                setEmailOrPhone={setEmailOrPhone}
+                handleToggleShare={handleToggleShare}
+                photo={photo}
+              />
+            </div>
+            <div>
+              <img
+                style={{ width: "75%", borderRadius: 50 }}
+                className="mx-auto"
+                src={photo}
+                alt={prompt}
+                onClick={() => closeModal()}
+              />
 
-          <h2 className="text-gray text-sm overflow-y-auto prompt text-center mt-6">
-            {prompt}
-          </h2>
-        </div>
+              <h2 className="text-gray overflow-y-auto prompt text-center mt-6 text-[24px]">
+                {prompt}
+              </h2>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

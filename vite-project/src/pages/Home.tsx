@@ -17,7 +17,7 @@ interface RenderCardsProp {
 export const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
   if (data && data?.length > 0) {
     return (
-      <>
+      <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
         {data.map((post, i) => (
           <SinglePhotoCard key={i} {...post} />
         ))}
@@ -26,7 +26,7 @@ export const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
             <Loader />
           </div>
         )}
-      </>
+      </div>
     );
   }
 
@@ -133,6 +133,7 @@ const Home = () => {
             placeholder="Search something..."
             value={searchText}
             handleChange={handleSearchChange}
+            data-testid="search-input"
           />
         </div>
 
@@ -149,7 +150,7 @@ const Home = () => {
                   <span className="text-[#222328]">{searchText}</span>:
                 </h2>
               )}
-              <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
+              <div>
                 {searchText ? (
                   <RenderCards
                     data={searchedResults}

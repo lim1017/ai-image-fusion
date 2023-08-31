@@ -1,3 +1,5 @@
+export const viewportWidth = window.innerWidth;
+
 export const surpriseMePrompts = [
   "An artistic render of a fox made of fire",
   "an armchair in the shape of an avocado",

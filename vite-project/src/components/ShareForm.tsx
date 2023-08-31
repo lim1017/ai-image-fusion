@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import Input from "./Input";
-import { ShareOptions } from "./ShareComponent";
 import Card from "./Card";
 import Button from "./Button";
 import MuiLoader from "./MuiLoader";
+import { ShareOptions } from "../hooks/useShareMedia";
 
 interface ShareFormProps {
   mode: ShareOptions | undefined;
