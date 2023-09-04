@@ -5,6 +5,7 @@ import ShareComponent from "./ShareComponent";
 import { ShareOptionsComponent } from "./ShareOptionsComponent";
 import { ShareOptions, useShareMedia } from "../hooks/useShareMedia";
 import ShareForm from "./ShareForm";
+import { useEffect } from "react";
 
 interface CardProps {
   _id: string;
@@ -24,6 +25,10 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
     loading,
     handleSendText,
   } = shareMedia;
+
+  useEffect(() => {
+    setEmailOrPhone(undefined);
+  }, [isOpen]);
 
   return (
     <div className="card animate075 zoomIn">

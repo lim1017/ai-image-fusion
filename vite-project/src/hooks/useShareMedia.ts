@@ -1,6 +1,6 @@
 import { sendTwilioText } from "../lib/api";
 import { useModal } from "./useModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export enum ShareOptions {
   TEXT = "text",
@@ -45,10 +45,12 @@ export const useShareMedia = ({ id, photo, name }: useShareMediaProps) => {
 
       setTimeout(async () => {
         await sendTwilioText(mobile, message, photo, name);
+        console.log("after twilio send");
       }, 1000);
     } catch (err) {
       console.log(err);
     } finally {
+      console.log("in finally of text");
       setLoading(false);
       closeModal();
     }
@@ -56,7 +58,6 @@ export const useShareMedia = ({ id, photo, name }: useShareMediaProps) => {
 
   const handleCloseModal = () => {
     closeModal();
-    setEmailOrPhone(undefined);
   };
 
   return {

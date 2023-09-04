@@ -10,7 +10,7 @@ interface ModalProps {
 }
 
 const style = {
-  position: "absolute" as "absolute",
+  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -22,7 +22,6 @@ const style = {
 };
 
 const SimpleModal = ({ isOpen, closeModal, children }: ModalProps) => {
-  console.log(viewportWidth);
   return (
     <div className="animate075 zoomIn">
       <Modal

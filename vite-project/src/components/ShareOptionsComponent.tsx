@@ -42,9 +42,13 @@ export const ShareOptionsComponent = ({
           />
         </button>
       </Tooltip>
+      {/* twilio account disabled atm */}
       <Tooltip title="Send Text">
         <button
           type="button"
+          // onClick={() =>
+          //   alert("Twilio account issues, I've probably run out of 💰💰")
+          // }
           onClick={() => {
             if (openModal) openModal();
             setEmailOrPhone(ShareOptions.TEXT);

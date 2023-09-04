@@ -11,6 +11,7 @@ const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_TOKEN;
 const client = twilio(accountSid, authToken);
 
+//issue with twilio account disabled for now
 router.route("/send-text").post(async (req, res) => {
   try {
     const { name, msg, phone, img } = req.body;
@@ -24,9 +25,12 @@ router.route("/send-text").post(async (req, res) => {
       })
       .then((message) => console.log(message.sid, "sid"));
 
+    console.log("successsssssssssssssssssssssssssssss");
+
     res.status(201).json({ success: true, data: "message sent" });
   } catch (err) {
-    res.status(500).json({ success: true, message: err });
+    console.log(err, "errrrrrrrrrrrrr");
+    res.status(500).json({ success: false, message: err });
   }
 });
 
