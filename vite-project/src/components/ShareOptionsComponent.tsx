@@ -46,13 +46,13 @@ export const ShareOptionsComponent = ({
       <Tooltip title="Send Text">
         <button
           type="button"
-          // onClick={() =>
-          //   alert("Twilio account issues, I've probably run out of 💰💰")
-          // }
-          onClick={() => {
-            if (openModal) openModal();
-            setEmailOrPhone(ShareOptions.TEXT);
-          }}
+          onClick={() =>
+            alert("Twilio account issues, I've probably run out of 💰💰")
+          }
+          // onClick={() => {
+          //   if (openModal) openModal();
+          //   setEmailOrPhone(ShareOptions.TEXT);
+          // }}
           className="outline-none bg-transparent border-none"
         >
           <BsFillChatTextFill
