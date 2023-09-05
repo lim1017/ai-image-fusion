@@ -7,6 +7,7 @@ import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, SinglePost } from "../lib/types";
 import Button from "../components/Button";
 import AnimatedWrapper from "../components/Containers/AnimatedWrapper";
+import { ChatWidget } from "../components/ChatWidget/ChatWidget";
 
 interface RenderCardsProp {
   data: SinglePost[] | null;
@@ -169,6 +170,7 @@ const Home = () => {
           )}
         </div>
         <div id="modal"></div>
+        <ChatWidget />
       </section>
     </AnimatedWrapper>
   );
