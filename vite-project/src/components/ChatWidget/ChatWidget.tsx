@@ -1,6 +1,6 @@
 import "./ChatWidget.css";
 
-import React, { useState, createRef, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./ChatWidget.css";
 import Input from "../Input";
 
@@ -17,11 +17,11 @@ export const ChatWidget: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleTextChange = (e) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatText(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setChatLog((prev) => [...prev, chatText]);
@@ -52,11 +52,11 @@ export const ChatWidget: React.FC = () => {
         </div>
         <div className="chat-messages">
           {chatLog.map((log, index) => (
-            <div key={index} className="fade-in">
+            <div key={index}>
               {index % 2 === 0 ? (
                 <div className="flex">
-                  <p className="font-bold text-green-500 mr-2">AI Overlord: </p>{" "}
-                  <p>{log}</p>
+                  <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
+                  <p className="typing-text">{log}</p>
                 </div>
               ) : (
                 <div className="flex mt-2">

@@ -72,3 +72,20 @@
     opacity: 1;
   }
 }
+
+/* Apply the animation to an element with a background */
+.typing-text {
+  display: inline-block;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflowing text */
+  animation: typing-animation 3s steps(40, end) forwards; /* Adjust duration as needed */
+}
+
+@keyframes typing-animation {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
