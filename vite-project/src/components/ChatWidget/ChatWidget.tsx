@@ -1,15 +1,17 @@
-// src/components/ChatWidget.ts
 import "./ChatWidget.css";
 
-import React, { useState } from "react";
+import React, { useState, createRef, useRef, useEffect } from "react";
 import "./ChatWidget.css";
-import FormField from "../FormField";
+import Input from "../Input";
 
 export const ChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [chatText, setChatText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [chatLog, setChatLog] = useState(["Hello, ask me anything"]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -17,17 +19,25 @@ export const ChatWidget: React.FC = () => {
 
   const handleTextChange = (e) => {
     setChatText(e.target.value);
-    console.log(e.keyCode);
-    if (e.key === "enter") {
-      console.log(e.key, "was pressed");
-    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     setChatLog((prev) => [...prev, chatText]);
     setChatText("");
+
+    setTimeout(() => {
+      setChatLog((prev) => [...prev, "I'll look into it..."]);
+      setLoading(false);
+    }, [2000]);
   };
+
+  useEffect(() => {
+    if (!loading && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [loading]);
 
   return (
     <div className={`chat-widget ${isOpen ? "open" : ""}`}>
@@ -37,20 +47,36 @@ export const ChatWidget: React.FC = () => {
       <div className="chat-window">
         <div className="chat-header">
           <span>Chat</span>
+          <button onClick={() => inputRef.current?.focus()}>FOCUS</button>
           <button onClick={toggleChat}>Close</button>
         </div>
         <div className="chat-messages">
-          <p>{chatLog}</p>
+          {chatLog.map((log, index) => (
+            <div key={index} className="fade-in">
+              {index % 2 === 0 ? (
+                <div className="flex">
+                  <p className="font-bold text-green-500 mr-2">AI Overlord: </p>{" "}
+                  <p>{log}</p>
+                </div>
+              ) : (
+                <div className="flex mt-2">
+                  <p className="font-bold text-red-500 mr-2">Me: </p>{" "}
+                  <p>{log}</p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
         <div className="chat-input">
           <form onSubmit={handleSubmit}>
-            <FormField
-              labelName=""
+            <Input
+              ref={inputRef}
               type="text"
               name="text"
               placeholder="Ask something..."
               value={chatText}
-              handleChange={handleTextChange}
+              onChange={handleTextChange}
+              disabled={loading}
             />
           </form>
         </div>
