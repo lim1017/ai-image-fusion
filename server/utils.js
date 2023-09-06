@@ -98,3 +98,44 @@ export const updatePinecone = async (client, indexName, docs) => {
     console.log(`Pinecone index updated with ${chunks.length} vectors`);
   }
 };
+
+const queryPinecone = async (client, indexName, query) => {
+  const index = client.index(indexName);
+  const queryEmbeddings = await new OpenAIEmbeddings().embedQuery(query);
+
+  // 4. Query Pinecone index and return top 10 matches
+  let queryResponse = await index.query({
+    queryRequest: {
+      topK: 10,
+      vector: queryEmbeddings,
+      includeMetadata: true,
+      includeValues: true,
+    },
+  });
+
+  // 5. Log the number of matches
+  console.log(`Found ${queryResponse.matches.length} matches...`);
+  // 6. Log the question being asked
+  console.log(`Asking question: ${question}...`);
+
+  if (queryResponse.matches.length) {
+    //create an openAI instance
+    const llm = new OpenAI({});
+    const chain = loadQAStuffChain(llm);
+
+    //extract and concatenate content found
+    const content = queryResponse.matches
+      .map((match) => match.metadata.pageContent)
+      .join(" ");
+
+    const result = await chain.call({
+      input_documents: [new Document({ pageContent: content })],
+      question: query,
+    });
+
+    console.log("answer", result.text);
+    return result.text;
+  } else {
+    console.log("No matches found");
+  }
+};
