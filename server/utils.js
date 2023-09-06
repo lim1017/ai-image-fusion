@@ -1,0 +1,100 @@
+import { OpenAIembeddings } from "langchain/embeddings/openai";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { OpenAI } from "langchain/openai";
+import { loadQAStuffChain } from "langchain/chains";
+import { Document } from "langchain/document";
+import { timeout } from "./config";
+
+export const createPineconeIndex = async (
+  client,
+  indexName,
+  vectorDimension
+) => {
+  // 1. Initiate index existence check
+  console.log(`Checking "${indexName}"...`);
+  // 2. Get list of existing indexes
+  const existingIndexes = await client.listIndexes();
+  // 3. If index doesn't exist, create it
+  if (!existingIndexes.includes(indexName)) {
+    // 4. Log index creation initiation
+    console.log(`Creating "${indexName}"...`);
+    // 5. Create index
+    await client.createIndex({
+      createRequest: {
+        name: indexName,
+        dimension: vectorDimension,
+        metric: "cosine",
+      },
+    });
+    // 6. Log successful creation
+    console.log(
+      `Creating index.... please wait for it to finish initializing.`
+    );
+    // 7. Wait for index initialization
+    await new Promise((resolve) => setTimeout(resolve, timeout));
+  } else {
+    // 8. Log if index already exists
+    console.log(`"${indexName}" already exists.`);
+  }
+};
+
+export const updatePinecone = async (client, indexName, docs) => {
+  const index = client.index(indexName);
+
+  console.log("Pinecone index:", index);
+
+  //process each document
+  for (const doc of docs) {
+    console.log("processing document...", doc.metadata.source);
+
+    const txtPath = doc.metadata.source;
+    const text = doc.pageContent;
+
+    //create recursiveChar text splitter instance
+    const textSplitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1000,
+    });
+
+    //split text
+    const chunks = await textSplitter.createDocuments([text]);
+    console.log(`Text split into ${chunks.length} chunks`);
+
+    //Create OpenAI embeddings to use with pinecone
+    const embeddingsArrays = await new OpenAIEmbeddings().embedDocuments(
+      chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
+    );
+    console.log("Finished embedding documents");
+    console.log(
+      `Creating ${chunks.length} vectors array with id, values, and metadata...`
+    );
+
+    //create and add vectors to pinecone
+    const batchSize = 100;
+    let batch = [];
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      const vector = {
+        id: `${txtPath}_${i}`,
+        values: embeddingsArrays[i],
+        metadata: {
+          ...chunk.metadata,
+          loc: JSON.stringify(chunk.metadata.loc),
+          pageContent: chunk.pageContent,
+          txtPath: txtPath,
+        },
+      };
+      batch = [...batch, vector];
+      // When batch is full or it's the last item, upload to pinecone.
+      if (batch.length === batchSize || i === chunks.length - 1) {
+        await index.upsert({
+          upsertRequest: {
+            vectors: batch,
+          },
+        });
+        // Empty the batch
+        batch = [];
+      }
+    }
+    console.log(`Pinecone index updated with ${chunks.length} vectors`);
+  }
+};
