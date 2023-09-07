@@ -8,12 +8,17 @@ import { useChatWidget } from "../../hooks/useChatWidget";
 export const ChatWidget: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [chatText, setChatText] = useState("");
 
-  const [chatLog, setChatLog] = useState(["Hello, ask me anything"]);
-
-  const { sendQuery, query, setQuery, result, loading, setLoading } =
-    useChatWidget();
+  const {
+    sendQuery,
+    query,
+    setQuery,
+    loading,
+    setLoading,
+    chatLog,
+    chatText,
+    setChatText,
+  } = useChatWidget();
 
   useEffect(() => {
     const createIndexAndEmbeddings = async () => {
@@ -46,19 +51,11 @@ export const ChatWidget: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setChatLog((prev) => [...prev, chatText]);
     setChatText("");
     setQuery("");
 
     console.log(query);
-    sendQuery().then(() => {
-      console.log("successfully sent");
-    });
-
-    // setTimeout(() => {
-    //   setChatLog((prev) => [...prev, "I'll look into it..."]);
-    //   setLoading(false);
-    // }, [2000]);
+    sendQuery();
   };
 
   useEffect(() => {
