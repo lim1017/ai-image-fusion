@@ -13,7 +13,7 @@ import dalleRoutes from "./routes/dalleRoutes.js";
 import twilioRoutes from "./routes/twilioRoutes.js";
 import chatGptRoutes from "./routes/chatGptRoutes.js";
 import whisperRoutes from "./routes/whisperRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
+import gptSemanticSearchRoutes from "./routes/gptSemanticSearchRoutes.js";
 
 const app = express();
 
@@ -47,7 +47,10 @@ app.use("/api/v1/dalle", dalleRoutes);
 app.use("/api/v1/twilio", twilioRoutes);
 app.use("/api/v1/gpt", chatGptRoutes);
 app.use("/api/v1/whisper", whisperRoutes);
-app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/gptSearch", gptSemanticSearchRoutes);
+
+//not used atm
+// app.use("/api/v1/auth", authRoutes);
 
 // Security headers
 app.use((req, res, next) => {

@@ -1,9 +1,9 @@
-import { OpenAIembeddings } from "langchain/embeddings/openai";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { OpenAI } from "langchain/openai";
+import { OpenAI } from "langchain/llms/openai";
 import { loadQAStuffChain } from "langchain/chains";
 import { Document } from "langchain/document";
-import { timeout } from "./config";
+import { timeout } from "./config.js";
 
 export const createPineconeIndex = async (
   client,
@@ -39,7 +39,7 @@ export const createPineconeIndex = async (
 };
 
 export const updatePinecone = async (client, indexName, docs) => {
-  const index = client.index(indexName);
+  const index = client.Index(indexName);
 
   console.log("Pinecone index:", index);
 
@@ -99,8 +99,8 @@ export const updatePinecone = async (client, indexName, docs) => {
   }
 };
 
-const queryPinecone = async (client, indexName, query) => {
-  const index = client.index(indexName);
+export const queryPinecone = async (client, indexName, query) => {
+  const index = client.Index(indexName);
   const queryEmbeddings = await new OpenAIEmbeddings().embedQuery(query);
 
   // 4. Query Pinecone index and return top 10 matches
@@ -116,7 +116,7 @@ const queryPinecone = async (client, indexName, query) => {
   // 5. Log the number of matches
   console.log(`Found ${queryResponse.matches.length} matches...`);
   // 6. Log the question being asked
-  console.log(`Asking question: ${question}...`);
+  console.log(`Asking question: ${query}...`);
 
   if (queryResponse.matches.length) {
     //create an openAI instance

@@ -10,6 +10,7 @@ router.route("/").get((req, res) => {
   res.status(200).json({ message: "Hello from chatGPT routess!" });
 });
 
+//handles array of words + prompt engineering to generate image prompt
 router.route("/").post(async (req, res) => {
   try {
     const { chips } = req.body;

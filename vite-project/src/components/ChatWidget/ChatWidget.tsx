@@ -3,15 +3,36 @@ import "./ChatWidget.css";
 import React, { useState, useRef, useEffect } from "react";
 import "./ChatWidget.css";
 import Input from "../Input";
+import { useChatWidget } from "../../hooks/useChatWidget";
 
 export const ChatWidget: React.FC = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [chatText, setChatText] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const [chatLog, setChatLog] = useState(["Hello, ask me anything"]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const { sendQuery, query, setQuery, result, loading, setLoading } =
+    useChatWidget();
+
+  useEffect(() => {
+    const createIndexAndEmbeddings = async () => {
+      try {
+        const result = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/v1/gptSearch/setup`,
+          {
+            method: "POST",
+          }
+        );
+        const json = await result.json();
+        console.log("result: ", json);
+      } catch (err) {
+        console.log("err:", err);
+      }
+    };
+
+    createIndexAndEmbeddings();
+  }, []);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -19,6 +40,7 @@ export const ChatWidget: React.FC = () => {
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatText(e.target.value);
+    setQuery(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,11 +48,17 @@ export const ChatWidget: React.FC = () => {
     setLoading(true);
     setChatLog((prev) => [...prev, chatText]);
     setChatText("");
+    setQuery("");
 
-    setTimeout(() => {
-      setChatLog((prev) => [...prev, "I'll look into it..."]);
-      setLoading(false);
-    }, [2000]);
+    console.log(query);
+    sendQuery().then(() => {
+      console.log("successfully sent");
+    });
+
+    // setTimeout(() => {
+    //   setChatLog((prev) => [...prev, "I'll look into it..."]);
+    //   setLoading(false);
+    // }, [2000]);
   };
 
   useEffect(() => {
