@@ -4,6 +4,17 @@ import React, { useState, useRef, useEffect } from "react";
 import "./ChatWidget.css";
 import Input from "../Input";
 import { useChatWidget } from "../../hooks/useChatWidget";
+import CursorSVG from "../icons/CursorSVG";
+
+const ChatLoader = () => {
+  return (
+    <div
+      className={`w-8 h-8 border-4 border-dashed rounded-full animate-spin border-blue-500 dark:border-violet-600`}
+      aria-label="Loading"
+      data-testid="loader"
+    ></div>
+  );
+};
 
 export const ChatWidget: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -11,13 +22,14 @@ export const ChatWidget: React.FC = () => {
 
   const {
     sendQuery,
-    query,
     setQuery,
     loading,
-    setLoading,
     chatLog,
     chatText,
     setChatText,
+    setChatLog,
+    completedTyping,
+    displayResponse,
   } = useChatWidget();
 
   useEffect(() => {
@@ -50,12 +62,11 @@ export const ChatWidget: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setChatLog((prev) => [...prev, chatText]);
+    sendQuery();
+
     setChatText("");
     setQuery("");
-
-    console.log(query);
-    sendQuery();
   };
 
   useEffect(() => {
@@ -78,10 +89,16 @@ export const ChatWidget: React.FC = () => {
         <div className="chat-messages">
           {chatLog.map((log, index) => (
             <div key={index}>
-              {index % 2 === 0 ? (
+              {index % 2 === 0 && index === chatLog.length - 1 ? (
                 <div className="flex">
                   <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
-                  <p className="typing-text">{log}</p>
+                  <p>{displayResponse}</p>
+                  {!completedTyping && <CursorSVG />}
+                </div>
+              ) : index % 2 === 0 ? (
+                <div className="flex">
+                  <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
+                  <p>{log}</p>
                 </div>
               ) : (
                 <div className="flex mt-2">
@@ -91,6 +108,11 @@ export const ChatWidget: React.FC = () => {
               )}
             </div>
           ))}
+          {loading ? (
+            <div>
+              <ChatLoader />
+            </div>
+          ) : null}
         </div>
         <div className="chat-input">
           <form onSubmit={handleSubmit}>
