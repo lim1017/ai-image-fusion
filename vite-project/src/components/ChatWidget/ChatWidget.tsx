@@ -16,7 +16,11 @@ const ChatLoader = () => {
   );
 };
 
-export const ChatWidget: React.FC = () => {
+interface ChatWidgetProps {
+  name?: string;
+}
+
+export const ChatWidget = ({ name }: ChatWidgetProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -99,7 +103,9 @@ export const ChatWidget: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex mt-2">
-                  <p className="font-bold text-red-500 mr-2">Me: </p>{" "}
+                  <p className="font-bold text-red-500 mr-2">
+                    {name ? name : "User"}:{" "}
+                  </p>{" "}
                   <p>{log}</p>
                 </div>
               )}

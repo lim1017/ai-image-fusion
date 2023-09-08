@@ -4,7 +4,7 @@ import React from "react";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   error?: boolean;
-  ref?: React.RefObject<HTMLInputElement | null>;
+  ref?: React.RefObject<HTMLInputElement>;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

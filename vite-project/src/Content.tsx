@@ -5,6 +5,7 @@ import { lazy, Suspense } from "react";
 import { Loader } from "./components";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ProtectedRoute } from "./components/Containers/ProtectedRoute";
+import { ChatWidget } from "./components/ChatWidget/ChatWidget";
 
 const Home = lazy(() => import("./pages/Home"));
 const CreatePost = lazy(() => import("./pages/CreatePost"));
@@ -12,8 +13,8 @@ const About = lazy(() => import("./pages/About"));
 const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
 
 export const Content = () => {
-  const { isAuthenticated } = useAuth0();
-
+  const { isAuthenticated, user } = useAuth0();
+  console.log(user);
   return (
     <>
       <Header />
@@ -41,6 +42,7 @@ export const Content = () => {
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Routes>
         </Suspense>
+        <ChatWidget name={user?.nickname} />
       </main>
     </>
   );

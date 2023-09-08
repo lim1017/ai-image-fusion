@@ -1,6 +1,6 @@
 import { sendTwilioText } from "../lib/api";
 import { useModal } from "./useModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export enum ShareOptions {
   TEXT = "text",
