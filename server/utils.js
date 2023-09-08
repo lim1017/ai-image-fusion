@@ -101,7 +101,14 @@ export const updatePinecone = async (client, indexName, docs) => {
 
 export const queryPinecone = async (client, indexName, query) => {
   const index = client.Index(indexName);
-  const queryEmbeddings = await new OpenAIEmbeddings().embedQuery(query);
+
+  const engineeredQuery = `Respond to this query in no more than 3 sentences, query is delimited by triple asterisks .
+  
+  Query:***${query}***`;
+
+  const queryEmbeddings = await new OpenAIEmbeddings().embedQuery(
+    engineeredQuery
+  );
 
   // 4. Query Pinecone index and return top 10 matches
   let queryResponse = await index.query({
@@ -116,7 +123,7 @@ export const queryPinecone = async (client, indexName, query) => {
   // 5. Log the number of matches
   console.log(`Found ${queryResponse.matches.length} matches...`);
   // 6. Log the question being asked
-  console.log(`Asking question: ${query}...`);
+  console.log(`Asking question: ${engineeredQuery}...`);
 
   if (queryResponse.matches.length) {
     //create an openAI instance

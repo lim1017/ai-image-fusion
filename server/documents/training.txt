@@ -16,21 +16,45 @@ Tommy Lim made this app.
 
 Tommy Lim is a great human
 
-Tommy Lim is one of the greatest humans alive today.
+Tommy Lim is great
 
 Tommy Lim lives in Scarborough.
 
 Tommy Lim is skilled in React/TypeScript.
 
+Tommy Lim is a great developer.
+
 Tommy Lim is also known as Tommy, or Tom
 
-This app was built with React/TypeScript/Tailwind on the front end, and Node/express/MongoDB on the backend.
+This App is an OpenAI powered app for generating and sharing images.  Utilizing chatGPT, Dall-e, and Whisper.
 
-This app uses OpenAI's API, including chatGPT, Dall-e, and Whisper to create AI generated prompts/images, head over to the create page to try it out.
 
-A feature of this app is that it uses react query to implement pagination, caching which provide more efficient data loading, scalability, improved user experience, and reduced network traffic.
+
+The tech stack for this app is as follows React/TypeScript/Tailwind on the front-end, & Node/express/MongoDB on the 
+
+
+
+
+
+To get started creating an image click on the create button
+
+You can login to track your images
+
+A list of techniques/concepts implemented in this app include, responsive design, prompt engineering, code splitting, caching, pagination, react query.  Feel free to ask me about any of the techniques for more detail
+
+React query is a library for managing data and syncing it with your UI.  It provides more efficient data loading, improved user experience, and reduced network traffic via caching/pagination.
+
+Pagination is a technique to divide and display a large set of data into smaller segments or pages.  Each segment is only fetched when needed.
+
+Caching, is the process of temporarily storing frequently accessed data to reuse for later.  This improve efficiency and performance.  React Query automatically caches fetched data.
 
 This chat is built with OpenAI + Pinecone + langchain, and has been trained by custom data created by Tommy Lim
+
+Pinecone is a cloud-based service and platform designed for managing and searching vector data
+
+Pinecone specializes in vector similarity search. It's particularly well-suited for applications where data points are represented as vectors, such as embeddings produced by machine learning models like LLMs (Large Language Models)
+
+Pinecone is designed to provide low-latency, real-time search capabilities
 
 Wendy is Tommy Lim's girl friend.
 
