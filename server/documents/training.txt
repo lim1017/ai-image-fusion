@@ -1,3 +1,7 @@
+I am Donkey, an AI chatbot trained on custom data related to this app
+
+Hello, I am Donkey, an AI chatbot trained on custom data related to this app, you can ask me anything related to this app.
+
 The developer of this app is Tommy Lim.
 
 The owner of this app is Tommy Lim.
@@ -14,13 +18,25 @@ Tommy Lim is a great human
 
 Tommy Lim is one of the greatest humans alive today.
 
-Tommy Lim is an asian male, who lives in Scarborough.
+Tommy Lim lives in Scarborough.
 
 Tommy Lim is skilled in React/TypeScript.
 
+Tommy Lim is also known as Tommy, or Tom
+
 This app was built with React/TypeScript/Tailwind on the front end, and Node/express/MongoDB on the backend.
 
-This app uses OpenAI's API, including chatGPT, Dall-e, and Whisper to create AI generated promps/images
+This app uses OpenAI's API, including chatGPT, Dall-e, and Whisper to create AI generated prompts/images, head over to the create page to try it out.
+
+A feature of this app is that it uses react query to implement pagination, caching which provide more efficient data loading, scalability, improved user experience, and reduced network traffic.
 
 This chat is built with OpenAI + Pinecone + langchain, and has been trained by custom data created by Tommy Lim
+
+Wendy is Tommy Lim's girl friend.
+
+Wendy is Tommy Lims partner.
+
+Tommy Lim is stronger then super man, batman, goku, and basically everyone.
+
+Tommy Lim would beat anyone in a fight except Wendy.
 

@@ -5,7 +5,7 @@ import "./ChatWidget.css";
 import Input from "../Input";
 import { useChatWidget } from "../../hooks/useChatWidget";
 import CursorSVG from "../icons/CursorSVG";
-
+import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 const ChatLoader = () => {
   return (
     <div
@@ -18,6 +18,7 @@ const ChatLoader = () => {
 
 export const ChatWidget: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -31,25 +32,6 @@ export const ChatWidget: React.FC = () => {
     completedTyping,
     displayResponse,
   } = useChatWidget();
-
-  useEffect(() => {
-    const createIndexAndEmbeddings = async () => {
-      try {
-        const result = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/v1/gptSearch/setup`,
-          {
-            method: "POST",
-          }
-        );
-        const json = await result.json();
-        console.log("result: ", json);
-      } catch (err) {
-        console.log("err:", err);
-      }
-    };
-
-    createIndexAndEmbeddings();
-  }, []);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -75,18 +57,33 @@ export const ChatWidget: React.FC = () => {
     }
   }, [loading]);
 
+  useEffect(() => {
+    if (containerRef && containerRef.current) {
+      const element = containerRef.current;
+      element.scroll({
+        top: element.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [containerRef, displayResponse]);
+
   return (
     <div className={`chat-widget ${isOpen ? "open" : ""}`}>
-      <div className="chat-icon" onClick={toggleChat}>
-        <img src="/chat-icon.png" alt="Chat Icon" />
-      </div>
+      <div className="chat-icon" onClick={toggleChat}></div>
       <div className="chat-window">
-        <div className="chat-header">
-          <span>Chat</span>
-          <button onClick={() => inputRef.current?.focus()}>FOCUS</button>
-          <button onClick={toggleChat}>Close</button>
+        <div className="chat-header" onClick={toggleChat}>
+          <span>AI Chat Assistance</span>
+
+          <button onClick={toggleChat}>
+            {isOpen ? (
+              <AiOutlineArrowUp size={20} className="mr-2" />
+            ) : (
+              <AiOutlineArrowDown size={20} className="mr-2" />
+            )}
+          </button>
         </div>
-        <div className="chat-messages">
+        <div id="chat-container" ref={containerRef}>
           {chatLog.map((log, index) => (
             <div key={index}>
               {index % 2 === 0 && index === chatLog.length - 1 ? (
@@ -109,7 +106,7 @@ export const ChatWidget: React.FC = () => {
             </div>
           ))}
           {loading ? (
-            <div>
+            <div className="flex justify-center mt-2">
               <ChatLoader />
             </div>
           ) : null}
@@ -124,6 +121,7 @@ export const ChatWidget: React.FC = () => {
               value={chatText}
               onChange={handleTextChange}
               disabled={loading}
+              autoComplete="off"
             />
           </form>
         </div>
