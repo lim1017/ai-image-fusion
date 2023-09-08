@@ -29,7 +29,6 @@ export const fetchPosts = async ({
   } else {
     url += `?page=${pageParam}&limit=${pageSize}`;
   }
-  console.log(url, "url");
   const res = await fetch(url, {
     method: "GET",
     headers: {

@@ -169,6 +169,7 @@ const Home = () => {
           )}
         </div>
         <div id="modal"></div>
+        {/* <ChatWidget /> */}
       </section>
     </AnimatedWrapper>
   );
