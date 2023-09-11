@@ -4,6 +4,11 @@ import { OpenAI } from "langchain/llms/openai";
 import { loadQAStuffChain } from "langchain/chains";
 import { Document } from "langchain/document";
 import { timeout } from "./config.js";
+import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
+import { TextLoader } from "langchain/document_loaders/fs/text";
+import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { PineconeClient } from "@pinecone-database/pinecone";
+import { indexName } from "./config.js";
 
 export const createPineconeIndex = async (
   client,
@@ -102,7 +107,7 @@ export const updatePinecone = async (client, indexName, docs) => {
 export const queryPinecone = async (client, indexName, query) => {
   const index = client.Index(indexName);
 
-  const engineeredQuery = `Respond to this query in no more than 3 sentences, query is delimited by triple asterisks .
+  const engineeredQuery = `Respond to this query in less than 3 sentences, query is delimited by triple asterisks .
   
   Query:***${query}***`;
 
@@ -144,5 +149,32 @@ export const queryPinecone = async (client, indexName, query) => {
     return result.text;
   } else {
     console.log("No matches found");
+  }
+};
+
+export const loadTrainingData = async () => {
+  const loader = new DirectoryLoader("./documents", {
+    ".txt": (path) => new TextLoader(path),
+    ".md": (path) => new TextLoader(path),
+    ".pdf": (path) => new PDFLoader(path),
+  });
+
+  try {
+    const docs = await loader.load();
+    const vectorDimensions = 1536;
+
+    const client = new PineconeClient();
+
+    await client.init({
+      apiKey: process.env.PINECONE_API_KEY || "",
+      environment: process.env.PINECONE_ENVIRONEMENT || "",
+    });
+
+    await createPineconeIndex(client, indexName, vectorDimensions);
+    await updatePinecone(client, indexName, docs);
+
+    console.log("successfully created index and loaded data into pinecone...");
+  } catch (err) {
+    console.log("error loading training data: ", err);
   }
 };

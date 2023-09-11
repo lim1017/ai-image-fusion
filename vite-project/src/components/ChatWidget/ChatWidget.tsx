@@ -2,10 +2,10 @@ import "./ChatWidget.css";
 
 import React, { useState, useRef, useEffect } from "react";
 import "./ChatWidget.css";
-import Input from "../Input";
 import { useChatWidget } from "../../hooks/useChatWidget";
 import CursorSVG from "../icons/CursorSVG";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
+import TextArea from "../TextArea";
 const ChatLoader = () => {
   return (
     <div
@@ -21,7 +21,7 @@ interface ChatWidgetProps {
 }
 
 export const ChatWidget = ({ name }: ChatWidgetProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,7 +41,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
     setIsOpen(!isOpen);
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setChatText(e.target.value);
     setQuery(e.target.value);
   };
@@ -120,9 +120,8 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
         </div>
         <div className="chat-input">
           <form onSubmit={handleSubmit}>
-            <Input
+            <TextArea
               ref={inputRef}
-              type="text"
               name="text"
               placeholder="Ask something..."
               value={chatText}

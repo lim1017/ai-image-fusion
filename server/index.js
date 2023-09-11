@@ -14,6 +14,7 @@ import twilioRoutes from "./routes/twilioRoutes.js";
 import chatGptRoutes from "./routes/chatGptRoutes.js";
 import whisperRoutes from "./routes/whisperRoutes.js";
 import gptSemanticSearchRoutes from "./routes/gptSemanticSearchRoutes.js";
+import { loadTrainingData } from "./utils.js";
 
 const app = express();
 
@@ -80,6 +81,12 @@ const startServer = async () => {
     }
   } catch (error) {
     console.log(error);
+  }
+
+  try {
+    await loadTrainingData();
+  } catch (err) {
+    console.log("error: ", err);
   }
 };
 

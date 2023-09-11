@@ -6,7 +6,7 @@ export const useChatWidget = () => {
   const [chatText, setChatText] = useState("");
 
   const [chatLog, setChatLog] = useState([
-    "Hello, I am Donkey, a AI chatbot trained on custom data related to this app, you can ask me anything related to this app.",
+    "Hello, I am Donkey, a AI chatbot trained on custom data related to this app, ask me about to this app.",
   ]);
 
   //typing anmiation
@@ -56,25 +56,6 @@ export const useChatWidget = () => {
 
     return () => clearInterval(intervalId);
   }, [chatLog]);
-
-  useEffect(() => {
-    const createIndexAndEmbeddings = async () => {
-      try {
-        const result = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/v1/gptSearch/setup`,
-          {
-            method: "POST",
-          }
-        );
-        const json = await result.json();
-        console.log("result: ", json);
-      } catch (err) {
-        console.log("err:", err);
-      }
-    };
-
-    createIndexAndEmbeddings();
-  }, []);
 
   return {
     sendQuery,
