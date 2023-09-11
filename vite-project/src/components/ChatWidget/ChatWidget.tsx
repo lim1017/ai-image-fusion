@@ -61,6 +61,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
     }
   }, [loading]);
 
+  //scrolls to the bottom of the chat window as new text is added
   useEffect(() => {
     if (containerRef && containerRef.current) {
       const element = containerRef.current;
