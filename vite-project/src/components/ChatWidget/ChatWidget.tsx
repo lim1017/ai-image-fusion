@@ -55,6 +55,16 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
     setQuery("");
   };
 
+  const handleTextareaKeyPress = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent line break in the textarea
+
+      handleSubmit(event as unknown as React.FormEvent<HTMLFormElement>);
+    }
+  };
+
   useEffect(() => {
     if (!loading && inputRef.current) {
       inputRef.current.focus();
@@ -92,12 +102,12 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
           {chatLog.map((log, index) => (
             <div key={index}>
               {index % 2 === 0 && index === chatLog.length - 1 ? (
-                <div className="flex">
+                <div className="flex mt-2">
                   <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
                   <p>{displayResponse}</p>
                   {!completedTyping && <CursorSVG />}
                 </div>
-              ) : index % 2 === 0 ? (
+              ) : index % 2 === 0 ? ( //inital msg, TODO REFACTOR to not use idx
                 <div className="flex">
                   <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
                   <p>{log}</p>
@@ -119,7 +129,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
           ) : null}
         </div>
         <div className="chat-input">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="w-full">
             <TextArea
               ref={inputRef}
               name="text"
@@ -128,6 +138,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
               onChange={handleTextChange}
               disabled={loading}
               autoComplete="off"
+              onKeyPress={handleTextareaKeyPress}
             />
           </form>
         </div>
