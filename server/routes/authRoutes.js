@@ -8,7 +8,7 @@ dotenv.config();
 
 const router = express.Router();
 
-router.get("/", verifyToken, (req, res) => {
+router.get("/", (req, res) => {
   console.log("in authRoute post!!!!!!!!!!!");
   const user = req.user;
   console.log(user, "USER!!!!!!!!!");
