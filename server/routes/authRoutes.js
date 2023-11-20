@@ -12,7 +12,8 @@ router.get("/", (req, res) => {
   res.send("hello from auth route");
 });
 
-router.post("/user", async (req, res) => {
+router.route("/user").post(async (req, res) => {
+  console.log("POST request received");
   const { username, email } = req.body;
   console.log(email, "email");
   console.log(username, "username");
