@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
   res.send("hello from auth route");
 });
 
-router.post("/", async (req, res) => {
+router.post("/user", async (req, res) => {
   const { username, email } = req.body;
   console.log(email, "email");
   console.log(username, "username");
