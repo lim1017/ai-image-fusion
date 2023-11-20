@@ -2,15 +2,25 @@ import express from "express";
 import * as dotenv from "dotenv";
 
 import User from "../mongodb/models/user.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 dotenv.config();
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   console.log("in authRoute post!!!!!!!!!!!");
+  const user = req.user;
+  console.log(user, "USER!!!!!!!!!");
   res.send("hello from auth route");
 });
+
+// //need this for post route?
+// https://community.auth0.com/t/cant-make-post-request/57815
+//  const checkJwt = auth({
+//   audience: "ai-server",
+//   issuerBaseURL: `https://ai-images2.us.auth0.com/`,
+// });
 
 router.route("/user").post(async (req, res) => {
   console.log("POST request received");
