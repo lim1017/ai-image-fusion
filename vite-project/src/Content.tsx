@@ -14,7 +14,6 @@ const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
 
 export const Content = () => {
   const { isAuthenticated, user } = useAuth0();
-  console.log(user);
   return (
     <>
       <Header />

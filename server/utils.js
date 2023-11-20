@@ -118,7 +118,7 @@ export const queryPinecone = async (client, indexName, query) => {
   // 4. Query Pinecone index and return top 10 matches
   let queryResponse = await index.query({
     queryRequest: {
-      topK: 10,
+      topK: 10, //set lower so bot has shorter responses?
       vector: queryEmbeddings,
       includeMetadata: true,
       includeValues: true,
