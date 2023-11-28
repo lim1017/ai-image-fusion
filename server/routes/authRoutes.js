@@ -16,7 +16,12 @@ router.get("/", verifyToken, async (req, res) => {
     //user exists
     if (isUser) {
       console.log("User Exists Here is the User");
-      res.status(201).json({ success: true, data: { user: isUser, token } });
+
+      const newToken = jwt.sign(isUser, process.env.SESSION_SECRET);
+
+      res
+        .status(201)
+        .json({ success: true, data: { user: isUser, token: newToken } });
     } else {
       const newUser = await UserSchema.create({
         name: user.firstName + " " + user.lastName,
@@ -25,8 +30,12 @@ router.get("/", verifyToken, async (req, res) => {
         createdAt: Date.now(),
         favourites: [],
       });
+      const newToken = jwt.sign(newUser, process.env.SESSION_SECRET);
+
       console.log(newUser, "creating newUser");
-      res.status(201).json({ success: true, data: { user: newUser, token } });
+      res
+        .status(201)
+        .json({ success: true, data: { user: newUser, token: newToken } });
     }
   } catch (err) {
     console.log(err, "errrrrrrrrrrrrr");
