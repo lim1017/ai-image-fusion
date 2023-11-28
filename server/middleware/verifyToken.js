@@ -14,7 +14,7 @@ export const verifyToken = (req, res, next) => {
     }
 
     console.log(decoded, "DECODED INFO");
-    // Attach the decoded payload to the request object for further use
+    // Attach payload to the req object for further use
     req.user = { decoded, token };
     next();
   });
