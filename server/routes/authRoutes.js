@@ -9,16 +9,12 @@ const router = express.Router();
 
 router.get("/", verifyToken, async (req, res) => {
   const user = req.user.data;
-  const token = req.token;
-  console.log(user, "USER!!!!!!!!!");
+  const token = req.user.token;
   try {
     const isUser = await UserSchema.find().where("email", user.email);
-    console.log(isUser, "is USER EXISTS????");
-    if (isUser.length === 0) {
-      console.log("user already Exists!!!");
+    if (isUser.length > 0) {
       res.status(201).json({ success: true, data: { user, token } });
     } else {
-      console.log("CREATING user!!!!!!!!!!!!!!!");
       const newUser = await UserSchema.create({
         name: user.firstName + " " + user.lastName,
         email: user.email,
