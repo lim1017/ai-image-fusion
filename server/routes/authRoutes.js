@@ -13,10 +13,10 @@ router.get("/", verifyToken, async (req, res) => {
   console.log(user, "USER!!!!!!!!!");
   try {
     const isUser = await UserSchema.find().where("email", user.email);
-
+    console.log(isUser, "is USER EXISTS????");
     if (isUser) {
       console.log("user already Exists!!!");
-      res.status(201).json({ success: true, data: { user }, token });
+      res.status(201).json({ success: true, data: { user, token } });
     } else {
       console.log("CREATING user!!!!!!!!!!!!!!!");
       const newUser = await UserSchema.create({
@@ -27,7 +27,7 @@ router.get("/", verifyToken, async (req, res) => {
         favourites: [],
       });
 
-      res.status(201).json({ success: true, data: { user: newUser }, token });
+      res.status(201).json({ success: true, data: { user: newUser, token } });
     }
   } catch (err) {
     console.log(err, "errrrrrrrrrrrrr");
