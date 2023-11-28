@@ -18,7 +18,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (isUser) {
       console.log("User Exists Here is the User");
 
-      const newToken = jwt.sign(isUser, process.env.SESSION_SECRET);
+      const newToken = jwt.sign(isUser.toObject(), process.env.SESSION_SECRET);
 
       res
         .status(201)
@@ -36,7 +36,10 @@ router.get("/", verifyToken, async (req, res) => {
       console.log(newUser, "creating newUser");
       res
         .status(201)
-        .json({ success: true, data: { user: newUser, token: newToken } });
+        .json({
+          success: true,
+          data: { user: newUser.toObject(), token: newToken },
+        });
     }
   } catch (err) {
     console.log(err, "errrrrrrrrrrrrr");
