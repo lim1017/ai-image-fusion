@@ -6,15 +6,23 @@ import { ShareOptionsComponent } from "./ShareOptionsComponent";
 import { ShareOptions, useShareMedia } from "../hooks/useShareMedia";
 import ShareForm from "./ShareForm";
 import { useEffect } from "react";
+import FavButton from "./FavButton";
 
 interface CardProps {
   _id: string;
   name: string;
   prompt: string;
   photo: string;
+  isAuthenticated: boolean;
 }
 
-const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
+const SinglePhotoCard = ({
+  _id,
+  name,
+  prompt,
+  photo,
+  isAuthenticated,
+}: CardProps) => {
   const { isOpen, openModal, closeModal } = useModal();
 
   const shareMedia = useShareMedia({ id: _id, photo, name });
@@ -31,7 +39,12 @@ const SinglePhotoCard = ({ _id, name, prompt, photo }: CardProps) => {
   }, [isOpen]);
 
   return (
-    <div className="card animate075 zoomIn">
+    <div className="card animate075 zoomIn relative">
+      {isAuthenticated && (
+        <div className="absolute top-10 left-10 z-50">
+          <FavButton onClick={() => console.log("clicked")} selected={false} />
+        </div>
+      )}
       <div className="rounded-xl group relative shadow-card hover:shadow-cardhover">
         <img
           onClick={openModal}

@@ -11,10 +11,16 @@ const LoginButton = ({ animate }: LoginBtnProps) => {
   const location = useLocation();
 
   const handleLogin = async () => {
-    await loginWithRedirect({
-      appState: { returnTo: location.pathname },
-    });
-    console.log("after login");
+    try {
+      await loginWithRedirect({
+        appState: { returnTo: location.pathname },
+      });
+    } catch (err) {
+      console.log("err", err);
+      console.log(err);
+    } finally {
+      console.log("finally login");
+    }
   };
 
   const classes = animate ? "animate slideInRight" : "";

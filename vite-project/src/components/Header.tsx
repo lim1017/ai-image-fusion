@@ -12,7 +12,7 @@ import LogoutButton from "./LogoutButton";
 
 export default function Header() {
   const { isAuthenticated, user } = useAuth0();
-
+  console.log(isAuthenticated, user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const userOptions = [
@@ -67,7 +67,7 @@ export default function Header() {
                   Create
                 </Button>
               </Link>
-              {isAuthenticated ? (
+              {user ? (
                 <div>
                   {userOptions.map((option) => {
                     return (
@@ -91,7 +91,7 @@ export default function Header() {
           <Link to="/create-post" className="mr-4">
             <Button intent="primary">Create</Button>
           </Link>
-          {isAuthenticated ? (
+          {user ? (
             <DropdownMenu options={userOptions} string={user?.nickname} />
           ) : (
             <LoginButton />
