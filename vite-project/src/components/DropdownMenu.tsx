@@ -57,7 +57,7 @@ const DropdownMenu = ({ options, string }: DropdownMenuProps) => {
 
               {options.map((option) => {
                 return (
-                  <Link to={`/${option.linkTo}`}>
+                  <Link key={option.linkTo} to={`/${option.linkTo}`}>
                     <Button intent="alt" className="mb-2">
                       {option.label}
                     </Button>
