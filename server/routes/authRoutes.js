@@ -2,6 +2,7 @@ import express from "express";
 import * as dotenv from "dotenv";
 import { verifyToken } from "../middleware/verifyToken.js";
 import UserSchema from "../mongodb/models/user.js";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
