@@ -11,9 +11,12 @@ router.get("/", verifyToken, async (req, res) => {
   const user = req.user.data;
   const token = req.user.token;
   try {
-    const isUser = await UserSchema.find().where("email", user.email);
-    if (isUser.length > 0) {
-      res.status(201).json({ success: true, data: { user, token } });
+    const isUser = await UserSchema.findOne().where("email", user.email);
+    console.log(isUser, "isUser");
+    //user exists
+    if (isUser) {
+      console.log("User Exists Here is the User");
+      res.status(201).json({ success: true, data: { user: isUser, token } });
     } else {
       const newUser = await UserSchema.create({
         name: user.firstName + " " + user.lastName,
@@ -22,7 +25,7 @@ router.get("/", verifyToken, async (req, res) => {
         createdAt: Date.now(),
         favourites: [],
       });
-
+      console.log(newUser, "creating newUser");
       res.status(201).json({ success: true, data: { user: newUser, token } });
     }
   } catch (err) {
@@ -30,5 +33,7 @@ router.get("/", verifyToken, async (req, res) => {
     res.status(500).json({ success: false, message: err });
   }
 });
+
+router.post("/user");
 
 export default router;
