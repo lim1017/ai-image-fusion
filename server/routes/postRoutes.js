@@ -70,7 +70,7 @@ router.route("/").post(async (req, res) => {
     res.status(201).json({ success: true, data: newPost });
   } catch (err) {
     console.log(err, "errrrrrrrrrrrrr");
-    res.status(500).json({ success: true, message: err });
+    res.status(500).json({ success: false, message: err });
   }
 });
 

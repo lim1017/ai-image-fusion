@@ -3,16 +3,39 @@ import * as dotenv from "dotenv";
 
 import User from "../mongodb/models/user.js";
 import { verifyToken } from "../middleware/verifyToken.js";
+import UserSchema from "../mongodb/models/user.js";
 
 dotenv.config();
 
 const router = express.Router();
 
-router.get("/", verifyToken, (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   console.log("in authRoute post!!!!!!!!!!!");
-  const user = req.user;
+  const user = req.user.data;
+  const token = req.token;
   console.log(user, "USER!!!!!!!!!");
-  res.send({ user });
+  try {
+    const isUser = await UserSchema.find().where("email", user.email);
+
+    if (isUser) {
+      console.log("user already Exists!!!");
+      res.send(201).json({ success: true, data: { user }, token });
+    } else {
+      console.log("CREATING user!!!!!!!!!!!!!!!");
+      const newUser = await UserSchema.create({
+        name: user.firstName + " " + user.lastName,
+        email: user.email,
+        username: user.userName,
+        createdAt: Date.now(),
+        favourites: [],
+      });
+
+      res.send(201).json({ success: true, data: { user: newUser }, token });
+    }
+  } catch (err) {
+    console.log(err, "errrrrrrrrrrrrr");
+    res.status(500).json({ success: false, message: err });
+  }
 });
 
 // //need this for post route?
