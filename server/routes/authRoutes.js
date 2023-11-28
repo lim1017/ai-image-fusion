@@ -14,7 +14,7 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     const isUser = await UserSchema.find().where("email", user.email);
     console.log(isUser, "is USER EXISTS????");
-    if (isUser) {
+    if (isUser.length === 0) {
       console.log("user already Exists!!!");
       res.status(201).json({ success: true, data: { user, token } });
     } else {
