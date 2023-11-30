@@ -9,9 +9,6 @@ import Button from "../components/Button";
 import AnimatedWrapper from "../components/Containers/AnimatedWrapper";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import { useSelector } from "react-redux";
-import { selectUser } from "../redux/selectors";
-
 interface RenderCardsProp {
   data: SinglePost[] | null;
   title: string;
@@ -50,9 +47,6 @@ export const RenderCards = ({
 };
 
 const Home = () => {
-  const user = useSelector(selectUser);
-  console.log(user);
-
   const { isAuthenticated } = useAuth0();
 
   const [searchText, setSearchText] = useState("");

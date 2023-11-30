@@ -7,6 +7,10 @@ import { ShareOptions, useShareMedia } from "../hooks/useShareMedia";
 import ShareForm from "./ShareForm";
 import { useEffect } from "react";
 import FavButton from "./FavButton";
+import type { Dispatch } from "redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../redux/userReducer";
+import { selectUser } from "../redux/selectors";
 
 interface CardProps {
   _id: string;
@@ -23,6 +27,26 @@ const SinglePhotoCard = ({
   photo,
   isAuthenticated,
 }: CardProps) => {
+  const dispatch: Dispatch = useDispatch();
+  const { favourites } = useSelector(selectUser);
+
+  const isFavourite = favourites.includes(_id);
+
+  const handleFavClick = () => {
+    if (isFavourite) {
+      dispatch({
+        type: userActions.REMOVEFAV,
+        payload: _id,
+      });
+      return;
+    } else {
+      dispatch({
+        type: userActions.ADDFAV,
+        payload: _id,
+      });
+    }
+  };
+
   const { isOpen, openModal, closeModal } = useModal();
 
   const shareMedia = useShareMedia({ id: _id, photo, name });
@@ -42,7 +66,7 @@ const SinglePhotoCard = ({
     <div className="card animate075 zoomIn relative">
       {isAuthenticated && (
         <div className="absolute top-10 left-10 z-50">
-          <FavButton onClick={() => console.log("clicked")} selected={false} />
+          <FavButton onClick={handleFavClick} selected={isFavourite} />
         </div>
       )}
       <div className="rounded-xl group relative shadow-card hover:shadow-cardhover">

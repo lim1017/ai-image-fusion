@@ -7,7 +7,7 @@ import logger from "redux-logger";
 // And use redux-batched-subscribe as an example of adding enhancers
 import { batchedSubscribe } from "redux-batched-subscribe";
 
-import { userReducer } from "./userReducer";
+import { initialUserState, userReducer } from "./userReducer";
 import _ from "lodash";
 
 const reducer = {
@@ -15,9 +15,7 @@ const reducer = {
 };
 
 const preloadedState = {
-  user: {
-    favourites: [],
-  },
+  user: initialUserState,
 };
 
 const debounceNotify = _.debounce((notify) => notify());
