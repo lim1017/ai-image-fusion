@@ -7,10 +7,7 @@ import { ShareOptions, useShareMedia } from "../hooks/useShareMedia";
 import ShareForm from "./ShareForm";
 import { useEffect } from "react";
 import FavButton from "./FavButton";
-import type { Dispatch } from "redux";
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../redux/userReducer";
-import { selectUser } from "../redux/selectors";
+import { useFavouriteImg } from "../hooks/useFavouriteImg";
 
 interface CardProps {
   _id: string;
@@ -27,25 +24,7 @@ const SinglePhotoCard = ({
   photo,
   isAuthenticated,
 }: CardProps) => {
-  const dispatch: Dispatch = useDispatch();
-  const { favourites } = useSelector(selectUser);
-
-  const isFavourite = favourites.includes(_id);
-
-  const handleFavClick = () => {
-    if (isFavourite) {
-      dispatch({
-        type: userActions.REMOVEFAV,
-        payload: _id,
-      });
-      return;
-    } else {
-      dispatch({
-        type: userActions.ADDFAV,
-        payload: _id,
-      });
-    }
-  };
+  const { handleFavClick, isFavourite } = useFavouriteImg(_id);
 
   const { isOpen, openModal, closeModal } = useModal();
 
