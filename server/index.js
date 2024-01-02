@@ -15,6 +15,7 @@ import chatGptRoutes from "./routes/chatGptRoutes.js";
 import whisperRoutes from "./routes/whisperRoutes.js";
 import gptSemanticSearchRoutes from "./routes/gptSemanticSearchRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { loadTrainingData } from "./utils.js";
 
 const app = express();
@@ -51,6 +52,7 @@ app.use("/api/v1/gpt", chatGptRoutes);
 app.use("/api/v1/whisper", whisperRoutes);
 app.use("/api/v1/gptSearch", gptSemanticSearchRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
 
 // Security headers
 app.use((req, res, next) => {

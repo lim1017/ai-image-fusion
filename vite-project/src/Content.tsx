@@ -11,16 +11,8 @@ const Home = lazy(() => import("./pages/Home"));
 const CreatePost = lazy(() => import("./pages/CreatePost"));
 const About = lazy(() => import("./pages/About"));
 const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
-import { jwtDecode } from "jwt-decode";
 export const Content = () => {
-  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
-
-  if (isAuthenticated) {
-    getAccessTokenSilently().then((token) => {
-      const decoded = jwtDecode(token);
-      console.log(decoded);
-    });
-  }
+  const { isAuthenticated, user } = useAuth0();
 
   return (
     <>
