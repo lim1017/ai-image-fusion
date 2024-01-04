@@ -1,19 +1,18 @@
 import express from "express";
 import UserSchema from "../mongodb/models/user.js";
+import { auth0JwtCheck } from "../middleware/verifyToken.js";
+
+//TODO verify token with get accesstoken silently does not work atm.
 
 const router = express.Router();
 
 //This route is for upading a users favourites
-router.route("/favourites").post(async (req, res) => {
-  // const userToken = req.user.data;
-  const { itemId, email } = req.body;
-
-  // console.log(userToken, "userToken");
-  console.log(itemId, email, "itemId");
-
+router.post("/favourites", auth0JwtCheck, async (req, res) => {
+  const userInfo = req.auth.payload;
+  const email = userInfo.email;
+  const { itemId } = req.body;
   try {
     const user = await UserSchema.findOne().where("email", email);
-    console.log(user, "user!!!!!!!!!!!1");
     const updatedUser = await user.addToFavourites(itemId);
 
     console.log(updatedUser, "updatedUser");
