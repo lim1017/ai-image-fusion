@@ -3,6 +3,7 @@ import type { Reducer, Action } from "@reduxjs/toolkit";
 export enum userActions {
   ADDFAV = "ADDFAV",
   REMOVEFAV = "REMOVEFAV",
+  SETFAV = "SETFAV",
 }
 
 interface UserState {
@@ -13,23 +14,33 @@ export const initialUserState = {
   favourites: [],
 };
 
-interface Actions<T> extends Action {
-  payload: T;
+interface AddRemoveFavAction extends Action {
+  type: typeof userActions.ADDFAV | typeof userActions.REMOVEFAV;
+  payload: string;
 }
 
-export const userReducer: Reducer<UserState, Actions<string>> = (
+interface SetFavAction extends Action {
+  type: typeof userActions.SETFAV;
+  payload: string[];
+}
+
+type UserActionTypes = AddRemoveFavAction | SetFavAction;
+
+export const userReducer: Reducer<UserState, UserActionTypes> = (
   state = initialUserState,
   action
 ) => {
   console.log({ state, action });
   switch (action.type) {
-    case userActions.ADDFAV:
-      return { favourites: [...state.favourites, action.payload] };
-    case userActions.REMOVEFAV:
-      return {
-        favourites: state.favourites.filter((id) => id !== action.payload),
-      };
-    default:
-      return state;
+  case userActions.SETFAV:
+    return { favourites: action.payload };
+  case userActions.ADDFAV:
+    return { favourites: [...state.favourites, action.payload] };
+  case userActions.REMOVEFAV:
+    return {
+      favourites: state.favourites.filter((id) => id !== action.payload),
+    };
+  default:
+    return state;
   }
 };

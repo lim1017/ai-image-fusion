@@ -9,7 +9,7 @@ export const favouriteImage = async (id: string, token: string) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ itemId: id, email: "lim1017@gmail.com" }),
+      body: JSON.stringify({ itemId: id }),
     }
   );
   if (res.ok) {

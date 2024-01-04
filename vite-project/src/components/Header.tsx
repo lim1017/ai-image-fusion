@@ -5,15 +5,33 @@ import Button from "../components/Button";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import DropdownMenu from "./DropdownMenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FaHamburger } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
+import { useDispatch } from "react-redux";
+import { userActions } from "../redux/userReducer";
 
 export default function Header() {
-  const { isAuthenticated, user } = useAuth0();
-  console.log(isAuthenticated, user);
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await getAccessTokenSilently();
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      console.log(decodedToken);
+      dispatch({
+        type: userActions.SETFAV,
+        payload: decodedToken.favourites,
+      });
+    };
+
+    if (isAuthenticated) {
+      getToken();
+    }
+  }, [isAuthenticated]);
 
   const userOptions = [
     {

@@ -15,6 +15,7 @@ export const useFavouriteImg = (id: string) => {
 
   const handleFavClick = async () => {
     const token = await getAccessTokenSilently();
+    console.log(token);
     favouriteImage(id, token)
       .then((res) => {
         console.log(res, "from adding fav");
