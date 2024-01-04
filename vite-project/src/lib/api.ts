@@ -53,6 +53,23 @@ export const createPost = async (data: postData) => {
   }
 };
 
+export const fetchPostsById = async ({
+  pageParam = 1,
+  pageSize = 8,
+  userFavorites = [],
+}) => {
+  let url = `${import.meta.env.VITE_API_URL}/api/v1/post`;
+
+  url += `?page=${pageParam}&limit=${pageSize}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const fetchPosts = async ({
   pageParam = 1,
   pageSize = 8,

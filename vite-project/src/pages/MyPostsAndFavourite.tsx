@@ -77,12 +77,6 @@ const MyPostsAndFavourite = () => {
     <section className="max-w-7xl mx-auto">
       <div className="flex justify-center flex-col">
         <h1 className="font-extrabold text-[#222328] text-[32px]">My Posts</h1>
-        {/* <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
-          Three exciting ways to create an image... Try it out{" "}
-        </h4>
-        <Link className="font-inter font-medium" to="/create-post">
-          HERE!
-        </Link> */}
       </div>
 
       <div className="mt-16">

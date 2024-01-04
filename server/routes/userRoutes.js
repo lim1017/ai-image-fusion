@@ -2,8 +2,6 @@ import express from "express";
 import UserSchema from "../mongodb/models/user.js";
 import { auth0JwtCheck } from "../middleware/verifyToken.js";
 
-//TODO verify token with get accesstoken silently does not work atm.
-
 const router = express.Router();
 
 router.get("/", auth0JwtCheck, async (req, res) => {

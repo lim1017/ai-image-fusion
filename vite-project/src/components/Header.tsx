@@ -39,10 +39,10 @@ export default function Header() {
       label: "My Posts",
       linkTo: "my-posts",
     },
-    // {
-    //   label: "Favourites",
-    //   linkTo: "favourites",
-    // },
+    {
+      label: "Favourites",
+      linkTo: "favourites",
+    },
   ];
 
   return (
