@@ -11,6 +11,7 @@ import { FaHamburger } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
 import { useDispatch } from "react-redux";
 import { userActions } from "../redux/userReducer";
+import { fetchUser } from "../lib/api";
 
 export default function Header() {
   const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
@@ -18,18 +19,18 @@ export default function Header() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const getToken = async () => {
+    const getUser = async () => {
       const token = await getAccessTokenSilently();
-      const decodedToken = JSON.parse(atob(token.split(".")[1]));
-      console.log(decodedToken);
+      //@ts-expect-error its handled
+      const userInfo = await fetchUser(user.email, token);
       dispatch({
         type: userActions.SETFAV,
-        payload: decodedToken.favourites,
+        payload: userInfo.data.user.favourites,
       });
     };
 
-    if (isAuthenticated) {
-      getToken();
+    if (isAuthenticated && user) {
+      getUser();
     }
   }, [isAuthenticated]);
 

@@ -6,6 +6,20 @@ import { auth0JwtCheck } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
+router.get("/", auth0JwtCheck, async (req, res) => {
+  const userInfo = req.auth.payload;
+  const email = userInfo.email;
+  try {
+    const user = await UserSchema.findOne().where("email", email);
+    res.status(201).json({
+      success: true,
+      data: { user: user },
+    });
+  } catch (e) {
+    console.log(e, "catch");
+  }
+});
+
 //This route is for upading a users favourites
 router.post("/favourites", auth0JwtCheck, async (req, res) => {
   const userInfo = req.auth.payload;
@@ -14,8 +28,6 @@ router.post("/favourites", auth0JwtCheck, async (req, res) => {
   try {
     const user = await UserSchema.findOne().where("email", email);
     const updatedUser = await user.addToFavourites(itemId);
-
-    console.log(updatedUser, "updatedUser");
 
     res.status(201).json({
       success: true,

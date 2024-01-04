@@ -29,12 +29,12 @@ const User = new mongoose.Schema({
 User.methods.addToFavourites = function (itemId) {
   if (!this.favourites.includes(itemId)) {
     this.favourites.push(itemId);
-    return this.save();
   } else {
     // If the item is already in favourites
+    console.log(itemId, "removing this item");
     this.favourites = this.favourites.filter((item) => item !== itemId);
-    return Promise.resolve(this);
   }
+  return this.save();
 };
 
 const UserSchema = mongoose.model("User", User);

@@ -11,7 +11,7 @@ export const useFavouriteImg = (id: string) => {
 
   const { getAccessTokenSilently } = useAuth0();
 
-  const isFavourite = favourites.includes(id);
+  const isFavourite = favourites ? favourites.includes(id) : false;
 
   const handleFavClick = async () => {
     const token = await getAccessTokenSilently();

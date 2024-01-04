@@ -30,7 +30,6 @@ export const userReducer: Reducer<UserState, UserActionTypes> = (
   state = initialUserState,
   action
 ) => {
-  console.log({ state, action });
   switch (action.type) {
   case userActions.SETFAV:
     return { favourites: action.payload };

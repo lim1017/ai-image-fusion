@@ -105,12 +105,10 @@ const Home = () => {
   };
 
   const handleScroll = debounce(() => {
-    console.log("in handle scroll");
     if (
       window.innerHeight + document.documentElement.scrollTop >=
       document.documentElement.offsetHeight - 100
     ) {
-      console.log("in if");
       fetchMorePosts();
     }
   }, 500);
