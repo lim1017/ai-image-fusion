@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import { Link } from "react-router-dom";
 import { fetchPosts } from "../lib/api";
@@ -104,16 +104,23 @@ const Home = () => {
     );
   };
 
-  const handleScroll = debounce(() => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 100
-    ) {
-      fetchMorePosts();
-    }
-  }, 500);
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        console.log("fetching");
+        fetchMorePosts();
+      }
+    }, 500);
 
-  window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasNextPage]);
 
   return (
     <AnimatedWrapper>
