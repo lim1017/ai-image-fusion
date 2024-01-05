@@ -58,9 +58,16 @@ export const fetchPostsById = async ({
   pageSize = 8,
   userFavorites = [],
 }) => {
-  let url = `${import.meta.env.VITE_API_URL}/api/v1/post`;
+  console.log(userFavorites);
+
+  let url = `${import.meta.env.VITE_API_URL}/api/v1/post/favourites`;
 
   url += `?page=${pageParam}&limit=${pageSize}`;
+
+  if (userFavorites.length > 0) {
+    const favoritesQueryParam = userFavorites.join(",");
+    url += `&userFavorites=${favoritesQueryParam}`;
+  }
 
   const res = await fetch(url, {
     method: "GET",
@@ -68,6 +75,13 @@ export const fetchPostsById = async ({
       "Content-Type": "application/json",
     },
   });
+
+  if (res.ok) {
+    const result = await res.json();
+    return result;
+  } else {
+    throw new Error("Something went wrong");
+  }
 };
 
 export const fetchPosts = async ({

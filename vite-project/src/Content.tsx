@@ -37,7 +37,14 @@ export const Content = () => {
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path="/favourites"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <MyPostsAndFavourite />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Routes>
         </Suspense>

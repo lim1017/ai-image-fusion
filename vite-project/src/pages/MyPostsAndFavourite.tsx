@@ -1,14 +1,27 @@
 import { useState, useEffect } from "react";
 import { Loader, FormField } from "../components";
-import { fetchPosts } from "../lib/api";
+import { fetchPosts, fetchPostsById } from "../lib/api";
 import { debounce } from "lodash";
 import { PostsResponse, SinglePost } from "../lib/types";
 import { RenderCards } from "./Home";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/selectors";
+
+enum Mode {
+  MY_POSTS = "my-posts",
+  FAVOURITES = "favourites",
+}
 
 const MyPostsAndFavourite = () => {
+  const { pathname } = useLocation();
+
+  const mode = pathname === "/my-posts" ? Mode.MY_POSTS : Mode.FAVOURITES;
+
   const { user, isAuthenticated } = useAuth0();
+  const { favourites } = useSelector(selectUser);
 
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
@@ -21,18 +34,31 @@ const MyPostsAndFavourite = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery<PostsResponse>({
       queryKey: ["user-posts"],
-      queryFn: ({ pageParam = 1 }) =>
-        fetchPosts({ pageParam, pageSize: 10, userEmail: user?.email || "" }),
+      queryFn: ({ pageParam = 1 }) => {
+        return mode === Mode.MY_POSTS
+          ? fetchPosts({
+            pageParam,
+            pageSize: 10,
+            userEmail: user?.email || "",
+          })
+          : fetchPostsById({
+            pageParam,
+            pageSize: 10,
+            userFavorites: favourites || [],
+          });
+      },
       getNextPageParam: (lastPage) => {
-        if (
-          lastPage.currentPage !== undefined &&
-          lastPage.totalPages !== undefined
-        ) {
-          if (lastPage.currentPage < lastPage.totalPages) {
-            return lastPage.currentPage + 1;
+        if (lastPage) {
+          if (
+            lastPage.currentPage !== undefined &&
+            lastPage.totalPages !== undefined
+          ) {
+            if (lastPage.currentPage < lastPage.totalPages) {
+              return lastPage.currentPage + 1;
+            }
+          } else {
+            return undefined;
           }
-        } else {
-          return undefined;
         }
       },
       onError(err) {
