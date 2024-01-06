@@ -43,11 +43,14 @@ const SinglePhotoCard = ({
 
   return (
     <div className="card animate075 zoomIn relative">
-      {isAuthenticated && (
-        <div className="absolute top-10 left-10 z-50">
-          <FavButton onClick={handleFavClick} selected={isFavourite} />
-        </div>
-      )}
+      <div className="absolute top-10 left-10 z-50">
+        <FavButton
+          onClick={handleFavClick}
+          selected={isFavourite}
+          isAuthenticated={isAuthenticated}
+        />
+      </div>
+
       <div className="rounded-xl group relative shadow-card hover:shadow-cardhover">
         <img
           onClick={openModal}
