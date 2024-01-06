@@ -84,11 +84,11 @@ const startServer = async () => {
     console.log(error);
   }
 
-  // try {
-  //   await loadTrainingData();
-  // } catch (err) {
-  //   console.log("error: ", err);
-  // }
+  try {
+    await loadTrainingData();
+  } catch (err) {
+    console.log("error: ", err);
+  }
 };
 
 startServer();
