@@ -5,25 +5,44 @@ import Button from "../components/Button";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import DropdownMenu from "./DropdownMenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FaHamburger } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
+import { useDispatch } from "react-redux";
+import { userActions } from "../redux/userReducer";
+import { fetchUser } from "../lib/api";
 
 export default function Header() {
-  const { isAuthenticated, user } = useAuth0();
-
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const token = await getAccessTokenSilently();
+      //@ts-expect-error its handled
+      const userInfo = await fetchUser(user.email, token);
+      dispatch({
+        type: userActions.SETFAV,
+        payload: userInfo.data.user.favourites,
+      });
+    };
+
+    if (isAuthenticated && user) {
+      getUser();
+    }
+  }, [isAuthenticated]);
 
   const userOptions = [
     {
       label: "My Posts",
       linkTo: "my-posts",
     },
-    // {
-    //   label: "Favourites",
-    //   linkTo: "favourites",
-    // },
+    {
+      label: "Favourites",
+      linkTo: "favourites",
+    },
   ];
 
   return (
@@ -67,7 +86,7 @@ export default function Header() {
                   Create
                 </Button>
               </Link>
-              {isAuthenticated ? (
+              {user ? (
                 <div>
                   {userOptions.map((option) => {
                     return (
@@ -91,7 +110,7 @@ export default function Header() {
           <Link to="/create-post" className="mr-4">
             <Button intent="primary">Create</Button>
           </Link>
-          {isAuthenticated ? (
+          {user ? (
             <DropdownMenu options={userOptions} string={user?.nickname} />
           ) : (
             <LoginButton />

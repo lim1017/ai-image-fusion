@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+import { auth } from "express-oauth2-jwt-bearer";
+
 export const verifyToken = (req, res, next) => {
   const token =
     req.headers.authorization && req.headers.authorization.split(" ")[1];
@@ -17,3 +19,9 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
+
+export const auth0JwtCheck = auth({
+  audience: "ai-server",
+  issuerBaseURL: "https://ai-images2.us.auth0.com/",
+  tokenSigningAlg: "RS256",
+});

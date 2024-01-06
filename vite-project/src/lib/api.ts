@@ -1,5 +1,41 @@
 import { postData } from "./types";
 
+export const fetchUser = async (email: string, token: string) => {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (res.ok) {
+    const result = await res.json();
+    return result;
+  } else {
+    throw new Error("Something went wrong");
+  }
+};
+
+export const favouriteImage = async (id: string, token: string) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/v1/user/favourites`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ itemId: id }),
+    }
+  );
+  if (res.ok) {
+    const result = await res.json();
+    return result;
+  } else {
+    throw new Error("Something went wrong");
+  }
+};
+
 export const createPost = async (data: postData) => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
     method: "POST",
@@ -7,6 +43,37 @@ export const createPost = async (data: postData) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    return result;
+  } else {
+    throw new Error("Something went wrong");
+  }
+};
+
+export const fetchPostsById = async ({
+  pageParam = 1,
+  pageSize = 8,
+  userFavorites = [],
+}) => {
+  console.log(userFavorites);
+
+  let url = `${import.meta.env.VITE_API_URL}/api/v1/post/favourites`;
+
+  url += `?page=${pageParam}&limit=${pageSize}`;
+
+  if (userFavorites.length > 0) {
+    const favoritesQueryParam = userFavorites.join(",");
+    url += `&userFavorites=${favoritesQueryParam}`;
+  }
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 
   if (res.ok) {

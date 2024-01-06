@@ -1,16 +1,29 @@
 import { useState, useEffect } from "react";
 import { Loader, FormField } from "../components";
-import { fetchPosts } from "../lib/api";
+import { fetchPosts, fetchPostsById } from "../lib/api";
 import { debounce } from "lodash";
-import { SinglePost } from "../lib/types";
+import { PostsResponse, SinglePost } from "../lib/types";
 import { RenderCards } from "./Home";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/selectors";
+
+enum Mode {
+  MY_POSTS = "my-posts",
+  FAVOURITES = "favourites",
+}
 
 const MyPostsAndFavourite = () => {
-  const { user } = useAuth0();
+  const { pathname } = useLocation();
 
-  const [userPosts, setUserPosts] = useState<SinglePost[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState<Mode>(
+    pathname === "/my-posts" ? Mode.MY_POSTS : Mode.FAVOURITES
+  );
+
+  const { user, isAuthenticated } = useAuth0();
+  const { favourites } = useSelector(selectUser);
 
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
@@ -21,27 +34,46 @@ const MyPostsAndFavourite = () => {
   );
 
   useEffect(() => {
-    const fetchPostWrapper = async () => {
-      setIsLoading(true);
-      try {
-        const result = await fetchPosts({
-          pageParam: 1,
-          pageSize: 100,
-          userEmail: user?.email || "",
-        });
-        return result;
-      } catch (err) {
-        alert(`${err} askdfskajdfh`);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    setMode(pathname === "/my-posts" ? Mode.MY_POSTS : Mode.FAVOURITES);
+  }, [pathname]);
 
-    fetchPostWrapper().then((result) => {
-      setUserPosts(result.data);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery<PostsResponse>({
+      queryKey: [mode === Mode.MY_POSTS ? "my-posts" : "favourites"],
+      queryFn: ({ pageParam = 1 }) => {
+        return mode === Mode.MY_POSTS
+          ? fetchPosts({
+            pageParam,
+            pageSize: 10,
+            userEmail: user?.email || "",
+          })
+          : fetchPostsById({
+            pageParam,
+            pageSize: 10,
+            userFavorites: favourites || [],
+          });
+      },
+      getNextPageParam: (lastPage) => {
+        if (lastPage) {
+          if (
+            lastPage.currentPage !== undefined &&
+            lastPage.totalPages !== undefined
+          ) {
+            if (lastPage.currentPage < lastPage.totalPages) {
+              return lastPage.currentPage + 1;
+            }
+          } else {
+            return undefined;
+          }
+        }
+      },
+      onError(err) {
+        console.log(err);
+        alert("Opps Something went wrong, Please try again later");
+      },
     });
-  }, []);
 
+  const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (searchTimeout) clearTimeout(searchTimeout);
 
@@ -49,7 +81,7 @@ const MyPostsAndFavourite = () => {
 
     setSearchTimeout(
       setTimeout(() => {
-        const searchResult = userPosts.filter(
+        const searchResult = allPosts.filter(
           (item) =>
             item.name.toLowerCase().includes(searchText.toLowerCase()) ||
             item.prompt.toLowerCase().includes(searchText.toLowerCase())
@@ -58,31 +90,33 @@ const MyPostsAndFavourite = () => {
       }, 500)
     );
   };
-
-  const handleScroll = debounce(() => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 100
-    ) {
-      console.log("");
+  const fetchMorePosts = () => {
+    if (hasNextPage) {
+      fetchNextPage();
     }
-  }, 500);
+  };
 
   useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        fetchMorePosts();
+      }
+    }, 500);
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasNextPage]);
 
   return (
     <section className="max-w-7xl mx-auto">
       <div className="flex justify-center flex-col">
         <h1 className="font-extrabold text-[#222328] text-[32px]">My Posts</h1>
-        {/* <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
-          Three exciting ways to create an image... Try it out{" "}
-        </h4>
-        <Link className="font-inter font-medium" to="/create-post">
-          HERE!
-        </Link> */}
       </div>
 
       <div className="mt-16">
@@ -109,18 +143,20 @@ const MyPostsAndFavourite = () => {
                 <span className="text-[#222328]">{searchText}</span>:
               </h2>
             )}
-            <div className="grid lg:grid-cols-3 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3">
+            <div>
               {searchText ? (
                 <RenderCards
                   data={searchedResults}
                   title="No Search Results Found"
-                  postsLoading={isLoading}
+                  postsLoading={isFetchingNextPage}
+                  isAuthenticated={isAuthenticated}
                 />
               ) : (
                 <RenderCards
-                  postsLoading={isLoading}
-                  data={userPosts}
+                  postsLoading={isFetchingNextPage}
+                  data={allPosts}
                   title="No Posts Yet"
+                  isAuthenticated={isAuthenticated}
                 />
               )}
             </div>

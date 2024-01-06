@@ -36,7 +36,46 @@ router.route("/").get(async (req, res) => {
       .skip(startIndex)
       .limit(limit);
 
-    const userPosts = await Post.find().where("email", userEmail);
+    const securePosts = posts.map((post) => {
+      const securePhotoUrl = post.photo.replace("http://", "https://");
+      return { ...post._doc, photo: securePhotoUrl };
+    });
+
+    res.status(200).json({
+      success: true,
+      data: securePosts,
+      currentPage: page,
+      totalPages,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error });
+  }
+});
+
+router.route("/favourites").get(async (req, res) => {
+  try {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit) || 10;
+
+    const userFavorites = req.query.userFavorites;
+
+    const count = await Post.countDocuments();
+    const totalPages = Math.ceil(count / limit);
+
+    const startIndex = (page - 1) * limit;
+
+    const favoritesArray = userFavorites.split(",");
+
+    //start query and add filter by email if email is provided
+    let query = Post.find();
+
+    query = query.where("_id").in(favoritesArray);
+
+    const posts = await query
+      .sort({ createdAt: -1 })
+      .skip(startIndex)
+      .limit(limit);
+    console.log(posts, "posts found");
 
     const securePosts = posts.map((post) => {
       const securePhotoUrl = post.photo.replace("http://", "https://");
@@ -50,6 +89,7 @@ router.route("/").get(async (req, res) => {
       totalPages,
     });
   } catch (error) {
+    console.log(error.message, " in fav error catch");
     res.status(500).json({ success: false, message: error });
   }
 });

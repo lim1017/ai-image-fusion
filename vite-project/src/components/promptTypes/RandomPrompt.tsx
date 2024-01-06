@@ -11,7 +11,7 @@ export default function RandomPrompt({
   return (
     <div style={{ minHeight: 160 }} className="pt-4">
       <Card>
-        <h2 className="mb-4 pt-4"> "Comeup with your own prompt, or..."</h2>
+        <p className="mb-4 pt-4"> "Comeup with your own prompt, or..."</p>
         <Button
           type="button"
           onClick={handleRandomPrompt}

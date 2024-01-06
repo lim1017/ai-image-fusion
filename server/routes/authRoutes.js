@@ -10,7 +10,6 @@ const router = express.Router();
 
 router.get("/", verifyToken, async (req, res) => {
   const user = req.user.data;
-  const token = req.user.token;
   try {
     const isUser = await UserSchema.findOne().where("email", user.email);
     console.log(isUser, "isUser");
@@ -34,12 +33,10 @@ router.get("/", verifyToken, async (req, res) => {
       const newToken = jwt.sign(newUser, process.env.SESSION_SECRET);
 
       console.log(newUser, "creating newUser");
-      res
-        .status(201)
-        .json({
-          success: true,
-          data: { user: newUser.toObject(), token: newToken },
-        });
+      res.status(201).json({
+        success: true,
+        data: { user: newUser.toObject(), token: newToken },
+      });
     }
   } catch (err) {
     console.log(err, "errrrrrrrrrrrrr");

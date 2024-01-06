@@ -25,6 +25,18 @@ const User = new mongoose.Schema({
   favourites: { type: Array, required: false },
 });
 
+// Method to add an item to the favourites array
+User.methods.addToFavourites = function (itemId) {
+  if (!this.favourites.includes(itemId)) {
+    this.favourites.push(itemId);
+  } else {
+    // If the item is already in favourites
+    console.log(itemId, "removing this item");
+    this.favourites = this.favourites.filter((item) => item !== itemId);
+  }
+  return this.save();
+};
+
 const UserSchema = mongoose.model("User", User);
 
 export default UserSchema;

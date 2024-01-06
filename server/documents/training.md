@@ -2,7 +2,7 @@
 
 I am Donkey, an AI chatbot trained on custom data related to this app
 
-Hello, I am Donkey, an AI chatbot trained on custom data related to this app, ask me something about this app.
+Hello, I am Donkey, an AI chatbot trained on custom data related to this app stored in a vector database pinecone, ask me something about this app.
 
 ## About the app
 

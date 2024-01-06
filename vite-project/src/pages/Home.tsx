@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Loader, SinglePhotoCard, FormField } from "../components";
 import { Link } from "react-router-dom";
 import { fetchPosts } from "../lib/api";
@@ -7,19 +7,30 @@ import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, SinglePost } from "../lib/types";
 import Button from "../components/Button";
 import AnimatedWrapper from "../components/Containers/AnimatedWrapper";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface RenderCardsProp {
   data: SinglePost[] | null;
   title: string;
   postsLoading: boolean;
+  isAuthenticated: boolean;
 }
 
-export const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
+export const RenderCards = ({
+  data,
+  title,
+  postsLoading,
+  isAuthenticated,
+}: RenderCardsProp) => {
   if (data && data?.length > 0) {
     return (
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
         {data.map((post, i) => (
-          <SinglePhotoCard key={i} {...post} />
+          <SinglePhotoCard
+            key={i}
+            {...post}
+            isAuthenticated={isAuthenticated}
+          />
         ))}
         {postsLoading && (
           <div className="flex justify-center items-center">
@@ -36,6 +47,8 @@ export const RenderCards = ({ data, title, postsLoading }: RenderCardsProp) => {
 };
 
 const Home = () => {
+  const { isAuthenticated } = useAuth0();
+
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
     null
@@ -91,18 +104,23 @@ const Home = () => {
     );
   };
 
-  const handleScroll = debounce(() => {
-    console.log("in handle scroll");
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 100
-    ) {
-      console.log("in if");
-      fetchMorePosts();
-    }
-  }, 500);
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        console.log("fetching");
+        fetchMorePosts();
+      }
+    }, 500);
 
-  window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasNextPage]);
 
   return (
     <AnimatedWrapper>
@@ -122,6 +140,9 @@ const Home = () => {
               Create Post
             </Button>
           </Link>
+          <h4 className="flex self-center mt-2 text-[#666e75] text-[16px] max-w-[500px]">
+            Login to track your posts, and favourites!
+          </h4>
         </div>
 
         <div className="mt-16">
@@ -155,12 +176,14 @@ const Home = () => {
                     data={searchedResults}
                     title="No Search Results Found"
                     postsLoading={isFetchingNextPage}
+                    isAuthenticated={isAuthenticated}
                   />
                 ) : (
                   <RenderCards
                     postsLoading={isFetchingNextPage}
                     data={allPostsz}
                     title="No Posts Yet"
+                    isAuthenticated={isAuthenticated}
                   />
                 )}
               </div>
