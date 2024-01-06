@@ -18,7 +18,9 @@ enum Mode {
 const MyPostsAndFavourite = () => {
   const { pathname } = useLocation();
 
-  const mode = pathname === "/my-posts" ? Mode.MY_POSTS : Mode.FAVOURITES;
+  const [mode, setMode] = useState<Mode>(
+    pathname === "/my-posts" ? Mode.MY_POSTS : Mode.FAVOURITES
+  );
 
   const { user, isAuthenticated } = useAuth0();
   const { favourites } = useSelector(selectUser);
@@ -31,9 +33,13 @@ const MyPostsAndFavourite = () => {
     null
   );
 
+  useEffect(() => {
+    setMode(pathname === "/my-posts" ? Mode.MY_POSTS : Mode.FAVOURITES);
+  }, [pathname]);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery<PostsResponse>({
-      queryKey: ["user-posts"],
+      queryKey: [mode === Mode.MY_POSTS ? "my-posts" : "favourites"],
       queryFn: ({ pageParam = 1 }) => {
         return mode === Mode.MY_POSTS
           ? fetchPosts({
@@ -85,7 +91,6 @@ const MyPostsAndFavourite = () => {
     );
   };
   const fetchMorePosts = () => {
-    console.log(hasNextPage);
     if (hasNextPage) {
       fetchNextPage();
     }
@@ -97,7 +102,6 @@ const MyPostsAndFavourite = () => {
         window.innerHeight + document.documentElement.scrollTop >=
         document.documentElement.offsetHeight - 100
       ) {
-        console.log("fetching");
         fetchMorePosts();
       }
     }, 500);
