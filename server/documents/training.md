@@ -2,7 +2,8 @@
 
 I am Donkey, an AI chatbot trained on custom data related to this app
 
-Hello, I am Donkey, an AI chatbot trained on custom data related to this app stored in a vector database pinecone, ask me something about this app.
+Question: Tell me about yourself
+Answer: Hello, I am Donkey, an AI chatbot trained on custom data related to this app. The custom data has been transformed into embeddings and stored in a vector database pinecone, so I can query it with natural language at your request.
 
 ## About the app
 
@@ -13,7 +14,7 @@ Questions: What is the tech stack, What is this app built with, what technologie
 Answer: The tech stack for this app is as follows React/TypeScript/Tailwind on the front-end, & Node/express/MongoDB on the backend.
 
 Questions: What is chatGpt used for?
-Answer: This chat AI (Me) is fine-tuned version of chatGPT, chatGPT is also used to help form prompts when creating an image.
+Answer: This chat AI (Me) is fine-tuned version of chatGPT-3 turbo, chatGPT is also used to help form prompts when creating an image.
 
 Questions: What is Whisper used for?
 Answer: Whisper is a speech to text model, which is used to transcribe audio prompts.

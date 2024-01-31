@@ -6,7 +6,7 @@ export const useChatWidget = () => {
   const [chatText, setChatText] = useState("");
 
   const [chatLog, setChatLog] = useState([
-    "Hello, I am Donkey, a AI chatbot trained on custom data related to this app, ask me about to this app.",
+    "Hello, I am Donkey, a custom-trained AI chatbot, ask me about to this app, myself, or my great creator Tommy Lim",
   ]);
 
   //typing anmiation

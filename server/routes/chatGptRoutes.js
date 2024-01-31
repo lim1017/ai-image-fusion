@@ -17,8 +17,9 @@ router.route("/").post(async (req, res) => {
 
     const words = chips.join();
 
+    //Completions API legacy
     const gptRes = await openai.createCompletion({
-      model: "text-curie-001",
+      model: "gpt-3.5-turbo-instruct",
       prompt: `
       Perform the following action:
       Use the list of words delimited by triple asterisk. 
@@ -35,7 +36,8 @@ router.route("/").post(async (req, res) => {
 
     res.status(200).json(prompt);
   } catch (error) {
-    console.log(error, "open ai ERRORRRRRRRRRRRRRRRRRRRRR");
+    console.log(error.message, "open ai ERRORRRRRRRRRRRRRRRRRRRRR");
+    console.log(error?.response.data.error.message, "msg error");
     res.status(500).send(error?.response.data.error.message);
   }
 });
