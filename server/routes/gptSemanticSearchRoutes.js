@@ -23,8 +23,10 @@ router.route("/").post(async (req, res) => {
     const text = await queryPinecone(pineconeClient, indexName, query);
 
     res.status(200).json(text);
-  } catch (err) {
-    console.log(err, "errrrrrrrrrrrrr");
+  } catch (error) {
+    console.log(error.message, "chatbot ERRORRRRRRRRRRRRRRRRRRRRR");
+    console.log(error?.response.data.error.message, "msg error");
+
     res.status(500).json({ success: false, message: err });
   }
 });
