@@ -1,6 +1,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
+import { customRateLimiter } from "../middleware/rateLimit.js";
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ router.route("/").get((req, res) => {
   res.status(200).json({ message: "Hello from DALL-E routess!" });
 });
 
-router.route("/").post(async (req, res) => {
+router.route("/").post(customRateLimiter(1, 1), async (req, res) => {
   try {
     const { prompt } = req.body;
 
