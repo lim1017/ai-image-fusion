@@ -23,7 +23,6 @@ const initialErrorObj = { name: false, prompt: false };
 
 const CreatePage = () => {
   const { user } = useAuth0();
-
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isOpen, openModal, closeModal } = useModal();
@@ -64,6 +63,12 @@ const CreatePage = () => {
             body: JSON.stringify({ prompt: form.prompt }),
           }
         );
+
+        //checks for rate limit error
+        if (!res.ok) {
+          const errorText = await res.text(); // Get the error text
+          throw new Error(errorText); // Optionally, you can throw an error to handle it further
+        }
 
         const data = await res.json();
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
