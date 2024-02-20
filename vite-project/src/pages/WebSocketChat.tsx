@@ -1,5 +1,6 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 const users = [
   { name: "tom", id: 1 },
@@ -7,28 +8,44 @@ const users = [
   { name: "jill", id: 3 },
 ];
 
-const messages = [
-  { text: "hello", sender: "tom" },
-  { text: "hi", sender: "jill" },
-];
+// const messageLog = [
+//   { text: "hello", sender: "tom", id: 1 },
+//   { text: "hi", sender: "jill", id: 2 },
+// ];
+
+interface Messages {
+  text: string;
+  sender: string;
+  id: number;
+}
+// const socket = io(`${import.meta.env.VITE_API_URL}`);
 
 export default function WebSocketChat() {
   const [newMessage, setNewMessage] = useState("");
+  const [messageLog, setMessageLog] = useState<Messages[]>([]);
+  const [socket, setSocket] = useState<Socket>();
+
+  const { user } = useAuth0();
 
   useEffect(() => {
     const socket = io(`${import.meta.env.VITE_API_URL}`);
-    socket.on("chat_response", (data) => {
+    setSocket(socket);
+
+    socket.on("chat_response", (data: Messages) => {
       console.log(data);
+      setMessageLog((prev) => [...prev, data]);
     });
+  }, []);
 
-    return () => {
-      socket.disconnect();
-    };
-  });
-
-  const socket = io(`${import.meta.env.VITE_API_URL}`);
   const handleSendMessage = () => {
-    socket.emit("chat", "Hello from chat world");
+    if (socket) {
+      socket.emit("chat", {
+        text: newMessage,
+        sender: user?.nickname || `user${Math.floor(Math.random() * 1000)}`,
+        id: Math.floor(Math.random() * 1000000),
+      });
+      setNewMessage("");
+    }
   };
   return (
     <div className="flex" style={{ height: "78vh" }}>
@@ -48,7 +65,7 @@ export default function WebSocketChat() {
       <div className="flex-1 flex flex-col">
         {/* Message Display Area */}
         <div className="flex-1 overflow-y-auto p-4">
-          {messages.map((message, index) => (
+          {messageLog.map((message, index) => (
             <div key={index} className="mb-4 text-left">
               <span className="font-bold">{message.sender}: </span>
               <span>{message.text}</span>

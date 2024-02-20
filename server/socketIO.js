@@ -9,8 +9,6 @@ export const initSocketIO = (server) => {
     },
   });
   io.on("connection", (socket) => {
-    console.log(`a user connected ${socket.id}`);
-
     socket.on("chat", (data) => {
       console.log(data);
       socket.broadcast.emit("chat_response", data);
