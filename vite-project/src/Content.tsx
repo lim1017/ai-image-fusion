@@ -6,6 +6,7 @@ import { Loader } from "./components";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ProtectedRoute } from "./components/Containers/ProtectedRoute";
 import { ChatWidget } from "./components/ChatWidget/ChatWidget";
+import WebSocketChat from "./pages/WebSocketChat";
 
 const Home = lazy(() => import("./pages/Home"));
 const CreatePost = lazy(() => import("./pages/CreatePost"));
@@ -29,6 +30,8 @@ export const Content = () => {
             <Route path="/" element={<Home />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/about" element={<About />} />
+            <Route path="/chat" element={<WebSocketChat />} />
+
             <Route
               path="/my-posts"
               element={
