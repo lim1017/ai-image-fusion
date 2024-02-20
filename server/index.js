@@ -1,6 +1,8 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
+import { Server } from "socket.io";
+import { createServer } from "node:http";
 
 //parse incoming requests
 import bodyParser from "body-parser";
@@ -19,6 +21,12 @@ import userRoutes from "./routes/userRoutes.js";
 import { loadTrainingData } from "./utils.js";
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+});
 
 //serves static files from public folder
 app.use(express.static("public"));
@@ -71,12 +79,12 @@ const startServer = async () => {
     connectDB(process.env.MONGO_DB_URL);
 
     if (process.env.NODE_ENV === "development") {
-      app.listen(8080, () =>
+      server.listen(8080, () =>
         console.log(`Server started on port 8080, in development mode`)
       );
     } else {
       console.log("production");
-      app.listen(process.env.PORT, () =>
+      server.listen(process.env.PORT, () =>
         console.log(`Server started on port ${process.env.PORT}`)
       );
     }
