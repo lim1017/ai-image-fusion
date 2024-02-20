@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 
 import { lazy, Suspense } from "react";
@@ -14,11 +14,11 @@ const About = lazy(() => import("./pages/About"));
 const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
 export const Content = () => {
   const { isAuthenticated, user } = useAuth0();
-
+  const location = useLocation();
   return (
     <>
       <Header />
-      <main className="sm:p-8 px-4 py-8 w-full bg-[#f9fafe] min-h-[calc(100vh-73px)]">
+      <main className="sm:p-8 px-4 py-8 w-full bg-[#f9fafe] min-h-[calc(100vh-150px)]">
         <Suspense
           fallback={
             <div className="flex justify-center pt-4 mt-4">
@@ -51,7 +51,7 @@ export const Content = () => {
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Routes>
         </Suspense>
-        <ChatWidget name={user?.nickname} />
+        {location.pathname !== "/chat" && <ChatWidget name={user?.nickname} />}
       </main>
     </>
   );
