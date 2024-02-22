@@ -1,47 +1,100 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
-const users = [
-  { name: "tom", id: 1 },
-  { name: "bob", id: 2 },
-  { name: "jill", id: 3 },
-];
-
-// const messageLog = [
-//   { text: "hello", sender: "tom", id: 1 },
-//   { text: "hi", sender: "jill", id: 2 },
-// ];
+const randomUser = `User${Math.floor(Math.random() * 1000)}`;
 
 interface Messages {
   text: string;
   sender: string;
   id: number;
 }
-// const socket = io(`${import.meta.env.VITE_API_URL}`);
+
+interface Users {
+  [key: string]: User;
+}
+
+interface User {
+  id: number;
+  name: string;
+}
 
 export default function WebSocketChat() {
   const [newMessage, setNewMessage] = useState("");
   const [messageLog, setMessageLog] = useState<Messages[]>([]);
   const [socket, setSocket] = useState<Socket>();
-
+  const [userList, setUserList] = useState<Users>({});
   const { user } = useAuth0();
+
+  const [chatUser, setChatUser] = useState("");
+  // const chatUser = user?.nickname || randomUser;
+
+  // const socketRef = useRef<Socket | null>(null);
+  // useEffect(() => {
+  //   // Initialize socket only if it doesn't exist
+  //   if (!socketRef.current) {
+  //     socketRef.current = io(`${import.meta.env.VITE_API_URL}`);
+  //     socketRef.current.emit("join_room", {
+  //       user: user?.nickname || undefined,
+  //       room: 1,
+  //     });
+
+  //     socketRef.current.on("roomUsers", (users) => {
+  //       console.log(users, "users");
+  //       setUserList(users);
+  //     });
+
+  //     socketRef.current.on("chat_response", (data: Messages) => {
+  //       console.log(data);
+  //       setMessageLog((prev) => [...prev, data]);
+  //     });
+  //   }
+
+  //   return () => {
+  //     if (socketRef.current) {
+  //       socketRef.current.emit("leave_room", {
+  //         user: user?.nickname || undefined,
+  //         room: 1,
+  //       });
+  //       socketRef.current = null;
+  //     }
+  //   };
+  // }, []); // Empty dependency array ensures this runs once
 
   useEffect(() => {
     const socket = io(`${import.meta.env.VITE_API_URL}`);
     setSocket(socket);
 
-    socket.on("chat_response", (data: Messages) => {
+    socket.emit("join_room", { user: chatUser || undefined, room: 1 });
+
+    //get list of users
+    socket.on("roomUsers", (data) => {
       console.log(data);
+      setUserList(data.users);
+
+      setChatUser(data.currentUser);
+    });
+
+    socket.on("chat_response", (data: Messages) => {
       setMessageLog((prev) => [...prev, data]);
     });
+
+    return () => {
+      if (socket.connected) {
+        socket.emit("leave_room", {
+          user: chatUser,
+          room: 1,
+        });
+        socket.disconnect();
+      }
+    };
   }, []);
 
   const handleSendMessage = () => {
     if (socket) {
       socket.emit("chat", {
         text: newMessage,
-        sender: user?.nickname || `user${Math.floor(Math.random() * 1000)}`,
+        sender: chatUser,
         id: Math.floor(Math.random() * 1000000),
       });
       setNewMessage("");
@@ -53,9 +106,9 @@ export default function WebSocketChat() {
       <div className="w-1/4 bg-gray-200 p-4">
         <h2 className="font-bold text-lg mb-4">Connected Users</h2>
         <ul>
-          {users.map((user) => (
-            <li key={user.id} className="mb-2">
-              {user.name}
+          {Object.keys(userList).map((user) => (
+            <li key={userList[user].id} className="mb-2">
+              {`User${userList[user].id.toString().slice(0, 6)}`}
             </li>
           ))}
         </ul>
