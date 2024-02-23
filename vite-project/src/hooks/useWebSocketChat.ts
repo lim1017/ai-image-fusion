@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
-interface Messages {
+interface Message {
   text: string;
   sender: string;
   id: number;
+  time: string;
+  room: string;
 }
 
-interface Users {
+export interface Users {
   [key: string]: User;
 }
 
-interface User {
+export interface User {
   id: number;
-  name: string;
+  user: string;
 }
 
 export const useWebSocketChat = () => {
   const [newMessage, setNewMessage] = useState("");
-  const [messageLog, setMessageLog] = useState<Messages[]>([]);
+  const [messageLog, setMessageLog] = useState<Message[]>([]);
   const [socket, setSocket] = useState<Socket>();
   const [userList, setUserList] = useState<Users>({});
 
@@ -27,49 +29,62 @@ export const useWebSocketChat = () => {
   useEffect(() => {
     const socket = io(`${import.meta.env.VITE_API_URL}`);
     setSocket(socket);
-
-    socket.emit("join_room", { user: chatUser || undefined, room: 1 });
-
     //get list of users
     socket.on("roomUsers", (data) => {
-      console.log(data);
       setUserList(data.users);
-
-      setChatUser(data.currentUser);
+      if (data.currentUser) {
+        setChatUser(data.currentUser.user);
+      } else {
+        setChatUser("");
+      }
     });
 
-    socket.on("chat_response", (data: Messages) => {
+    socket.on("chat_response", (data: Message) => {
+      console.log(data, "reciving chat response");
       setMessageLog((prev) => [...prev, data]);
     });
 
     return () => {
-      if (socket.connected) {
-        socket.emit("leave_room", {
-          user: chatUser,
-          room: 1,
-        });
-        socket.disconnect();
-      }
+      //clean up other wise duplicate events
+      socket.off("chat_response");
+      socket.off("roomUsers");
     };
   }, []);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (socket) {
-      socket.emit("chat", {
+      const MsgData: Message = {
         text: newMessage,
         sender: chatUser,
+        time: new Date().toLocaleTimeString(),
         id: Math.floor(Math.random() * 1000000),
-      });
+        room: "chat1",
+      };
+      await socket.emit("chat", MsgData);
       setNewMessage("");
+      setMessageLog((prev) => [...prev, MsgData]);
+    }
+  };
+
+  const handleJoinChat = (e) => {
+    e.preventDefault();
+    if (socket) {
+      socket.emit("join_room", {
+        user: chatUser,
+        room: "chat1",
+      });
     }
   };
 
   return {
+    handleJoinChat,
     handleSendMessage,
     messageLog,
     userList,
     newMessage,
     setNewMessage,
+    chatUser,
+    setChatUser,
   };
 };

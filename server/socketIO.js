@@ -5,7 +5,7 @@ export const initSocketIO = (server) => {
   const users = {};
 
   const addUser = (user) => {
-    users[user.id] = { id: user.id, name: user.user };
+    users[user.id] = { id: user.id, user: user.user };
   };
 
   const removeUser = (user) => {
@@ -20,20 +20,25 @@ export const initSocketIO = (server) => {
     },
   });
   io.on("connection", (socket) => {
-    socket.on("join_room", (data) => {
-      const { room, user } = data;
-      addUser({ user, id: socket.id });
-
-      socket.broadcast.emit("roomUsers", { users, currentUser: socket.id });
+    console.log("broadcast", users);
+    socket.emit("roomUsers", {
+      users,
     });
 
-    socket.on("leave_room", (data) => {
-      removeUser(data);
-      console.log(users);
+    socket.on("join_room", (data) => {
+      const { room, user } = data;
+      socket.join(room);
+      addUser({ user, id: socket.id });
+
+      io.to("chat1").emit("roomUsers", {
+        users: users,
+        currentUser: { user, id: socket.id },
+      });
     });
 
     socket.on("chat", (data) => {
-      socket.broadcast.emit("chat_response", data);
+      console.log(data, "chat");
+      socket.to("chat1").emit("chat_response", data);
     });
 
     socket.on("disconnect", () => {
