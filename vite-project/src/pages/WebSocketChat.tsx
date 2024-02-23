@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React from "react";
+import React, { useState } from "react";
 import { Users, User, useWebSocketChat } from "../hooks/useWebSocketChat";
 
 const randomUser = `User${Math.floor(Math.random() * 1000)}`;
@@ -24,10 +24,15 @@ export default function WebSocketChat() {
     messageLog,
     userList,
     newMessage,
-    setNewMessage,
+    command,
+    setCommand,
+    additionalText,
     chatUser,
     setChatUser,
+    handleInputChange,
+    handleKeyDown,
   } = useWebSocketChat();
+
   return (
     <>
       <div>
@@ -79,13 +84,27 @@ export default function WebSocketChat() {
           {/* Message Input Area */}
           <div className="p-4 border-t-2">
             <form onSubmit={handleSendMessage}>
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                className="border-2 w-full p-2"
-                placeholder="Type your message..."
-              />
+              <div className="flex items-center border-2 w-full p-2">
+                {command && (
+                  <div className="chip bg-purple-500 text-white p-1 mr-2 rounded">
+                    {command}
+                    <span
+                      className="ml-2 cursor-pointer"
+                      onClick={() => setCommand("")}
+                    >
+                      &times;
+                    </span>
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={command ? additionalText : newMessage}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  className="flex-1"
+                  placeholder={command ? "" : "Type your message..."}
+                />
+              </div>
               <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2">
                 Send
               </button>

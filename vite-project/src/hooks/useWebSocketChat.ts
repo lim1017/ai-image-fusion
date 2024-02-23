@@ -7,6 +7,7 @@ interface Message {
   id: number;
   time: string;
   room: string;
+  command: string;
 }
 
 export interface Users {
@@ -25,6 +26,35 @@ export const useWebSocketChat = () => {
   const [userList, setUserList] = useState<Users>({});
 
   const [chatUser, setChatUser] = useState("");
+
+  //for specialc commands
+  const [command, setCommand] = useState("");
+  const [additionalText, setAdditionalText] = useState("");
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    const commandMatch = value.match(/^\/image\s*/);
+
+    if (commandMatch) {
+      setCommand("image");
+      setAdditionalText(value.slice(commandMatch[0].length));
+    } else {
+      if (command) {
+        setAdditionalText(value);
+      } else {
+        setNewMessage(value);
+      }
+    }
+
+    setNewMessage(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Backspace" && command && additionalText.length === 0) {
+      setCommand("");
+      setNewMessage("/image");
+    }
+  };
 
   useEffect(() => {
     const socket = io(`${import.meta.env.VITE_API_URL}`);
@@ -51,18 +81,21 @@ export const useWebSocketChat = () => {
     };
   }, []);
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = (e) => {
+    console.log({ command, additionalText, newMessage });
     e.preventDefault();
     if (socket) {
       const MsgData: Message = {
         text: newMessage,
         sender: chatUser,
+        command,
         time: new Date().toLocaleTimeString(),
         id: Math.floor(Math.random() * 1000000),
         room: "chat1",
       };
-      await socket.emit("chat", MsgData);
+      socket.emit("chat", MsgData);
       setNewMessage("");
+      setCommand("");
       setMessageLog((prev) => [...prev, MsgData]);
     }
   };
@@ -80,11 +113,16 @@ export const useWebSocketChat = () => {
   return {
     handleJoinChat,
     handleSendMessage,
+    handleInputChange,
+    handleKeyDown,
     messageLog,
     userList,
     newMessage,
     setNewMessage,
     chatUser,
     setChatUser,
+    command,
+    setCommand,
+    additionalText,
   };
 };
