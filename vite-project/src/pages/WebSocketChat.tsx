@@ -1,6 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React, { useEffect, useRef, useState } from "react";
-import io, { Socket } from "socket.io-client";
+import React from "react";
 import { Users, User, useWebSocketChat } from "../hooks/useWebSocketChat";
 
 const randomUser = `User${Math.floor(Math.random() * 1000)}`;

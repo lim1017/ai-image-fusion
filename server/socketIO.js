@@ -20,7 +20,7 @@ export const initSocketIO = (server) => {
     },
   });
   io.on("connection", (socket) => {
-    console.log("broadcast", users);
+    //sends list of users on connection
     socket.emit("roomUsers", {
       users,
     });
