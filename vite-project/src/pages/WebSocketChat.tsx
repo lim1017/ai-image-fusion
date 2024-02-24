@@ -32,7 +32,6 @@ export default function WebSocketChat() {
     handleInputChange,
     handleKeyDown,
   } = useWebSocketChat();
-
   return (
     <>
       <div>
@@ -71,14 +70,22 @@ export default function WebSocketChat() {
         <div className="flex-1 flex flex-col">
           {/* Message Display Area */}
           <div className="flex-1 overflow-y-auto p-4">
-            {messageLog.map((message, index) => (
-              <div key={index} className="mb-4 text-left">
-                <span className="font-bold">
-                  {`User${message.sender.toString().slice(0, 6)}`}:{" "}
-                </span>
-                <span>{message.text}</span>
-              </div>
-            ))}
+            {messageLog.map((message, index) => {
+              return (
+                <div key={index} className="mb-4 text-left">
+                  <span className="font-bold">
+                    {`User${message.sender.toString().slice(0, 6)}`}:{" "}
+                  </span>
+                  <span>{message.text}</span>
+                  {message.image && (
+                    <img
+                      src={`data:image/jpeg;base64,${message.image}`}
+                      alt={message.text}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Message Input Area */}

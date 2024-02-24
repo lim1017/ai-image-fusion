@@ -8,6 +8,7 @@ interface Message {
   time: string;
   room: string;
   command: string;
+  image?: string;
 }
 
 export interface Users {
@@ -82,7 +83,6 @@ export const useWebSocketChat = () => {
   }, []);
 
   const handleSendMessage = (e) => {
-    console.log({ command, additionalText, newMessage });
     e.preventDefault();
     if (socket) {
       const MsgData: Message = {

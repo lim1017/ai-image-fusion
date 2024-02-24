@@ -1,5 +1,6 @@
 // socket.js
 import { Server as SocketIOServer } from "socket.io";
+import { generateImage } from "./routes/dalleRoutes.js";
 
 export const initSocketIO = (server) => {
   const users = {};
@@ -36,15 +37,13 @@ export const initSocketIO = (server) => {
       });
     });
 
-    socket.on("chat", (data) => {
-      console.log(data, "chat");
-
+    socket.on("chat", async (data) => {
       if (data.command === "image") {
-        console.log("do image generation!!");
-        //call image generation here
+        const image = await generateImage(data.text);
+        socket.to("chat1").emit("chat_response", { ...data, image });
+      } else {
+        socket.to("chat1").emit("chat_response", data);
       }
-
-      socket.to("chat1").emit("chat_response", data);
     });
 
     socket.on("disconnect", () => {
