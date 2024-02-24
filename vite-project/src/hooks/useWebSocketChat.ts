@@ -31,6 +31,7 @@ export const useWebSocketChat = () => {
   //for specialc commands
   const [command, setCommand] = useState("");
   const [additionalText, setAdditionalText] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -72,6 +73,7 @@ export const useWebSocketChat = () => {
 
     socket.on("chat_response", (data: Message) => {
       console.log(data, "reciving chat response");
+      setImageLoading(false);
       setMessageLog((prev) => [...prev, data]);
     });
 
@@ -93,10 +95,11 @@ export const useWebSocketChat = () => {
         id: Math.floor(Math.random() * 1000000),
         room: "chat1",
       };
+      if (command === "image") setImageLoading(true);
       socket.emit("chat", MsgData);
       setNewMessage("");
       setCommand("");
-      setMessageLog((prev) => [...prev, MsgData]);
+      // setMessageLog((prev) => [...prev, MsgData]);
     }
   };
 
@@ -111,6 +114,7 @@ export const useWebSocketChat = () => {
   };
 
   return {
+    imageLoading,
     handleJoinChat,
     handleSendMessage,
     handleInputChange,

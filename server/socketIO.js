@@ -40,9 +40,9 @@ export const initSocketIO = (server) => {
     socket.on("chat", async (data) => {
       if (data.command === "image") {
         const image = await generateImage(data.text);
-        socket.to("chat1").emit("chat_response", { ...data, image });
+        io.in("chat1").emit("chat_response", { ...data, image });
       } else {
-        socket.to("chat1").emit("chat_response", data);
+        io.in("chat1").emit("chat_response", data);
       }
     });
 

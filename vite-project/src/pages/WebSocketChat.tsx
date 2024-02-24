@@ -1,6 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from "react";
 import { Users, User, useWebSocketChat } from "../hooks/useWebSocketChat";
+import Button from "../components/Button";
+import MuiLoader from "../components/MuiLoader";
+import { Loader } from "../components";
 
 const randomUser = `User${Math.floor(Math.random() * 1000)}`;
 //sorts active user first
@@ -19,6 +22,7 @@ export default function WebSocketChat() {
   const { user } = useAuth0();
 
   const {
+    imageLoading,
     handleJoinChat,
     handleSendMessage,
     messageLog,
@@ -78,14 +82,19 @@ export default function WebSocketChat() {
                   </span>
                   <span>{message.text}</span>
                   {message.image && (
-                    <img
-                      src={`data:image/jpeg;base64,${message.image}`}
-                      alt={message.text}
-                    />
+                    <>
+                      <img
+                        className="w-1/2"
+                        src={`data:image/jpeg;base64,${message.image}`}
+                        alt={message.text}
+                      />
+                      <Button className="mt-1">Post</Button>
+                    </>
                   )}
                 </div>
               );
             })}
+            {imageLoading ? <Loader /> : null}
           </div>
 
           {/* Message Input Area */}
