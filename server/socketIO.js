@@ -38,6 +38,12 @@ export const initSocketIO = (server) => {
 
     socket.on("chat", (data) => {
       console.log(data, "chat");
+
+      if (data.command === "image") {
+        console.log("do image generation!!");
+        //call image generation here
+      }
+
       socket.to("chat1").emit("chat_response", data);
     });
 
