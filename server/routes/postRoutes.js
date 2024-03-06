@@ -75,7 +75,6 @@ router.route("/favourites").get(async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(startIndex)
       .limit(limit);
-    console.log(posts, "posts found");
 
     const securePosts = posts.map((post) => {
       const securePhotoUrl = post.photo.replace("http://", "https://");
@@ -97,7 +96,6 @@ router.route("/favourites").get(async (req, res) => {
 router.route("/").post(async (req, res) => {
   try {
     const { name, prompt, photo, email } = req.body;
-
     const photoURL = await cloudinary.uploader.upload(photo, { secure: true });
     const securePhotoURL = photoURL.url.replace("http://", "https://");
     const newPost = await Post.create({
@@ -106,10 +104,10 @@ router.route("/").post(async (req, res) => {
       photo: securePhotoURL,
       email,
     });
-
     res.status(201).json({ success: true, data: newPost });
   } catch (err) {
-    console.log(err, "errrrrrrrrrrrrr");
+    console.log(err, "err OBJ");
+    console.log(err.message, "errrrrrrrrrrrrr in post create");
     res.status(500).json({ success: false, message: err });
   }
 });

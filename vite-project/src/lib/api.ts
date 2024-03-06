@@ -37,19 +37,23 @@ export const favouriteImage = async (id: string, token: string) => {
 };
 
 export const createPost = async (data: postData) => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/post`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (res.ok) {
-    const result = await res.json();
-    return result;
-  } else {
-    throw new Error("Something went wrong");
+    if (res.ok) {
+      const result = await res.json();
+      return result;
+    } else {
+      throw new Error("Something went wrong with create post request");
+    }
+  } catch (e) {
+    console.log(e, "create post error");
   }
 };
 

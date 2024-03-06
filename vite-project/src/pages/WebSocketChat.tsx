@@ -2,8 +2,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from "react";
 import { Users, User, useWebSocketChat } from "../hooks/useWebSocketChat";
 import Button from "../components/Button";
-import MuiLoader from "../components/MuiLoader";
 import { Loader } from "../components";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createPost } from "../lib/api";
+import { SinglePost, postData } from "../lib/types";
+import MuiLoader from "../components/MuiLoader";
 
 const randomUser = `User${Math.floor(Math.random() * 1000)}`;
 //sorts active user first
@@ -20,6 +23,8 @@ const sortUsers = (userList: Users, chatUser: string): User[] => {
 
 export default function WebSocketChat() {
   const { user } = useAuth0();
+  const queryClient = useQueryClient();
+  const [sharedImagesArr, setSharedImagesArr] = useState<number[]>([]);
 
   const {
     imageLoading,
@@ -36,6 +41,36 @@ export default function WebSocketChat() {
     handleInputChange,
     handleKeyDown,
   } = useWebSocketChat();
+
+  const { mutate, isLoading } = useMutation<SinglePost, unknown, postData>(
+    (newData: postData) => createPost(newData),
+    {
+      onSuccess: () => {
+        //@ts-expect-error passing in an array does not work
+        queryClient.invalidateQueries("posts");
+      },
+      onError(error) {
+        console.log(error);
+        alert(error);
+      },
+    }
+  );
+
+  const handleShare = async (message) => {
+    console.log(message);
+    try {
+      mutate({
+        name: chatUser,
+        prompt: message.text,
+        photo: `data:image/jpeg;base64,${message.image}`,
+        email: "",
+      });
+      setSharedImagesArr((prev) => [...prev, message.id]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div>
@@ -78,7 +113,7 @@ export default function WebSocketChat() {
               return (
                 <div key={index} className="mb-4 text-left">
                   <span className="font-bold">
-                    {`User${message.sender.toString().slice(0, 6)}`}:{" "}
+                    {`${message.sender.toString().slice(0, 6)}`}:{" "}
                   </span>
                   <span>{message.text}</span>
                   {message.image && (
@@ -88,7 +123,19 @@ export default function WebSocketChat() {
                         src={`data:image/jpeg;base64,${message.image}`}
                         alt={message.text}
                       />
-                      <Button className="mt-1">Post</Button>
+                      <Button
+                        onClick={() => handleShare(message)}
+                        disabled={sharedImagesArr.includes(message.id)}
+                        className="mt-1"
+                      >
+                        {isLoading ? (
+                          <MuiLoader />
+                        ) : sharedImagesArr.includes(message.id) ? (
+                          "Shared"
+                        ) : (
+                          "Share to Wall"
+                        )}
+                      </Button>
                     </>
                   )}
                 </div>
