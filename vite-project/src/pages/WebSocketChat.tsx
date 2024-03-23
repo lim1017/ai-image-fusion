@@ -1,15 +1,14 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { User, useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from "react";
-import { Users, User, useWebSocketChat } from "../hooks/useWebSocketChat";
+import { Message, Users, useWebSocketChat } from "../hooks/useWebSocketChat";
 import Button from "../components/Button";
 import { Loader } from "../components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../lib/api";
 import { SinglePost, postData } from "../lib/types";
 import MuiLoader from "../components/MuiLoader";
+import Input from "../components/Input";
 
-const randomUser = `User${Math.floor(Math.random() * 1000)}`;
-//sorts active user first
 const sortUsers = (userList: Users, chatUser: string): User[] => {
   const result = Object.keys(userList)
     .sort((a, b) => {
@@ -20,6 +19,8 @@ const sortUsers = (userList: Users, chatUser: string): User[] => {
     .map((key) => userList[key]);
   return result;
 };
+
+//TODO add functionality to chat with gpt in the chat window
 
 export default function WebSocketChat() {
   const { user } = useAuth0();
@@ -40,7 +41,8 @@ export default function WebSocketChat() {
     setChatUser,
     handleInputChange,
     handleKeyDown,
-  } = useWebSocketChat();
+    isUserJoined,
+  } = useWebSocketChat(user);
 
   const { mutate, isLoading } = useMutation<SinglePost, unknown, postData>(
     (newData: postData) => createPost(newData),
@@ -56,7 +58,7 @@ export default function WebSocketChat() {
     }
   );
 
-  const handleShare = async (message) => {
+  const handleShare = async (message: Message) => {
     console.log(message);
     try {
       mutate({
@@ -83,7 +85,7 @@ export default function WebSocketChat() {
             placeholder="Type your message..."
           />
           <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2">
-            Join
+            Join Chat
           </button>
         </form>
       </div>
@@ -115,28 +117,32 @@ export default function WebSocketChat() {
                   <span className="font-bold">
                     {`${message.sender.toString().slice(0, 6)}`}:{" "}
                   </span>
-                  <span>{message.text}</span>
+                  <span className={message.image ? "text-red-500" : ""}>
+                    {message.text}
+                  </span>
                   {message.image && (
-                    <>
+                    <div>
                       <img
-                        className="w-1/2"
+                        className="w-1/2 mx-auto mt-2 mb-2"
                         src={`data:image/jpeg;base64,${message.image}`}
                         alt={message.text}
                       />
-                      <Button
-                        onClick={() => handleShare(message)}
-                        disabled={sharedImagesArr.includes(message.id)}
-                        className="mt-1"
-                      >
-                        {isLoading ? (
-                          <MuiLoader />
-                        ) : sharedImagesArr.includes(message.id) ? (
-                          "Shared"
-                        ) : (
-                          "Share to Wall"
-                        )}
-                      </Button>
-                    </>
+                      {message.sender === chatUser && (
+                        <Button
+                          onClick={() => handleShare(message)}
+                          disabled={sharedImagesArr.includes(message.id)}
+                          className="mt-1"
+                        >
+                          {isLoading ? (
+                            <MuiLoader />
+                          ) : sharedImagesArr.includes(message.id) ? (
+                            "Shared"
+                          ) : (
+                            "Share to Wall"
+                          )}
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </div>
               );
@@ -147,7 +153,7 @@ export default function WebSocketChat() {
           {/* Message Input Area */}
           <div className="p-4 border-t-2">
             <form onSubmit={handleSendMessage}>
-              <div className="flex items-center border-2 w-full p-2">
+              <div className="flex items-center  w-full p-2">
                 {command && (
                   <div className="chip bg-purple-500 text-white p-1 mr-2 rounded">
                     {command}
@@ -159,7 +165,8 @@ export default function WebSocketChat() {
                     </span>
                   </div>
                 )}
-                <input
+                <Input
+                  disabled={!isUserJoined}
                   type="text"
                   value={command ? additionalText : newMessage}
                   onChange={handleInputChange}
@@ -167,10 +174,13 @@ export default function WebSocketChat() {
                   className="flex-1"
                   placeholder={command ? "" : "Type your message..."}
                 />
+                <Button
+                  disabled={!isUserJoined}
+                  className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Send
+                </Button>
               </div>
-              <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2">
-                Send
-              </button>
             </form>
           </div>
         </div>

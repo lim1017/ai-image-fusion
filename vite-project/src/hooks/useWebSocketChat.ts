@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
+import { User as Auth0User } from "@auth0/auth0-react";
 
-interface Message {
+export interface Message {
   text: string;
   sender: string;
   id: number;
@@ -20,7 +21,7 @@ export interface User {
   user: string;
 }
 
-export const useWebSocketChat = () => {
+export const useWebSocketChat = (user: Auth0User | undefined) => {
   const [newMessage, setNewMessage] = useState("");
   const [messageLog, setMessageLog] = useState<Message[]>([]);
   const [socket, setSocket] = useState<Socket>();
@@ -28,12 +29,14 @@ export const useWebSocketChat = () => {
 
   const [chatUser, setChatUser] = useState("");
 
-  //for specialc commands
+  //for special commands
   const [command, setCommand] = useState("");
   const [additionalText, setAdditionalText] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
 
-  const handleInputChange = (e) => {
+  const isUserJoined = socket ? userList[socket.id as string] : false;
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const commandMatch = value.match(/^\/image\s*/);
 
@@ -51,7 +54,7 @@ export const useWebSocketChat = () => {
     setNewMessage(e.target.value);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && command && additionalText.length === 0) {
       setCommand("");
       setNewMessage("/image");
@@ -63,9 +66,11 @@ export const useWebSocketChat = () => {
     setSocket(socket);
     //get list of users
     socket.on("roomUsers", (data) => {
+      console.log(data);
+      console.log(socket.id);
       setUserList(data.users);
-      if (data.currentUser) {
-        setChatUser(data.currentUser.user);
+      if (data.users[socket.id as string]) {
+        setChatUser(data.users[socket.id as string].user);
       } else {
         setChatUser("");
       }
@@ -84,7 +89,19 @@ export const useWebSocketChat = () => {
     };
   }, []);
 
-  const handleSendMessage = (e) => {
+  useEffect(() => {
+    if (socket && user) {
+      setChatUser(user.nickname || "");
+
+      socket.emit("join_room", {
+        user: user.nickname || "",
+        id: socket.id,
+        room: "chat1",
+      });
+    }
+  }, [socket, user]);
+
+  const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socket) {
       const MsgData: Message = {
@@ -103,11 +120,12 @@ export const useWebSocketChat = () => {
     }
   };
 
-  const handleJoinChat = (e) => {
+  const handleJoinChat = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socket) {
       socket.emit("join_room", {
         user: chatUser,
+        id: socket.id,
         room: "chat1",
       });
     }
@@ -128,5 +146,6 @@ export const useWebSocketChat = () => {
     command,
     setCommand,
     additionalText,
+    isUserJoined,
   };
 };
