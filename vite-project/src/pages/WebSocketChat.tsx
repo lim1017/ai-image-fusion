@@ -89,7 +89,7 @@ export default function WebSocketChat() {
           </button>
         </form>
       </div>
-      <div className="flex" style={{ height: "78vh" }}>
+      <div className="flex h-75vh">
         {/* Sidebar for Users */}
         <div className="w-1/4 bg-gray-200 p-4">
           <h2 className="font-bold text-lg mb-4">Connected Users</h2>

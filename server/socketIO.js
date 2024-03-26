@@ -1,6 +1,6 @@
 // socket.js
 import { Server as SocketIOServer } from "socket.io";
-import { generateImage } from "./routes/dalleRoutes.js";
+import { generateImage } from "./services/openai.js";
 
 export const initSocketIO = (server) => {
   const users = {};

@@ -106,7 +106,6 @@ router.route("/").post(async (req, res) => {
     });
     res.status(201).json({ success: true, data: newPost });
   } catch (err) {
-    console.log(err, "err OBJ");
     console.log(err.message, "errrrrrrrrrrrrr in post create");
     res.status(500).json({ success: false, message: err });
   }

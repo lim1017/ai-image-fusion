@@ -1,11 +1,8 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import { openai } from "../apis/openai.js";
 import { PineconeClient } from "@pinecone-database/pinecone";
-import { queryPinecone } from "../utils.js";
+import { queryPinecone } from "../services/pinecone.js";
 import { indexName } from "../config.js";
-
-import { createPineconeIndex, updatePinecone } from "../utils.js";
 
 dotenv.config();
 
