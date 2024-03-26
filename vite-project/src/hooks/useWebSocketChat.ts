@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { User as Auth0User } from "@auth0/auth0-react";
+import { useTypingAnimation } from "./useTypingAnimation";
 
 export interface Message {
   text: string;

@@ -20,8 +20,6 @@ const sortUsers = (userList: Users, chatUser: string): User[] => {
   return result;
 };
 
-//TODO add functionality to chat with gpt in the chat window
-
 export default function WebSocketChat() {
   const { user } = useAuth0();
   const queryClient = useQueryClient();
@@ -73,7 +71,6 @@ export default function WebSocketChat() {
       console.log(error);
     }
   };
-  console.log(imageLoading);
   return (
     <>
       <div>
@@ -124,6 +121,12 @@ export default function WebSocketChat() {
                         {`${message.sender.toString().slice(0, 6)}`}:{" "}
                       </span>
                       <span className={message.image ? "text-red-500" : ""}>
+                        {message.command && (
+                          <span className="chip bg-purple-500 text-white p-1 mr-2 rounded">
+                            {" "}
+                            /{message.command}{" "}
+                          </span>
+                        )}
                         {message.text}
                       </span>
                     </>
@@ -131,6 +134,7 @@ export default function WebSocketChat() {
                   {message.gpt && (
                     <div className="flex">
                       <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
+                      {/* TODO get useTypingAnimation to work*/}
                       <p>{message.gpt}</p>
                     </div>
                   )}
@@ -161,7 +165,11 @@ export default function WebSocketChat() {
                 </div>
               );
             })}
-            {imageLoading || gptLoading ? <Loader /> : null}
+            {imageLoading || gptLoading ? (
+              <div className="flex justify-center mt-2">
+                <Loader />
+              </div>
+            ) : null}
           </div>
 
           {/* Message Input Area */}

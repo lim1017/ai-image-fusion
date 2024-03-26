@@ -6,11 +6,15 @@ export const useTypingAnimation = ({ chatLog }: { chatLog: string[] }) => {
   const [displayResponse, setDisplayResponse] = useState("");
 
   useEffect(() => {
-    setCompletedTyping(false);
-
-    let i = 0;
     const stringResponse = chatLog[chatLog.length - 1];
+    console.log(chatLog, "chatlog");
+    console.log(stringResponse);
+    if (!chatLog.length || chatLog[chatLog.length - 1] === stringResponse)
+      return;
 
+    setCompletedTyping(false);
+    let i = 0;
+    console.log(chatLog, "chatlog");
     const intervalId = setInterval(() => {
       setDisplayResponse(stringResponse.slice(0, i));
 

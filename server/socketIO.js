@@ -40,10 +40,10 @@ export const initSocketIO = (server) => {
 
     socket.on("chat", async (data) => {
       if (data.command === "image") {
+        io.in("chat1").emit("chat_response", data);
         const image = await generateImage(data.text);
-        io.in("chat1").emit("chat_response", { ...data, image });
-      }
-      if (data.command === "gpt") {
+        io.in("chat1").emit("chat_response", { ...data, image, text: "" });
+      } else if (data.command === "gpt") {
         io.in("chat1").emit("chat_response", data);
         console.log(data.text, "gpt query");
         const response = await queryPinecone(data.text);
