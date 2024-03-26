@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { User as Auth0User } from "@auth0/auth0-react";
-import { useTypingAnimation } from "./useTypingAnimation";
 
 export interface Message {
   text: string;
@@ -26,6 +25,7 @@ export interface User {
 const enum ChatCommands {
   IMAGE = "image",
   GPT = "gpt",
+  QUERY = "query",
 }
 
 export const useWebSocketChat = (user: Auth0User | undefined) => {
@@ -47,7 +47,7 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const commandMatch = value.match(/^\/(image|gpt)\s*/);
+    const commandMatch = value.match(/^\/(image|gpt|query)\s*/);
 
     if (commandMatch) {
       setCommand(commandMatch[1] as ChatCommands);
