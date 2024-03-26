@@ -66,8 +66,6 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
     setSocket(socket);
     //get list of users
     socket.on("roomUsers", (data) => {
-      console.log(data);
-      console.log(socket.id);
       setUserList(data.users);
       if (data.users[socket.id as string]) {
         setChatUser(data.users[socket.id as string].user);
@@ -86,6 +84,7 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
       //clean up other wise duplicate events
       socket.off("chat_response");
       socket.off("roomUsers");
+      socket.disconnect();
     };
   }, []);
 

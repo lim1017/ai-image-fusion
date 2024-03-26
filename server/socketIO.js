@@ -20,7 +20,10 @@ export const initSocketIO = (server) => {
       methods: ["GET", "POST"], // allowed HTTP methods
     },
   });
+
   io.on("connection", (socket) => {
+    const listUsers = Array.from(io.sockets.sockets.keys());
+
     //sends list of users on connection
     socket.emit("roomUsers", {
       users,
@@ -33,7 +36,6 @@ export const initSocketIO = (server) => {
 
       io.to("chat1").emit("roomUsers", {
         users: users,
-        currentUser: { user, id: socket.id },
       });
     });
 
@@ -49,6 +51,8 @@ export const initSocketIO = (server) => {
     socket.on("disconnect", () => {
       removeUser(socket.id);
       console.log(`User disconnected: ${socket.id}`);
+
+      io.emit("roomUsers", { users }); // Update the user list for all clients
     });
   });
 
