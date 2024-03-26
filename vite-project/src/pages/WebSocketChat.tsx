@@ -28,6 +28,7 @@ export default function WebSocketChat() {
   const [sharedImagesArr, setSharedImagesArr] = useState<number[]>([]);
 
   const {
+    gptLoading,
     imageLoading,
     handleJoinChat,
     handleSendMessage,
@@ -72,7 +73,7 @@ export default function WebSocketChat() {
       console.log(error);
     }
   };
-
+  console.log(imageLoading);
   return (
     <>
       <div>
@@ -82,11 +83,14 @@ export default function WebSocketChat() {
             value={chatUser}
             onChange={(e) => setChatUser(e.target.value)}
             className="border-2 w-30 p-2"
-            placeholder="Type your message..."
+            placeholder="Enter your name"
           />
-          <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2">
+          <Button
+            disabled={!chatUser}
+            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2"
+          >
             Join Chat
-          </button>
+          </Button>
         </form>
       </div>
       <div className="flex h-75vh">
@@ -114,12 +118,22 @@ export default function WebSocketChat() {
             {messageLog.map((message, index) => {
               return (
                 <div key={index} className="mb-4 text-left">
-                  <span className="font-bold">
-                    {`${message.sender.toString().slice(0, 6)}`}:{" "}
-                  </span>
-                  <span className={message.image ? "text-red-500" : ""}>
-                    {message.text}
-                  </span>
+                  {message.text && (
+                    <>
+                      <span className="font-bold">
+                        {`${message.sender.toString().slice(0, 6)}`}:{" "}
+                      </span>
+                      <span className={message.image ? "text-red-500" : ""}>
+                        {message.text}
+                      </span>
+                    </>
+                  )}
+                  {message.gpt && (
+                    <div className="flex">
+                      <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
+                      <p>{message.gpt}</p>
+                    </div>
+                  )}
                   {message.image && (
                     <div>
                       <img
@@ -147,7 +161,7 @@ export default function WebSocketChat() {
                 </div>
               );
             })}
-            {imageLoading ? <Loader /> : null}
+            {imageLoading || gptLoading ? <Loader /> : null}
           </div>
 
           {/* Message Input Area */}

@@ -10,6 +10,7 @@ export interface Message {
   room: string;
   command: string;
   image?: string;
+  gpt?: string;
 }
 
 export interface Users {
@@ -21,6 +22,11 @@ export interface User {
   user: string;
 }
 
+const enum ChatCommands {
+  IMAGE = "image",
+  GPT = "gpt",
+}
+
 export const useWebSocketChat = (user: Auth0User | undefined) => {
   const [newMessage, setNewMessage] = useState("");
   const [messageLog, setMessageLog] = useState<Message[]>([]);
@@ -30,18 +36,20 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
   const [chatUser, setChatUser] = useState("");
 
   //for special commands
-  const [command, setCommand] = useState("");
+  const [command, setCommand] = useState<ChatCommands | "">("");
   const [additionalText, setAdditionalText] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
+
+  const [gptLoading, setGptLoading] = useState(false);
 
   const isUserJoined = socket ? userList[socket.id as string] : false;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const commandMatch = value.match(/^\/image\s*/);
+    const commandMatch = value.match(/^\/(image|gpt)\s*/);
 
     if (commandMatch) {
-      setCommand("image");
+      setCommand(commandMatch[1] as ChatCommands);
       setAdditionalText(value.slice(commandMatch[0].length));
     } else {
       if (command) {
@@ -57,7 +65,7 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && command && additionalText.length === 0) {
       setCommand("");
-      setNewMessage("/image");
+      setNewMessage(`/${command}`);
     }
   };
 
@@ -76,7 +84,8 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
 
     socket.on("chat_response", (data: Message) => {
       console.log(data, "reciving chat response");
-      setImageLoading(false);
+      if (data.image) setImageLoading(false);
+      if (data.gpt) setGptLoading(false);
       setMessageLog((prev) => [...prev, data]);
     });
 
@@ -111,7 +120,8 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
         id: Math.floor(Math.random() * 1000000),
         room: "chat1",
       };
-      if (command === "image") setImageLoading(true);
+      if (command === ChatCommands.IMAGE) setImageLoading(true);
+      if (command === ChatCommands.GPT) setGptLoading(true);
       socket.emit("chat", MsgData);
       setNewMessage("");
       setCommand("");
@@ -146,5 +156,6 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
     setCommand,
     additionalText,
     isUserJoined,
+    gptLoading,
   };
 };
