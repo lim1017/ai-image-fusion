@@ -43,6 +43,10 @@ export default function Header() {
       label: "Favourites",
       linkTo: "favourites",
     },
+    {
+      label: "Chat",
+      linkTo: "chat",
+    },
   ];
 
   return (
@@ -107,8 +111,8 @@ export default function Header() {
           )}
         </div>
         <div className="hidden md:flex items-center">
-          <Link to="/create-post" className="mr-4">
-            <Button intent="primary">Create</Button>
+          <Link to="/chat" className="mr-4">
+            <Button intent="primary">Chat</Button>
           </Link>
           {user ? (
             <DropdownMenu options={userOptions} string={user?.nickname} />

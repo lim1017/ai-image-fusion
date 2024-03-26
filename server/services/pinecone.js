@@ -3,12 +3,12 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAI } from "langchain/llms/openai";
 import { loadQAStuffChain } from "langchain/chains";
 import { Document } from "langchain/document";
-import { timeout } from "./config.js";
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { PineconeClient } from "@pinecone-database/pinecone";
-import { indexName } from "./config.js";
+import { timeout } from "../config.js";
+import { indexName } from "../config.js";
 
 export const createPineconeIndex = async (
   client,

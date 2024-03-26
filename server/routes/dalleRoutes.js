@@ -1,35 +1,18 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import { Configuration, OpenAIApi } from "openai";
 import { customRateLimiter } from "../middleware/rateLimit.js";
+import { generateImage } from "../services/openai.js";
 
 dotenv.config();
 
 const router = express.Router();
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
-
-router.route("/").get((req, res) => {
-  res.status(200).json({ message: "Hello from DALL-E routess!" });
-});
-
-router.route("/").post(customRateLimiter(1, 1), async (req, res) => {
+router.route("/").post(customRateLimiter(1, 5), async (req, res) => {
   try {
     const { prompt } = req.body;
 
-    const aiRes = await openai.createImage({
-      model: "dall-e-3",
-      prompt,
-      n: 1,
-      size: "1024x1024",
-      response_format: "b64_json",
-    });
+    const image = await generateImage(prompt);
 
-    const image = aiRes.data.data[0].b64_json;
     // for response_format = 'url'
     // const image = aiRes.data;
 
