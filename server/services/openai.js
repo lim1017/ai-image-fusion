@@ -106,6 +106,6 @@ export const queryMongoWithIntent = async (intentObj) => {
       return `The total number of posts by ${user} is ${countPostsByUser}.`;
 
     default:
-      return "Unknown query, try using /gpt and ask about the db schemas";
+      return "Unknown query, check the Help menu or try using /gpt and ask about the db schemas";
   }
 };

@@ -76,7 +76,7 @@ export default function WebSocketChat() {
             Join Chat
           </Button>
           <Button onClick={openModal} intent={"alt"} className="ml-2">
-            Instructions
+            Help
           </Button>
         </form>
       </div>

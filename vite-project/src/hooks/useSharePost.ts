@@ -4,6 +4,15 @@ import { SinglePost, postData } from "../lib/types";
 import { useState } from "react";
 import { Message } from "./useWebSocketChat";
 
+/**
+ * Creates a custom hook for sharing a post.
+ *
+ * @param {string} params.user - The username of the user sharing the post.
+ * @return {Object} - The hook's return value.
+ * @return {Function} return.handleShare - The function for sharing a post.
+ * @return {boolean} return.submitPostLoading - Indicates if the post submission is loading.
+ * @return {number[]} return.sharedImagesArr - The array of shared image IDs.
+ */
 export const useSharePost = ({ user }: { user: string }) => {
   const queryClient = useQueryClient();
   const [sharedImagesArr, setSharedImagesArr] = useState<number[]>([]);
