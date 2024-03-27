@@ -11,6 +11,7 @@ export interface Message {
   command: string;
   image?: string;
   gpt?: string;
+  email?: string;
 }
 
 export interface Users {
@@ -116,13 +117,15 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
       const MsgData: Message = {
         text: newMessage,
         sender: chatUser,
+        email: user?.email,
         command,
         time: new Date().toLocaleTimeString(),
         id: Math.floor(Math.random() * 1000000),
         room: "chat1",
       };
       if (command === ChatCommands.IMAGE) setImageLoading(true);
-      if (command === ChatCommands.GPT) setGptLoading(true);
+      if (command === ChatCommands.GPT || command === ChatCommands.QUERY)
+        setGptLoading(true);
       socket.emit("chat", MsgData);
       setNewMessage("");
       setCommand("");

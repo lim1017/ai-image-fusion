@@ -15,7 +15,6 @@ export const initSocketIO = (server) => {
   };
 
   const removeUser = (user) => {
-    console.log("DELETING user", user);
     delete users[user];
   };
 
@@ -49,7 +48,6 @@ export const initSocketIO = (server) => {
         io.in("chat1").emit("chat_response", { ...data, image, text: "" });
       } else if (data.command === "gpt") {
         io.in("chat1").emit("chat_response", data);
-        console.log(data.text, "gpt query");
         const response = await queryPinecone(data.text);
         io.in("chat1").emit("chat_response", {
           ...data,
@@ -60,8 +58,11 @@ export const initSocketIO = (server) => {
         io.in("chat1").emit("chat_response", data);
         const nlpIntent = await getIntentNLP(data.text);
         const intentObj = JSON.parse(nlpIntent);
-        console.log(intentObj, "intentObj");
-        const result = await queryMongoWithIntent(intentObj);
+        const result = await queryMongoWithIntent({
+          ...intentObj,
+          loggedInUser: data.sender,
+          loggedInEmail: data.email,
+        });
         io.in("chat1").emit("chat_response", {
           ...data,
           text: "",
