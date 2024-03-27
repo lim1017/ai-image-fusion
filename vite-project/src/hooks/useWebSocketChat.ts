@@ -23,7 +23,7 @@ export interface User {
   user: string;
 }
 
-const enum ChatCommands {
+export const enum ChatCommands {
   IMAGE = "image",
   GPT = "gpt",
   QUERY = "query",
@@ -43,7 +43,7 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
 
   const [gptLoading, setGptLoading] = useState(false);
 
-  const isUserJoined = socket ? userList[socket.id as string] : false;
+  const isUserJoined = socket && userList[socket.id as string] ? true : false;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
