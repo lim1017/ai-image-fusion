@@ -1,4 +1,6 @@
 import { openai } from "../apis/openai.js";
+import User from "../mongodb/models/user.js";
+import Post from "../mongodb/models/post.js";
 
 export const generateImage = async (prompt) => {
   const aiRes = await openai.createImage({
@@ -18,57 +20,75 @@ export const getIntentNLP = async (query) => {
   try {
     const response = await openai.createCompletion({
       model: "gpt-3.5-turbo-instruct",
-      prompt: `This query should be mapped to an intent for use to query a mongo database.  I want you to map the query to a clear intent such as "count_posts", "get_email", "count_favourites" etc.  If you cannot map the query to an intent, just return "unknown". Query: "${query}"
+      prompt: `This query should be mapped to an intent for use to query a mongo database.  I want you to map the query to an intent from the following array of intents. 
       
-      Also construct a query for the mongo database. 
+      intents: [
+        'count_users',
+        'count_posts',
+        'posts_by_userX',
+        'user_by_email',
+        'users_after_date',
+        'posts_sorted_by_date',
+        'count_posts_by_user',
+      ];
+      
+      If you cannot map the query to an intent, just return "unknown". 
+      
+      ***The Query***: "${query}"
+      
+      The purpose is the use the result to construct a query to the mongo database.
 
-      Schemas:
-      const Post = new mongoose.Schema({
-        name: { type: String, required: true },
-        prompt: { type: String, required: true },
-        photo: { type: String, required: true },
-        email: { type: String, required: false },
-        createdAt: { type: Date, default: Date.now },
-      });
-      const User = new mongoose.Schema({
-        name: { type: String, required: true },
-        // email: { type: String, required: true, unique: true },
-        email: {
-          type: String,
-          validate: {
-            validator: async function (email) {
-              const user = await this.constructor.findOne({ email });
-              if (user) {
-                if (this.id === user.id) {
-                  return true;
-                }
-                return false;
-              }
-              return true;
-            },
-            message: (props) => "The specified email address is already in use.",
-          },
-          required: [true, "User email required"],
-        },
-        username: { type: String, required: true },
-        createdAt: { type: Date, default: Date.now },
-        favourites: { type: Array, required: false },
-      });
+      return your response in a valid JSON format.
+      {"intent": "get_posts", "email"?: "example@example.com", "user"?: "testUser", "date"?: "2022-01-01"}
 
-      return your response in the following format
-      {intent: "get_posts", query: "User.findOne().where("email", "example@example.com")}
+      if the query references the user themselves include "user" in the response as "selfReferenceUser123"
+
+      Where the key "intent" is required mapped intent, and the rest are optional depending on if they are needed to produce a query.
       `,
       max_tokens: 50,
       temperature: 0,
     });
 
     const intentText = response.data.choices[0].text.trim();
-    console.log(intentText, "gpt intent");
 
-    // Add other intent mappings as needed
-    return { intent: intentText };
+    return intentText;
   } catch (error) {
     console.error("Error in getNlpIntent:", error);
     throw error;
+  }
+};
+
+export const queryMongoWithIntent = async (intentObj) => {
+  const { intent, email, user, date } = intentObj;
+  console.log(intentObj, "intentObj");
+  console.log(intent, "intent!!!");
+  switch (intent) {
+    case "count_users":
+      return await User.countDocuments();
+
+    case "count_posts":
+      return await Post.countDocuments();
+
+    case "posts_by_userX":
+      if (!user) throw new Error("User name is required for this intent.");
+      return await Post.find({ name: user });
+
+    case "user_by_email":
+      if (!email) throw new Error("Email is required for this intent.");
+      return await User.findOne({ email });
+
+    case "users_after_date":
+      if (!date) throw new Error("Date is required for this intent.");
+      return await User.find({ createdAt: { $gt: new Date(date) } });
+
+    case "posts_sorted_by_date":
+      return await Post.find().sort({ createdAt: -1 });
+
+    case "count_posts_by_user":
+      if (!user) throw new Error("User name is required for this intent.");
+      return await Post.countDocuments({ name: user });
+
+    default:
+      return "Unknown query, try asking /gpt about the db schemas";
   }
 };

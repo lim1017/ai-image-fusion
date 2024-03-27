@@ -1,6 +1,10 @@
 // socket.js
 import { Server as SocketIOServer } from "socket.io";
-import { generateImage, getIntentNLP } from "./services/openai.js";
+import {
+  generateImage,
+  getIntentNLP,
+  queryMongoWithIntent,
+} from "./services/openai.js";
 import { queryPinecone } from "./services/pinecone.js";
 
 export const initSocketIO = (server) => {
@@ -54,8 +58,15 @@ export const initSocketIO = (server) => {
         });
       } else if (data.command === "query") {
         io.in("chat1").emit("chat_response", data);
-        const nlp = await getIntentNLP(data.text);
-        console.log(nlp, "nlp");
+        const nlpIntent = await getIntentNLP(data.text);
+        const intentObj = JSON.parse(nlpIntent);
+        console.log(intentObj, "intentObj");
+        const result = await queryMongoWithIntent(intentObj);
+        io.in("chat1").emit("chat_response", {
+          ...data,
+          text: "",
+          gpt: result,
+        });
       } else {
         io.in("chat1").emit("chat_response", data);
       }
