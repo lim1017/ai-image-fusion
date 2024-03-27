@@ -8,6 +8,9 @@ import { createPost } from "../lib/api";
 import { SinglePost, postData } from "../lib/types";
 import MuiLoader from "../components/MuiLoader";
 import Input from "../components/Input";
+import { useModal } from "../hooks/useModal";
+import Modal from "../components/Modal";
+import ChatModalContent from "../components/ModalComponents/ChatModalContent";
 
 const sortUsers = (userList: Users, chatUser: string): User[] => {
   const result = Object.keys(userList)
@@ -25,9 +28,10 @@ export default function WebSocketChat() {
   const queryClient = useQueryClient();
   const [sharedImagesArr, setSharedImagesArr] = useState<number[]>([]);
 
+  const { isOpen, openModal, closeModal } = useModal();
+
   const {
     gptLoading,
-    imageLoading,
     handleJoinChat,
     handleSendMessage,
     messageLog,
@@ -72,7 +76,10 @@ export default function WebSocketChat() {
     }
   };
   return (
-    <>
+    <div className="overflow-y-hidden">
+      <Modal isOpen={isOpen} closeModal={closeModal}>
+        <ChatModalContent />
+      </Modal>
       <div>
         <form onSubmit={handleJoinChat}>
           <input
@@ -84,9 +91,12 @@ export default function WebSocketChat() {
           />
           <Button
             disabled={!chatUser}
-            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2"
+            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded ml-2"
           >
             Join Chat
+          </Button>
+          <Button onClick={openModal} intent={"alt"} className="ml-2">
+            Instructions
           </Button>
         </form>
       </div>
@@ -118,7 +128,7 @@ export default function WebSocketChat() {
                   {message.text && (
                     <>
                       <span className="font-bold">
-                        {`${message.sender.toString().slice(0, 6)}`}:{" "}
+                        {`${message.sender.toString().slice(0, 10)}`}:{" "}
                       </span>
                       <span className={message.image ? "text-red-500" : ""}>
                         {message.command && (
@@ -165,7 +175,7 @@ export default function WebSocketChat() {
                 </div>
               );
             })}
-            {imageLoading || gptLoading ? (
+            {gptLoading ? (
               <div className="flex justify-center mt-2">
                 <Loader />
               </div>
@@ -207,6 +217,6 @@ export default function WebSocketChat() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

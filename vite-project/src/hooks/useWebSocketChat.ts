@@ -40,7 +40,6 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
   //for special commands
   const [command, setCommand] = useState<ChatCommands | "">("");
   const [additionalText, setAdditionalText] = useState("");
-  const [imageLoading, setImageLoading] = useState(false);
 
   const [gptLoading, setGptLoading] = useState(false);
 
@@ -86,8 +85,7 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
 
     socket.on("chat_response", (data: Message) => {
       console.log(data, "reciving chat response");
-      if (data.image) setImageLoading(false);
-      if (data.gpt) setGptLoading(false);
+      if (data.gpt || data.image) setGptLoading(false);
       setMessageLog((prev) => [...prev, data]);
     });
 
@@ -123,8 +121,11 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
         id: Math.floor(Math.random() * 1000000),
         room: "chat1",
       };
-      if (command === ChatCommands.IMAGE) setImageLoading(true);
-      if (command === ChatCommands.GPT || command === ChatCommands.QUERY)
+      if (
+        command === ChatCommands.GPT ||
+        command === ChatCommands.QUERY ||
+        command === ChatCommands.IMAGE
+      )
         setGptLoading(true);
       socket.emit("chat", MsgData);
       setNewMessage("");
@@ -145,7 +146,6 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
   };
 
   return {
-    imageLoading,
     handleJoinChat,
     handleSendMessage,
     handleInputChange,
