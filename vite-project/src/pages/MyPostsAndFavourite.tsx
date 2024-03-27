@@ -50,7 +50,7 @@ const MyPostsAndFavourite = () => {
           : fetchPostsById({
             pageParam,
             pageSize: 10,
-            userFavorites: favourites || [],
+            userFavorites: favourites as never[] || [],
           });
       },
       getNextPageParam: (lastPage) => {

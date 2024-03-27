@@ -1,3 +1,5 @@
-export const selectState = (state) => state;
+import { InitialState } from "./store";
 
-export const selectUser = (state) => state.user;
+export const selectState = (state: InitialState) => state;
+
+export const selectUser = (state: InitialState) => state.user;
