@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useTypingAnimation } from "./useTypingAnimation";
 
 export const useChatWidget = () => {
   const [query, setQuery] = useState("");
@@ -9,10 +10,7 @@ export const useChatWidget = () => {
     "Hello, I am Donkey, a custom-trained AI chatbot, ask me about to this app, myself, or my great creator Tommy Lim",
   ]);
 
-  //typing anmiation
-  const [completedTyping, setCompletedTyping] = useState(true);
-  const [displayResponse, setDisplayResponse] = useState("");
-
+  const { completedTyping, displayResponse } = useTypingAnimation({ chatLog });
   const sendQuery = async () => {
     if (!query) return;
     setLoading(true);
@@ -36,26 +34,6 @@ export const useChatWidget = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setCompletedTyping(false);
-
-    let i = 0;
-    const stringResponse = chatLog[chatLog.length - 1];
-
-    const intervalId = setInterval(() => {
-      setDisplayResponse(stringResponse.slice(0, i));
-
-      i++;
-
-      if (i > stringResponse.length) {
-        clearInterval(intervalId);
-        setCompletedTyping(true);
-      }
-    }, 20);
-
-    return () => clearInterval(intervalId);
-  }, [chatLog]);
 
   return {
     sendQuery,

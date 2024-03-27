@@ -7,22 +7,28 @@ import logger from "redux-logger";
 // And use redux-batched-subscribe as an example of adding enhancers
 import { batchedSubscribe } from "redux-batched-subscribe";
 
-import { initialUserState, userReducer } from "./userReducer";
+import { UserState, initialUserState, userReducer } from "./userReducer";
 import _ from "lodash";
+
+export interface InitialState {
+  user: UserState;
+}
+
+const preloadedState: InitialState = {
+  user: initialUserState,
+};
 
 const reducer = {
   user: userReducer,
 };
 
-const preloadedState = {
-  user: initialUserState,
-};
-
 const debounceNotify = _.debounce((notify) => notify());
 
 export const store = configureStore({
+  //@ts-expect-error TODO fix reducer type
   reducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  //@ts-expect-error TODO fix middleware type
+  middleware: (getDefaultMiddleware) => [...getDefaultMiddleware(), logger],
   devTools: process.env.NODE_ENV !== "production",
   preloadedState,
   enhancers: [batchedSubscribe(debounceNotify)],

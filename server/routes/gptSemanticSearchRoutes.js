@@ -17,7 +17,7 @@ router.route("/").post(async (req, res) => {
       environment: process.env.PINECONE_ENVIRONEMENT,
     });
 
-    const text = await queryPinecone(pineconeClient, indexName, query);
+    const text = await queryPinecone(query);
 
     res.status(200).json(text);
   } catch (error) {

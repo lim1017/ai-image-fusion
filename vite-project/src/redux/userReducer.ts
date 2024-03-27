@@ -1,4 +1,5 @@
 import type { Reducer, Action } from "@reduxjs/toolkit";
+import { AnyAction } from "redux";
 
 export enum userActions {
   ADDFAV = "ADDFAV",
@@ -6,12 +7,12 @@ export enum userActions {
   SETFAV = "SETFAV",
 }
 
-interface UserState {
+export interface UserState {
   favourites: string[]; // Adjust the type based on what your IDs are
 }
 
-export const initialUserState = {
-  favourites: [],
+export const initialUserState:UserState = {
+  favourites: []
 };
 
 interface AddRemoveFavAction extends Action {
@@ -20,7 +21,7 @@ interface AddRemoveFavAction extends Action {
 }
 
 interface SetFavAction extends Action {
-  type: typeof userActions.SETFAV;
+  type: userActions.SETFAV;
   payload: string[];
 }
 
@@ -28,8 +29,8 @@ type UserActionTypes = AddRemoveFavAction | SetFavAction;
 
 export const userReducer: Reducer<UserState, UserActionTypes> = (
   state = initialUserState,
-  action
-) => {
+  action: AnyAction
+): UserState => {
   switch (action.type) {
   case userActions.SETFAV:
     return { favourites: action.payload };

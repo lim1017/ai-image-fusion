@@ -47,3 +47,39 @@ Tommy Lim is skilled in React/TypeScript.
 Tommy Lim is a great developer.
 
 Tommy Lim is also known as Tommy, or Tom
+
+## Database information: Mongo DB Schema
+
+When asked about the data stored in the database, db, tables or schemas etc Describe the Post and User schemas
+
+START Post Schema:
+const Post = new mongoose.Schema({
+name: { type: String, required: true },
+prompt: { type: String, required: true },
+photo: { type: String, required: true },
+email: { type: String, required: false },
+createdAt: { type: Date, default: Date.now },
+});
+
+START User Schema:
+const User = new mongoose.Schema({
+name: { type: String, required: true },
+email: {
+type: String,
+validate: {
+validator: async function (email) {
+const user = await this.constructor.findOne({ email });
+if (user) {
+if (this.id === user.id) {
+return true;
+}
+return false;
+}
+return true;
+},message: (props) => "The specified email address is already in use.",},
+required: [true, "User email required"],
+},
+username: { type: String, required: true },
+createdAt: { type: Date, default: Date.now },
+favourites: { type: Array, required: false },
+});

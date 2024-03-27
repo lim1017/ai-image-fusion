@@ -104,8 +104,13 @@ export const updatePinecone = async (client, indexName, docs) => {
   }
 };
 
-export const queryPinecone = async (client, indexName, query) => {
-  const index = client.Index(indexName);
+export const queryPinecone = async (query) => {
+  const pineconeClient = new PineconeClient();
+  await pineconeClient.init({
+    apiKey: process.env.PINECONE_API_KEY,
+    environment: process.env.PINECONE_ENVIRONEMENT,
+  });
+  const index = pineconeClient.Index(indexName);
 
   const engineeredQuery = `Respond to this query in less than 3 sentences, query is delimited by triple asterisks .
   
