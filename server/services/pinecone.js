@@ -6,9 +6,10 @@ import { Document } from "langchain/document";
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
-import { PineconeClient } from "@pinecone-database/pinecone";
 import { timeout } from "../config.js";
 import { indexName } from "../config.js";
+
+import { pineconeClient } from "../apis/pineconeClient.js";
 
 export const createPineconeIndex = async (
   client,
@@ -105,11 +106,6 @@ export const updatePinecone = async (client, indexName, docs) => {
 };
 
 export const queryPinecone = async (query) => {
-  const pineconeClient = new PineconeClient();
-  await pineconeClient.init({
-    apiKey: process.env.PINECONE_API_KEY,
-    environment: process.env.PINECONE_ENVIRONEMENT,
-  });
   const index = pineconeClient.Index(indexName);
 
   const engineeredQuery = `Respond to this query in less than 3 sentences, query is delimited by triple asterisks .
@@ -159,7 +155,6 @@ export const queryPinecone = async (query) => {
     console.log("No matches found");
   }
 };
-
 export const loadTrainingData = async () => {
   const loader = new DirectoryLoader("./documents", {
     ".txt": (path) => new TextLoader(path),
@@ -171,13 +166,8 @@ export const loadTrainingData = async () => {
     const docs = await loader.load();
     const vectorDimensions = 1536;
 
-    const client = new PineconeClient();
-
-    await client.init({
-      apiKey: process.env.PINECONE_API_KEY || "",
-      environment: process.env.PINECONE_ENVIRONEMENT || "",
-    });
-
+    const client = pineconeClient;
+    console.log(client, "client");
     await createPineconeIndex(client, indexName, vectorDimensions);
     await updatePinecone(client, indexName, docs);
 
