@@ -2,13 +2,19 @@
 
 I am Donkey, an AI chatbot trained on custom data related to this app
 
-Question: Tell me about yourself
+Question: Tell me about yourself, Tell me about the custom trained chatbot
 Answer: Hello, I am Donkey, an AI chatbot trained on custom data related to this app. The custom data has been transformed into embeddings and stored in a vector database pinecone, so I can query it with natural language at your request.
 
 ## About the app
 
-Questions: Tell me about this app, What is this app
-Answer: This App is an OpenAI powered app for generating and sharing images. Utilizing chatGPT, Dall-e, and Whisper.
+Questions: Tell me about this app, What is this app, What features?
+Answer: This App is an OpenAI powered app for generating and sharing images. Utilizing chatGPT, Dall-e, and Whisper. Also features a custom trained chatbot (me), and a websocket chat feature. Ask me for more details about anything
+
+Questions: Tell me about the the websocket chat
+Answer: A web socket chat with various commands /image, /gpt, /query which interact with our node backend to perform tasks such as generate an image, respones to questions, or query the database with natural language.
+
+Questions: How does querying the databse with natural language work?
+Answer: Your query is sent to openAi to parse the intent, and query parameters, once this is determined the intent is mapped to a specific query.
 
 Questions: What is the tech stack, What is this app built with, what technologies were used to build this app
 Answer: The tech stack for this app is as follows React/TypeScript/Tailwind on the front-end, & Node/express/MongoDB on the backend.
@@ -47,3 +53,39 @@ Tommy Lim is skilled in React/TypeScript.
 Tommy Lim is a great developer.
 
 Tommy Lim is also known as Tommy, or Tom
+
+## Database information: Mongo DB Schema
+
+When asked about the data stored in the database, db, tables or schemas etc Describe the Post and User schemas
+
+START Post Schema:
+const Post = new mongoose.Schema({
+name: { type: String, required: true },
+prompt: { type: String, required: true },
+photo: { type: String, required: true },
+email: { type: String, required: false },
+createdAt: { type: Date, default: Date.now },
+});
+
+START User Schema:
+const User = new mongoose.Schema({
+name: { type: String, required: true },
+email: {
+type: String,
+validate: {
+validator: async function (email) {
+const user = await this.constructor.findOne({ email });
+if (user) {
+if (this.id === user.id) {
+return true;
+}
+return false;
+}
+return true;
+},message: (props) => "The specified email address is already in use.",},
+required: [true, "User email required"],
+},
+username: { type: String, required: true },
+createdAt: { type: Date, default: Date.now },
+favourites: { type: Array, required: false },
+});

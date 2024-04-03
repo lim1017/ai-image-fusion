@@ -1,6 +1,11 @@
 // socket.js
 import { Server as SocketIOServer } from "socket.io";
-import { generateImage } from "./services/openai.js";
+import {
+  generateImage,
+  getIntentNLP,
+  queryMongoWithIntent,
+} from "./services/openai.js";
+import { queryPinecone } from "./services/pinecone.js";
 
 export const initSocketIO = (server) => {
   const users = {};
@@ -10,7 +15,6 @@ export const initSocketIO = (server) => {
   };
 
   const removeUser = (user) => {
-    console.log("DELETING user", user);
     delete users[user];
   };
 
@@ -22,8 +26,6 @@ export const initSocketIO = (server) => {
   });
 
   io.on("connection", (socket) => {
-    const listUsers = Array.from(io.sockets.sockets.keys());
-
     //sends list of users on connection
     socket.emit("roomUsers", {
       users,
@@ -41,8 +43,46 @@ export const initSocketIO = (server) => {
 
     socket.on("chat", async (data) => {
       if (data.command === "image") {
-        const image = await generateImage(data.text);
-        io.in("chat1").emit("chat_response", { ...data, image });
+        io.in("chat1").emit("chat_response", data);
+        try {
+          const image = await generateImage(data.text);
+
+          io.in("chat1").emit("chat_response", {
+            ...data,
+            image,
+            text: "",
+            imagePrompt: data.text, //so it doesnt show how in chat but still accessible
+          });
+        } catch (error) {
+          console.log(error.response.data.error, "error dataa");
+          io.in("chat1").emit("chat_response", {
+            ...data,
+            text: `Error: ${error.response.data.error.message}`,
+            isError: true,
+          });
+        }
+      } else if (data.command === "gpt") {
+        io.in("chat1").emit("chat_response", data);
+        const response = await queryPinecone(data.text);
+        io.in("chat1").emit("chat_response", {
+          ...data,
+          text: "",
+          gpt: response,
+        });
+      } else if (data.command === "query") {
+        io.in("chat1").emit("chat_response", data);
+        const nlpIntent = await getIntentNLP(data.text);
+        const intentObj = JSON.parse(nlpIntent);
+        const result = await queryMongoWithIntent({
+          ...intentObj,
+          loggedInUser: data.sender,
+          loggedInEmail: data.email,
+        });
+        io.in("chat1").emit("chat_response", {
+          ...data,
+          text: "",
+          gpt: result,
+        });
       } else {
         io.in("chat1").emit("chat_response", data);
       }
@@ -52,7 +92,8 @@ export const initSocketIO = (server) => {
       removeUser(socket.id);
       console.log(`User disconnected: ${socket.id}`);
 
-      io.emit("roomUsers", { users }); // Update the user list for all clients
+      // Update the user list for all clients on disconnect
+      io.emit("roomUsers", { users });
     });
   });
 

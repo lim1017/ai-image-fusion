@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
 import { User as Auth0User } from "@auth0/auth0-react";
+import { useSocketConnection } from "./useSocket";
+import { useChatUserManagement } from "./useChatUserManagement";
+import { useChat } from "./useChat";
 
 export interface Message {
   text: string;
@@ -10,6 +11,10 @@ export interface Message {
   room: string;
   command: string;
   image?: string;
+  imagePrompt?: string;
+  gpt?: string;
+  email?: string;
+  isError?: boolean;
 }
 
 export interface Users {
@@ -21,117 +26,32 @@ export interface User {
   user: string;
 }
 
+export const enum ChatCommands {
+  IMAGE = "image",
+  GPT = "gpt",
+  QUERY = "query",
+}
+
 export const useWebSocketChat = (user: Auth0User | undefined) => {
-  const [newMessage, setNewMessage] = useState("");
-  const [messageLog, setMessageLog] = useState<Message[]>([]);
-  const [socket, setSocket] = useState<Socket>();
-  const [userList, setUserList] = useState<Users>({});
+  const socket = useSocketConnection(import.meta.env.VITE_API_URL);
 
-  const [chatUser, setChatUser] = useState("");
+  const { userList, chatUser, setChatUser, handleJoinChat, isUserJoined } =
+    useChatUserManagement(socket, user);
 
-  //for special commands
-  const [command, setCommand] = useState("");
-  const [additionalText, setAdditionalText] = useState("");
-  const [imageLoading, setImageLoading] = useState(false);
-
-  const isUserJoined = socket ? userList[socket.id as string] : false;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const commandMatch = value.match(/^\/image\s*/);
-
-    if (commandMatch) {
-      setCommand("image");
-      setAdditionalText(value.slice(commandMatch[0].length));
-    } else {
-      if (command) {
-        setAdditionalText(value);
-      } else {
-        setNewMessage(value);
-      }
-    }
-
-    setNewMessage(e.target.value);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && command && additionalText.length === 0) {
-      setCommand("");
-      setNewMessage("/image");
-    }
-  };
-
-  useEffect(() => {
-    const socket = io(`${import.meta.env.VITE_API_URL}`);
-    setSocket(socket);
-    //get list of users
-    socket.on("roomUsers", (data) => {
-      setUserList(data.users);
-      if (data.users[socket.id as string]) {
-        setChatUser(data.users[socket.id as string].user);
-      } else {
-        setChatUser("");
-      }
-    });
-
-    socket.on("chat_response", (data: Message) => {
-      console.log(data, "reciving chat response");
-      setImageLoading(false);
-      setMessageLog((prev) => [...prev, data]);
-    });
-
-    return () => {
-      //clean up other wise duplicate events
-      socket.off("chat_response");
-      socket.off("roomUsers");
-      socket.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (socket && user) {
-      setChatUser(user.nickname || "");
-
-      socket.emit("join_room", {
-        user: user.nickname || "",
-        id: socket.id,
-        room: "chat1",
-      });
-    }
-  }, [socket, user]);
-
-  const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (socket) {
-      const MsgData: Message = {
-        text: newMessage,
-        sender: chatUser,
-        command,
-        time: new Date().toLocaleTimeString(),
-        id: Math.floor(Math.random() * 1000000),
-        room: "chat1",
-      };
-      if (command === "image") setImageLoading(true);
-      socket.emit("chat", MsgData);
-      setNewMessage("");
-      setCommand("");
-      // setMessageLog((prev) => [...prev, MsgData]);
-    }
-  };
-
-  const handleJoinChat = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (socket) {
-      socket.emit("join_room", {
-        user: chatUser,
-        id: socket.id,
-        room: "chat1",
-      });
-    }
-  };
+  const {
+    messageLog,
+    gptLoading,
+    handleInputChange,
+    handleKeyDown,
+    handleSendMessage,
+    newMessage,
+    setNewMessage,
+    command,
+    setCommand,
+    additionalText,
+  } = useChat(socket, user, chatUser);
 
   return {
-    imageLoading,
     handleJoinChat,
     handleSendMessage,
     handleInputChange,
@@ -146,5 +66,6 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
     setCommand,
     additionalText,
     isUserJoined,
+    gptLoading,
   };
 };
