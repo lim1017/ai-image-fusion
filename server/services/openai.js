@@ -1,6 +1,5 @@
 import { openai } from "../apis/openai.js";
-import User from "../mongodb/models/user.js";
-import Post from "../mongodb/models/post.js";
+import { queryIntentActions } from "./queryIntentActions.js";
 
 export const generateImage = async (prompt) => {
   const aiRes = await openai.createImage({
@@ -59,53 +58,19 @@ export const getIntentNLP = async (query) => {
 };
 
 export const queryMongoWithIntent = async (intentObj) => {
-  const { intent, date, selfRef, loggedInUser, loggedInEmail } = intentObj;
+  const { intent, date, selfRef, user, email, loggedInUser, loggedInEmail } =
+    intentObj;
 
-  let { user, email } = intentObj;
+  const queryObj = {
+    intent,
+    date,
+    //reassign user/email if selfRef
+    user: selfRef ? loggedInUser : user,
+    email: selfRef ? loggedInEmail : email,
+  };
 
-  //reassign user/email if selfRef
-  if (selfRef) {
-    user = loggedInUser;
-    email = loggedInEmail;
-  }
-  switch (intent) {
-    case "count_users":
-      const count_users = await User.countDocuments();
-      return `The total number of users is ${count_users}.`;
+  if (!queryIntentActions[intent])
+    return "Unknown query, check the Help menu or try using /gpt and ask about the db schemas";
 
-    case "count_posts":
-      const count_posts = await Post.countDocuments();
-      return `The total number of posts is ${count_posts}.`;
-
-    case "posts_by_userX":
-      if (!user) throw new Error("User name is required for this intent.");
-      const posts = await Post.find({ name: user });
-      return `Found ${posts.length} posts by user ${user}.`;
-
-    case "user_by_email":
-      if (!email) throw new Error("Email is required for this intent.");
-      const userByEmail = await User.findOne({ email });
-      return userByEmail
-        ? `User details for email ${email}: ${JSON.stringify(userByEmail)}`
-        : `No user found with email ${email}.`;
-
-    case "users_after_date":
-      if (!date) throw new Error("Date is required for this intent.");
-      const usersAfterDate = await User.find({
-        createdAt: { $gt: new Date(date) },
-      });
-      return `Found ${usersAfterDate.length} users created after ${date}.`;
-
-    case "posts_sorted_by_date":
-      const sortedPosts = await Post.find().sort({ createdAt: -1 });
-      return `Found ${sortedPosts.length} posts, sorted by creation date.`;
-
-    case "count_posts_by_user":
-      if (!user) throw new Error("User name is required for this intent.");
-      const countPostsByUser = await Post.countDocuments({ name: user });
-      return `The total number of posts by ${user} is ${countPostsByUser}.`;
-
-    default:
-      return "Unknown query, check the Help menu or try using /gpt and ask about the db schemas";
-  }
+  return await queryIntentActions[intent](queryObj);
 };
