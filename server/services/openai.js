@@ -26,8 +26,6 @@ export const getIntentNLP = async (query) => {
         'count_posts',
         'posts_by_userX',
         'user_by_email',
-        'users_after_date',
-        'posts_sorted_by_date',
         'count_posts_by_user',
       ];
       

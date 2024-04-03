@@ -22,15 +22,6 @@ export const queryIntentActions = {
       ? `User details for email ${email}: ${JSON.stringify(user)}`
       : `No user found with email ${email}.`;
   },
-  users_after_date: async ({ date }) => {
-    if (!date) throw new Error("Date is required for this intent.");
-    const users = await User.find({ createdAt: { $gt: new Date(date) } });
-    return `Found ${users.length} users created after ${date}.`;
-  },
-  posts_sorted_by_date: async () => {
-    const posts = await Post.find().sort({ createdAt: -1 });
-    return `Found ${posts.length} posts, sorted by creation date.`;
-  },
   count_posts_by_user: async ({ user }) => {
     if (!user) throw new Error("User name is required for this intent.");
     const count = await Post.countDocuments({ name: user });
