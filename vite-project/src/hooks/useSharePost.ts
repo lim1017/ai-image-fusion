@@ -36,13 +36,17 @@ export const useSharePost = ({ user }: { user: string }) => {
     try {
       mutate({
         name: user,
-        prompt: message.text,
+        prompt: message.text
+          ? message.text
+          : message.imagePrompt
+            ? message.imagePrompt
+            : "",
         photo: `data:image/jpeg;base64,${message.image}`,
         email: "",
       });
       setSharedImagesArr((prev) => [...prev, message.id]);
     } catch (error) {
-      console.log(error);
+      console.log(error, "err in handle share");
     }
   };
 

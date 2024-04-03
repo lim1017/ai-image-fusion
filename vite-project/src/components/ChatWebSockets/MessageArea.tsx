@@ -30,7 +30,7 @@ export const MessageArea = ({
                 <span className="font-bold">
                   {`${message.sender.toString().slice(0, 10)}`}:{" "}
                 </span>
-                <span className={message.image ? "text-red-500" : ""}>
+                <span className={message.isError ? "text-red-500" : ""}>
                   {message.command && (
                     <span className="chip bg-purple-500 text-white p-1 mr-2 rounded">
                       {" "}

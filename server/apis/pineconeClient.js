@@ -7,6 +7,4 @@ await pineconeClient.init({
   environment: process.env.PINECONE_ENVIRONEMENT,
 });
 
-console.log(pineconeClient, "pineconeClient in module");
-
 export { pineconeClient };

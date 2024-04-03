@@ -46,8 +46,7 @@ export const useChat = (
     if (!socket) return;
 
     socket.on("chat_response", (data: Message) => {
-      console.log(data, "reciving chat response");
-      if (data.gpt || data.image) setGptLoading(false);
+      if (data.gpt || data.image || data.isError) setGptLoading(false);
       setMessageLog((prev) => [...prev, data]);
     });
 

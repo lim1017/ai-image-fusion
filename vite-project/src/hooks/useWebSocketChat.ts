@@ -11,8 +11,10 @@ export interface Message {
   room: string;
   command: string;
   image?: string;
+  imagePrompt?: string;
   gpt?: string;
   email?: string;
+  isError?: boolean;
 }
 
 export interface Users {

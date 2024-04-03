@@ -44,8 +44,23 @@ export const initSocketIO = (server) => {
     socket.on("chat", async (data) => {
       if (data.command === "image") {
         io.in("chat1").emit("chat_response", data);
-        const image = await generateImage(data.text);
-        io.in("chat1").emit("chat_response", { ...data, image, text: "" });
+        try {
+          const image = await generateImage(data.text);
+
+          io.in("chat1").emit("chat_response", {
+            ...data,
+            image,
+            text: "",
+            imagePrompt: data.text, //so it doesnt show how in chat but still accessible
+          });
+        } catch (error) {
+          console.log(error.response.data.error, "error dataa");
+          io.in("chat1").emit("chat_response", {
+            ...data,
+            text: `Error: ${error.response.data.error.message}`,
+            isError: true,
+          });
+        }
       } else if (data.command === "gpt") {
         io.in("chat1").emit("chat_response", data);
         const response = await queryPinecone(data.text);
