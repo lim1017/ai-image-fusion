@@ -35,12 +35,12 @@ export default function WebSocketChat() {
     newMessage,
     command,
     setCommand,
-    additionalText,
     chatUser,
     setChatUser,
     handleInputChange,
     handleKeyDown,
     isUserJoined,
+    additionalText,
   } = useWebSocketChat(user);
 
   const { handleShare, submitPostLoading, sharedImagesArr } = useSharePost({
