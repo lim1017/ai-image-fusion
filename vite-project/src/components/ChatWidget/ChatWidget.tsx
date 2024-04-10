@@ -5,7 +5,8 @@ import "./ChatWidget.css";
 import { useChatWidget } from "../../hooks/useChatWidget";
 import CursorSVG from "../icons/CursorSVG";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
-import TextArea from "../TextArea";
+import { ChatCommands } from "../../hooks/useWebSocketChat";
+import { ChatInputArea } from "../ChatWebSockets/ChatInputArea";
 const ChatLoader = () => {
   return (
     <div
@@ -27,7 +28,6 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
 
   const {
     sendQuery,
-    setQuery,
     loading,
     chatLog,
     chatText,
@@ -35,6 +35,10 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
     setChatLog,
     completedTyping,
     displayResponse,
+    command,
+    setCommand,
+    additionalText,
+    setAdditionalText,
   } = useChatWidget();
 
   const toggleChat = () => {
@@ -42,8 +46,23 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setChatText(e.target.value);
-    setQuery(e.target.value);
+    // setChatText(e.target.value);
+
+    const value = e.target.value;
+    const commandMatch = value.match(/^\/(image|gpt|query)\s*/);
+
+    if (commandMatch) {
+      setCommand(commandMatch[1] as ChatCommands);
+      setAdditionalText(value.slice(commandMatch[0].length));
+    } else {
+      if (command) {
+        setAdditionalText(value);
+      } else {
+        setChatText(value);
+      }
+    }
+
+    setChatText(value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,16 +71,19 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
     sendQuery();
 
     setChatText("");
-    setQuery("");
   };
 
   const handleTextareaKeyPress = (
     event: React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
     if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault(); // Prevent line break in the textarea
+      event.preventDefault(); // Prevents new line and submits
 
       handleSubmit(event as unknown as React.FormEvent<HTMLFormElement>);
+    }
+    if (event.key === "Backspace" && command && additionalText.length === 0) {
+      setCommand("");
+      setChatText(`/${command}`);
     }
   };
 
@@ -130,8 +152,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
         </div>
         <div className="chat-input">
           <form onSubmit={handleSubmit} className="w-full">
-            <TextArea
-              ref={inputRef}
+            {/* <TextArea
               name="text"
               placeholder="Ask something..."
               value={chatText}
@@ -139,6 +160,18 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
               disabled={loading}
               autoComplete="off"
               onKeyPress={handleTextareaKeyPress}
+            /> */}
+            <ChatInputArea
+              ref={inputRef}
+              hideButton={true}
+              handleSendMessage={handleSubmit}
+              command={command}
+              setCommand={setCommand}
+              isUserJoined={true}
+              additionalText={additionalText}
+              newMessage={chatText}
+              handleInputChange={handleTextChange}
+              handleKeyDown={handleTextareaKeyPress}
             />
           </form>
         </div>

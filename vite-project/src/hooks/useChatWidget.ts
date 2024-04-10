@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useTypingAnimation } from "./useTypingAnimation";
+import { ChatCommands } from "./useWebSocketChat";
 
 export const useChatWidget = () => {
-  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [chatText, setChatText] = useState("");
 
@@ -10,9 +10,13 @@ export const useChatWidget = () => {
     "Hello, I am Donkey, a custom-trained AI chatbot, ask me about to this app, myself, or my great creator Tommy Lim",
   ]);
 
+  //for special commands
+  const [command, setCommand] = useState<ChatCommands | "">("");
+  const [additionalText, setAdditionalText] = useState("");
+
   const { completedTyping, displayResponse } = useTypingAnimation({ chatLog });
   const sendQuery = async () => {
-    if (!query) return;
+    if (!chatText) return;
     setLoading(true);
     try {
       const result = await fetch(
@@ -22,7 +26,7 @@ export const useChatWidget = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ query }),
+          body: JSON.stringify({ chatText }),
         }
       );
       const json = await result.json();
@@ -37,8 +41,6 @@ export const useChatWidget = () => {
 
   return {
     sendQuery,
-    query,
-    setQuery,
     loading,
     setLoading,
     chatLog,
@@ -47,5 +49,9 @@ export const useChatWidget = () => {
     setChatText,
     completedTyping,
     displayResponse,
+    command,
+    setCommand,
+    additionalText,
+    setAdditionalText,
   };
 };
