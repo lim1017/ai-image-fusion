@@ -22,7 +22,7 @@ export const initSocketIO = (server) => {
     cors: {
       origin: [
         "http://localhost:5173",
-        "https://ai-image-tom.netlify.app/",
+        "https://ai-image-tom.netlify.app",
         "https://ai-image-tom.netlify.app/chat",
       ], // your frontend application's origin
       methods: ["GET", "POST"], // allowed HTTP methods

@@ -7,8 +7,7 @@ export const useTypingAnimation = ({ chatLog }: { chatLog: string[] }) => {
 
   useEffect(() => {
     const stringResponse = chatLog[chatLog.length - 1];
-    if (!chatLog.length || chatLog[chatLog.length - 1] === stringResponse)
-      return;
+    if (!chatLog.length) return;
 
     setCompletedTyping(false);
     let i = 0;
