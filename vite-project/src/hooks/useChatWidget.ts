@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { useTypingAnimation } from "./useTypingAnimation";
-import { ChatCommands } from "./useWebSocketChat";
+import { ChatCommands, Message } from "./useWebSocketChat";
 
 export const useChatWidget = () => {
   const [loading, setLoading] = useState(false);
   const [chatText, setChatText] = useState("");
 
-  const [chatLog, setChatLog] = useState([
-    "Hello, I am Donkey, a custom-trained AI chatbot, ask me about to this app, myself, or my great creator Tommy Lim",
+  const [chatLog, setChatLog] = useState<Message[]>([
+    {
+      text: "Hello, I am Donkey, a custom-trained AI chatbot, ask me about to this app, myself, or my great creator Tommy Lim",
+      sender: "ai",
+      id: Math.floor(Math.random() * 100000),
+      time: new Date().toLocaleTimeString(),
+      command: "",
+      room: "",
+    },
   ]);
 
   //for special commands
@@ -26,7 +33,7 @@ export const useChatWidget = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ chatText }),
+          body: JSON.stringify({ chatText, command }),
         }
       );
       const json = await result.json();

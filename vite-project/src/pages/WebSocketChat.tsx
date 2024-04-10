@@ -41,6 +41,8 @@ export default function WebSocketChat() {
     handleKeyDown,
     isUserJoined,
     additionalText,
+    completedTyping,
+    displayResponse,
   } = useWebSocketChat(user);
 
   const { handleShare, submitPostLoading, sharedImagesArr } = useSharePost({
@@ -86,6 +88,8 @@ export default function WebSocketChat() {
             sharedImagesArr={sharedImagesArr}
             submitPostLoading={submitPostLoading}
             gptLoading={gptLoading}
+            displayResponse={displayResponse}
+            completedTyping={completedTyping}
           />
 
           {/* Message Input Area */}

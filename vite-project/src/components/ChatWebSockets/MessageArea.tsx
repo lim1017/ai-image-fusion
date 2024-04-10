@@ -2,6 +2,7 @@ import { Message } from "../../hooks/useWebSocketChat";
 import Button from "../Button";
 import Loader from "../Loader";
 import MuiLoader from "../MuiLoader";
+import CursorSVG from "../icons/CursorSVG";
 
 interface MessageAreaProps {
   messageLog: Message[];
@@ -10,6 +11,8 @@ interface MessageAreaProps {
   sharedImagesArr: number[];
   submitPostLoading: boolean;
   gptLoading: boolean;
+  displayResponse: string;
+  completedTyping: boolean;
 }
 
 export const MessageArea = ({
@@ -19,6 +22,8 @@ export const MessageArea = ({
   sharedImagesArr,
   submitPostLoading,
   gptLoading,
+  displayResponse,
+  completedTyping,
 }: MessageAreaProps) => {
   return (
     <div className="flex-1 overflow-y-auto p-4">
@@ -44,8 +49,8 @@ export const MessageArea = ({
             {message.gpt && (
               <div className="flex">
                 <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
-                {/* TODO get useTypingAnimation to work*/}
-                <p>{message.gpt}</p>
+                <p>{displayResponse}</p>
+                {!completedTyping && <CursorSVG />}
               </div>
             )}
             {message.image && (

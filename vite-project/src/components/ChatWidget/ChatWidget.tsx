@@ -67,10 +67,21 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setChatLog((prev) => [...prev, chatText]);
+    setChatLog((prev) => [
+      ...prev,
+      {
+        text: chatText,
+        sender: "user",
+        id: Math.floor(Math.random() * 100000),
+        time: new Date().toLocaleTimeString(),
+        command,
+        room: "",
+      },
+    ]);
     sendQuery();
 
     setChatText("");
+    setCommand("");
   };
 
   const handleTextareaKeyPress = (
@@ -121,29 +132,40 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
           </button>
         </div>
         <div id="chat-container" ref={containerRef}>
-          {chatLog.map((log, index) => (
-            <div key={index}>
-              {index % 2 === 0 && index === chatLog.length - 1 ? (
-                <div className="flex mt-2">
-                  <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
-                  <p>{displayResponse}</p>
-                  {!completedTyping && <CursorSVG />}
-                </div>
-              ) : index % 2 === 0 ? ( //inital msg, TODO REFACTOR to not use idx
-                <div className="flex">
-                  <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
-                  <p>{log}</p>
-                </div>
-              ) : (
-                <div className="flex mt-2">
-                  <p className="font-bold text-red-500 mr-2">
-                    {name ? name : "User"}:{" "}
-                  </p>{" "}
-                  <p>{log}</p>
-                </div>
-              )}
-            </div>
-          ))}
+          {chatLog.map((message, index) => {
+            const { text, sender } = message;
+            return (
+              <div key={index}>
+                {message.image && (
+                  <img
+                    className="w-1/2 mx-auto mt-2 mb-2"
+                    src={`data:image/jpeg;base64,${message.image}`}
+                    alt={message.text}
+                  />
+                )}
+
+                {sender === "ai" && index === chatLog.length - 1 ? (
+                  <div className="flex mt-2">
+                    <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
+                    <p>{displayResponse}</p>
+                    {!completedTyping && <CursorSVG />}
+                  </div>
+                ) : index % 2 === 0 ? ( //inital msg, TODO REFACTOR to not use idx
+                  <div className="flex">
+                    <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
+                    <p>{text}</p>
+                  </div>
+                ) : (
+                  <div className="flex mt-2">
+                    <p className="font-bold text-red-500 mr-2">
+                      {name ? name : "User"}:{" "}
+                    </p>{" "}
+                    <p>{text}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
           {loading ? (
             <div className="flex justify-center mt-2">
               <ChatLoader />

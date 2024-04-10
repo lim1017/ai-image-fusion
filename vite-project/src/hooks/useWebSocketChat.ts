@@ -2,6 +2,7 @@ import { User as Auth0User } from "@auth0/auth0-react";
 import { useSocketConnection } from "./useSocket";
 import { useChatUserManagement } from "./useChatUserManagement";
 import { useChat } from "./useChat";
+import { useTypingAnimation } from "./useTypingAnimation";
 
 export interface Message {
   text: string;
@@ -51,6 +52,10 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
     additionalText,
   } = useChat(socket, user, chatUser);
 
+  const { completedTyping, displayResponse } = useTypingAnimation({
+    chatLog: messageLog,
+  });
+
   return {
     handleJoinChat,
     handleSendMessage,
@@ -67,5 +72,7 @@ export const useWebSocketChat = (user: Auth0User | undefined) => {
     additionalText,
     isUserJoined,
     gptLoading,
+    completedTyping,
+    displayResponse,
   };
 };
