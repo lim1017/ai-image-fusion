@@ -72,6 +72,7 @@ export const initSocketIO = (server) => {
           ...data,
           text: "",
           gpt: response,
+          sender: "AI",
         });
       } else if (data.command === "query") {
         io.in("chat1").emit("chat_response", data);
@@ -86,6 +87,7 @@ export const initSocketIO = (server) => {
           ...data,
           text: "",
           gpt: result,
+          sender: "AI",
         });
       } else {
         io.in("chat1").emit("chat_response", data);

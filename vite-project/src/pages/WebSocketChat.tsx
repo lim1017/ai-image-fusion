@@ -92,17 +92,19 @@ export default function WebSocketChat() {
             completedTyping={completedTyping}
           />
 
-          {/* Message Input Area */}
-          <ChatInputArea
-            handleSendMessage={handleSendMessage}
-            command={command}
-            setCommand={setCommand}
-            isUserJoined={isUserJoined}
-            additionalText={additionalText}
-            newMessage={newMessage}
-            handleInputChange={handleInputChange}
-            handleKeyDown={handleKeyDown}
-          />
+          <form onSubmit={handleSendMessage} className="w-full">
+            {/* Message Input Area */}
+            <ChatInputArea
+              handleSendMessage={handleSendMessage}
+              command={command}
+              setCommand={setCommand}
+              isUserJoined={isUserJoined}
+              additionalText={additionalText}
+              newMessage={newMessage}
+              handleInputChange={handleInputChange}
+              handleKeyDown={handleKeyDown}
+            />
+          </form>
         </div>
       </div>
     </div>

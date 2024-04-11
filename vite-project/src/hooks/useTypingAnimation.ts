@@ -9,7 +9,7 @@ export const useTypingAnimation = ({ chatLog }: { chatLog: Message[] }) => {
   useEffect(() => {
     if (!chatLog.length) return;
     const stringResponse =
-      chatLog[chatLog.length - 1].text || chatLog[chatLog.length - 1].gpt;
+      chatLog[chatLog.length - 1].text || chatLog[chatLog.length - 1].gpt || "";
 
     setCompletedTyping(false);
     let i = 0;

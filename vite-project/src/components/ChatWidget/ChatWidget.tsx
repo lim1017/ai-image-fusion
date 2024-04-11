@@ -3,28 +3,22 @@ import "./ChatWidget.css";
 import React, { useState, useRef, useEffect } from "react";
 import "./ChatWidget.css";
 import { useChatWidget } from "../../hooks/useChatWidget";
-import CursorSVG from "../icons/CursorSVG";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 import { ChatCommands } from "../../hooks/useWebSocketChat";
 import { ChatInputArea } from "../ChatWebSockets/ChatInputArea";
-const ChatLoader = () => {
-  return (
-    <div
-      className={`w-8 h-8 border-4 border-dashed rounded-full animate-spin border-blue-500 dark:border-violet-600`}
-      aria-label="Loading"
-      data-testid="loader"
-    ></div>
-  );
-};
+import { useSharePost } from "../../hooks/useSharePost";
+import { useAuth0 } from "@auth0/auth0-react";
+import { MessageArea } from "../ChatWebSockets/MessageArea";
 
-interface ChatWidgetProps {
-  name?: string;
-}
-
-export const ChatWidget = ({ name }: ChatWidgetProps) => {
+export const ChatWidget = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth0();
+  const userName = user?.nickname || "User";
+  const { handleShare, submitPostLoading, sharedImagesArr } = useSharePost({
+    user: userName,
+  });
 
   const {
     sendQuery,
@@ -39,7 +33,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
     setCommand,
     additionalText,
     setAdditionalText,
-  } = useChatWidget();
+  } = useChatWidget({ userName, email: user?.email || "" });
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -49,7 +43,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
     // setChatText(e.target.value);
 
     const value = e.target.value;
-    const commandMatch = value.match(/^\/(image|gpt|query)\s*/);
+    const commandMatch = value.match(/^\/(image|query)\s*/);
 
     if (commandMatch) {
       setCommand(commandMatch[1] as ChatCommands);
@@ -71,7 +65,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
       ...prev,
       {
         text: chatText,
-        sender: "user",
+        sender: userName,
         id: Math.floor(Math.random() * 100000),
         time: new Date().toLocaleTimeString(),
         command,
@@ -131,7 +125,7 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
             )}
           </button>
         </div>
-        <div id="chat-container" ref={containerRef}>
+        {/* <div id="chat-container" ref={containerRef}>
           {chatLog.map((message, index) => {
             const { text, sender } = message;
             return (
@@ -143,14 +137,13 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
                     alt={message.text}
                   />
                 )}
-
-                {sender === "ai" && index === chatLog.length - 1 ? (
+                {sender === "AI" && index === chatLog.length - 1 ? (
                   <div className="flex mt-2">
                     <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
                     <p>{displayResponse}</p>
                     {!completedTyping && <CursorSVG />}
                   </div>
-                ) : index % 2 === 0 ? ( //inital msg, TODO REFACTOR to not use idx
+                ) : sender === "AI" ? (
                   <div className="flex">
                     <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
                     <p>{text}</p>
@@ -171,7 +164,18 @@ export const ChatWidget = ({ name }: ChatWidgetProps) => {
               <ChatLoader />
             </div>
           ) : null}
-        </div>
+        </div> */}
+        <MessageArea
+          messageLog={chatLog}
+          chatUser={userName}
+          handleShare={handleShare}
+          sharedImagesArr={sharedImagesArr}
+          submitPostLoading={submitPostLoading}
+          gptLoading={loading}
+          displayResponse={displayResponse}
+          completedTyping={completedTyping}
+          ref={containerRef}
+        />
         <div className="chat-input">
           <form onSubmit={handleSubmit} className="w-full">
             {/* <TextArea

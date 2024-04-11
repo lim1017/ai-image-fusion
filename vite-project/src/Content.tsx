@@ -52,7 +52,7 @@ export const Content = () => {
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Routes>
         </Suspense>
-        {location.pathname !== "/chat" && <ChatWidget name={user?.nickname} />}
+        {location.pathname !== "/chat" && <ChatWidget />}
       </main>
     </>
   );

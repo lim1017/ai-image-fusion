@@ -40,6 +40,12 @@ export const useChat = (
       setCommand("");
       setNewMessage(`/${command}`);
     }
+
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevents new line and submits
+
+      handleSendMessage(e as unknown as React.FormEvent<HTMLFormElement>);
+    }
   };
 
   useEffect(() => {
