@@ -40,8 +40,6 @@ export const ChatWidget = () => {
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // setChatText(e.target.value);
-
     const value = e.target.value;
     const commandMatch = value.match(/^\/(image|query)\s*/);
 
@@ -125,46 +123,7 @@ export const ChatWidget = () => {
             )}
           </button>
         </div>
-        {/* <div id="chat-container" ref={containerRef}>
-          {chatLog.map((message, index) => {
-            const { text, sender } = message;
-            return (
-              <div key={index}>
-                {message.image && (
-                  <img
-                    className="w-1/2 mx-auto mt-2 mb-2"
-                    src={`data:image/jpeg;base64,${message.image}`}
-                    alt={message.text}
-                  />
-                )}
-                {sender === "AI" && index === chatLog.length - 1 ? (
-                  <div className="flex mt-2">
-                    <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
-                    <p>{displayResponse}</p>
-                    {!completedTyping && <CursorSVG />}
-                  </div>
-                ) : sender === "AI" ? (
-                  <div className="flex">
-                    <p className="font-bold text-green-500 mr-2">AI: </p>{" "}
-                    <p>{text}</p>
-                  </div>
-                ) : (
-                  <div className="flex mt-2">
-                    <p className="font-bold text-red-500 mr-2">
-                      {name ? name : "User"}:{" "}
-                    </p>{" "}
-                    <p>{text}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-          {loading ? (
-            <div className="flex justify-center mt-2">
-              <ChatLoader />
-            </div>
-          ) : null}
-        </div> */}
+
         <MessageArea
           messageLog={chatLog}
           chatUser={userName}
@@ -178,15 +137,6 @@ export const ChatWidget = () => {
         />
         <div className="chat-input">
           <form onSubmit={handleSubmit} className="w-full">
-            {/* <TextArea
-              name="text"
-              placeholder="Ask something..."
-              value={chatText}
-              onChange={handleTextChange}
-              disabled={loading}
-              autoComplete="off"
-              onKeyPress={handleTextareaKeyPress}
-            /> */}
             <ChatInputArea
               ref={inputRef}
               hideButton={true}

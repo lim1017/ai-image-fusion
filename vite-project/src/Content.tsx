@@ -14,7 +14,7 @@ const About = lazy(() => import("./pages/About"));
 const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
 
 export const Content = () => {
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const location = useLocation();
   return (
     <>
