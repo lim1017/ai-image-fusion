@@ -22,9 +22,9 @@ export const queryIntentActions = {
       ? `User details for email ${email}: ${JSON.stringify(user)}`
       : `No user found with email ${email}.`;
   },
-  count_posts_by_user: async ({ user }) => {
-    if (!user) throw new Error("User name is required for this intent.");
-    const count = await Post.countDocuments({ name: user });
-    return `The total number of posts by ${user} is ${count}.`;
+  count_posts_by_user: async ({ email }) => {
+    if (!email) throw new Error("User name is required for this intent.");
+    const count = await Post.countDocuments({ email });
+    return `The total number of posts by ${email} is ${count}.`;
   },
 };

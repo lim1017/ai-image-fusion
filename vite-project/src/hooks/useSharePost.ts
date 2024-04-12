@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../lib/api";
-import { SinglePost, postData } from "../lib/types";
 import { useState } from "react";
-import { Message } from "../Modules/Chat/WebSocketChat/hooks/useWebSocketChat";
+import { SinglePost, postData } from "../Modules/DisplayImages/lib/types";
+import { Message } from "../Modules/Chat/types/types";
 
 /**
  * Creates a custom hook for sharing a post.
@@ -13,7 +13,13 @@ import { Message } from "../Modules/Chat/WebSocketChat/hooks/useWebSocketChat";
  * @return {boolean} return.submitPostLoading - Indicates if the post submission is loading.
  * @return {number[]} return.sharedImagesArr - The array of shared image IDs.
  */
-export const useSharePost = ({ user }: { user: string }) => {
+export const useSharePost = ({
+  user,
+  email,
+}: {
+  user: string;
+  email: string;
+}) => {
   const queryClient = useQueryClient();
   const [sharedImagesArr, setSharedImagesArr] = useState<number[]>([]);
 
@@ -42,7 +48,7 @@ export const useSharePost = ({ user }: { user: string }) => {
           ? message.imagePrompt
           : "",
         photo: `data:image/jpeg;base64,${message.image}`,
-        email: "",
+        email,
       });
       setSharedImagesArr((prev) => [...prev, message.id]);
     } catch (error) {

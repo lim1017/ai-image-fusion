@@ -18,6 +18,7 @@ export const ChatWidget = () => {
   const userName = user?.nickname || "User";
   const { handleShare, submitPostLoading, sharedImagesArr } = useSharePost({
     user: userName,
+    email: user?.email || "",
   });
 
   const {

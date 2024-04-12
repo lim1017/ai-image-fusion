@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Users, useWebSocketChat, User } from "../hooks/useWebSocketChat";
+import { useWebSocketChat } from "../hooks/useWebSocketChat";
 import { useModal } from "../../../../hooks/useModal";
 import Modal from "../../../../components/Modal";
 import ChatModalContent from "../../../../components/ModalComponents/ChatModalContent";
@@ -9,6 +9,7 @@ import { MessageArea } from "../../Components/MessageArea";
 import { ChatInputArea } from "../../Components/ChatInputArea";
 import { useSharePost } from "../../../../hooks/useSharePost";
 import Button from "../../../../components/Button";
+import { User, Users } from "../../types/types";
 
 const sortUsers = (userList: Users, chatUser: string): User[] => {
   const result = Object.keys(userList)
@@ -47,6 +48,7 @@ export default function WebSocketChat() {
 
   const { handleShare, submitPostLoading, sharedImagesArr } = useSharePost({
     user: chatUser,
+    email: user?.email || "",
   });
 
   return (
