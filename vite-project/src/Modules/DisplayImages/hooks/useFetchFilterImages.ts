@@ -1,13 +1,17 @@
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
-import { PostsResponse, SinglePost } from "../lib/types";
+import { PostsResponse, QueryFetchMode, SinglePost } from "../lib/types";
 import { fetchPosts } from "../../../lib/api";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useCustomInfiniteQuery } from "./useCustomInfiniteQuery";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/selectors";
 
-export const useFetchFilterImages = () => {
-  const { isAuthenticated } = useAuth0();
-  console.log(isAuthenticated, "isAuthenticated");
+export const useFetchFilterImages = (mode: QueryFetchMode) => {
+  const { isAuthenticated, user } = useAuth0();
+  const { favourites } = useSelector(selectUser);
+
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
     null
@@ -17,26 +21,29 @@ export const useFetchFilterImages = () => {
   );
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery<PostsResponse>({
-      queryKey: ["posts"],
-      queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
-      getNextPageParam: (lastPage) => {
-        if (
-          lastPage.currentPage !== undefined &&
-          lastPage.totalPages !== undefined
-        ) {
-          if (lastPage.currentPage < lastPage.totalPages) {
-            return lastPage.currentPage + 1;
-          }
-        } else {
-          return undefined;
-        }
-      },
-      onError(err) {
-        console.log(err);
-        alert("Opps Something went wrong, Please try again later");
-      },
-    });
+    useCustomInfiniteQuery({ mode, user, favourites });
+
+  // const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  //   useInfiniteQuery<PostsResponse>({
+  //     queryKey: ["posts"],
+  //     queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, pageSize: 10 }),
+  //     getNextPageParam: (lastPage) => {
+  //       if (
+  //         lastPage.currentPage !== undefined &&
+  //         lastPage.totalPages !== undefined
+  //       ) {
+  //         if (lastPage.currentPage < lastPage.totalPages) {
+  //           return lastPage.currentPage + 1;
+  //         }
+  //       } else {
+  //         return undefined;
+  //       }
+  //     },
+  //     onError(err) {
+  //       console.log(err);
+  //       alert("Opps Something went wrong, Please try again later");
+  //     },
+  //   });
 
   const postData = data as InfiniteData<PostsResponse>;
   const allPostsz = postData?.pages.flatMap((page) => page.data) ?? [];
@@ -90,5 +97,6 @@ export const useFetchFilterImages = () => {
     isFetchingNextPage,
     allPostsz,
     isAuthenticated,
+    user,
   };
 };

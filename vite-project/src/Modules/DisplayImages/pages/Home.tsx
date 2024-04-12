@@ -5,6 +5,7 @@ import Button from "../../../components/Button";
 import AnimatedWrapper from "../../../components/Containers/AnimatedWrapper";
 import { RenderCards } from "../components/Cards";
 import { useFetchFilterImages } from "../hooks/useFetchFilterImages";
+import { QueryFetchMode } from "../lib/types";
 
 const Home = () => {
   const {
@@ -15,7 +16,7 @@ const Home = () => {
     isFetchingNextPage,
     allPostsz,
     isAuthenticated,
-  } = useFetchFilterImages();
+  } = useFetchFilterImages(QueryFetchMode.POSTS);
 
   return (
     <AnimatedWrapper>

@@ -16,3 +16,9 @@ export interface PostsResponse {
   currentPage?: number;
   totalPages?: number;
 }
+
+export enum QueryFetchMode {
+  MY_POSTS = "my-posts",
+  FAVOURITES = "favourites",
+  POSTS = "posts",
+}
