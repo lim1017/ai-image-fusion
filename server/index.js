@@ -43,7 +43,13 @@ app.use(
 
 dotenv.config();
 
-app.use(cors());
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://ai-image-tom.netlify.app"],
+  credentials: true, //to allow sessions to be maintained between requests
+  methods: ["GET", "POST", "PUT", "DELETE"], // Configurable based on what your server needs
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "50mb" }));
 
