@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { Loader, FormField } from "../components";
-import { fetchPosts, fetchPostsById } from "../lib/api";
+import { Loader, FormField } from "../../../components";
+import { fetchPosts, fetchPostsById } from "../../../lib/api";
 import { debounce } from "lodash";
-import { PostsResponse, SinglePost } from "../lib/types";
-import { RenderCards } from "./Home";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser } from "../redux/selectors";
+import { selectUser } from "../../../redux/selectors";
+import { PostsResponse, SinglePost } from "../lib/types";
+import { RenderCards } from "../components/Cards";
 
 enum Mode {
   MY_POSTS = "my-posts",
@@ -43,15 +43,15 @@ const MyPostsAndFavourite = () => {
       queryFn: ({ pageParam = 1 }) => {
         return mode === Mode.MY_POSTS
           ? fetchPosts({
-            pageParam,
-            pageSize: 10,
-            userEmail: user?.email || "",
-          })
+              pageParam,
+              pageSize: 10,
+              userEmail: user?.email || "",
+            })
           : fetchPostsById({
-            pageParam,
-            pageSize: 10,
-            userFavorites: favourites as never[] || [],
-          });
+              pageParam,
+              pageSize: 10,
+              userFavorites: (favourites as never[]) || [],
+            });
       },
       getNextPageParam: (lastPage) => {
         if (lastPage) {

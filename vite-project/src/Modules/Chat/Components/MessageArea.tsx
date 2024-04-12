@@ -1,9 +1,9 @@
 import React from "react";
-import { Message } from "../../hooks/useWebSocketChat";
-import Button from "../Button";
-import Loader from "../Loader";
-import MuiLoader from "../MuiLoader";
-import CursorSVG from "../icons/CursorSVG";
+import Button from "../../../components/Button";
+import Loader from "../../../components/Loader";
+import MuiLoader from "../../../components/MuiLoader";
+import CursorSVG from "../../../components/icons/CursorSVG";
+import { Message } from "../types/types";
 
 interface MessageAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {

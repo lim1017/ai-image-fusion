@@ -1,13 +1,15 @@
-import { truncateString } from "../utils/helper";
-import Modal from "./Modal";
-import { useModal } from "../hooks/useModal";
-import ShareComponent from "./ShareComponent";
-import { ShareOptionsComponent } from "./ShareOptionsComponent";
-import { ShareOptions, useShareMedia } from "../hooks/useShareMedia";
-import ShareForm from "./ShareForm";
+import { Loader } from "../../../components";
+import FavButton from "../../../components/FavButton";
+import Modal from "../../../components/Modal";
+import ShareComponent from "../../../components/ShareComponent";
+import ShareForm from "../../../components/ShareForm";
+import { ShareOptionsComponent } from "../../../components/ShareOptionsComponent";
+import { useFavouriteImg } from "../../../hooks/useFavouriteImg";
+import { useModal } from "../../../hooks/useModal";
+import { useShareMedia, ShareOptions } from "../../../hooks/useShareMedia";
+import { truncateString } from "../../../utils/helper";
+import { SinglePost } from "../lib/types";
 import { useEffect } from "react";
-import FavButton from "./FavButton";
-import { useFavouriteImg } from "../hooks/useFavouriteImg";
 
 interface CardProps {
   _id: string;
@@ -133,4 +135,39 @@ const SinglePhotoCard = ({
   );
 };
 
-export default SinglePhotoCard;
+interface RenderCardsProp {
+  data: SinglePost[] | null;
+  title: string;
+  postsLoading: boolean;
+  isAuthenticated: boolean;
+}
+
+export const RenderCards = ({
+  data,
+  title,
+  postsLoading,
+  isAuthenticated,
+}: RenderCardsProp) => {
+  if (data && data?.length > 0) {
+    return (
+      <div className="grid lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 grid-cols-1 gap-3">
+        {data.map((post, i) => (
+          <SinglePhotoCard
+            key={i}
+            {...post}
+            isAuthenticated={isAuthenticated}
+          />
+        ))}
+        {postsLoading && (
+          <div className="flex justify-center items-center">
+            <Loader />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <h2 className="mt-5 font-bold text-[#6469ff] text-xl uppercase">{title}</h2>
+  );
+};

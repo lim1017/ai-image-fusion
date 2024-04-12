@@ -1,7 +1,7 @@
 import React from "react";
-import { ChatCommands } from "../../hooks/useWebSocketChat";
-import Button from "../Button";
-import TextArea from "../TextArea";
+import Button from "../../../components/Button";
+import TextArea from "../../../components/TextArea";
+import { ChatCommands } from "../types/types";
 
 interface ChatInputAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -52,7 +52,6 @@ export const ChatInputArea = React.forwardRef<
             <TextArea
               ref={ref}
               disabled={!isUserJoined}
-              type="text"
               value={command ? additionalText : newMessage}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}

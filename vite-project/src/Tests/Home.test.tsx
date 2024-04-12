@@ -1,5 +1,5 @@
 import React from "react";
-import Home from "../pages/Home";
+import Home from "../Modules/DisplayImages/pages/Home";
 import { customRender, screen } from "../utils/test-utils";
 
 describe("Home component", () => {

@@ -1,7 +1,7 @@
 import { User as Auth0User } from "@auth0/auth0-react";
 import { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { ChatCommands, Message } from "./useWebSocketChat";
+import { ChatCommands, Message } from "../../types/types";
 
 export const useChat = (
   socket: Socket | undefined,
@@ -17,7 +17,7 @@ export const useChat = (
 
   const [gptLoading, setGptLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     const commandMatch = value.match(/^\/(image|gpt|query)\s*/);
 
@@ -35,7 +35,7 @@ export const useChat = (
     setNewMessage(e.target.value);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Backspace" && command && additionalText.length === 0) {
       setCommand("");
       setNewMessage(`/${command}`);

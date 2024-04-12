@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../lib/api";
 import { SinglePost, postData } from "../lib/types";
 import { useState } from "react";
-import { Message } from "./useWebSocketChat";
+import { Message } from "../Modules/Chat/WebSocketChat/hooks/useWebSocketChat";
 
 /**
  * Creates a custom hook for sharing a post.
@@ -39,8 +39,8 @@ export const useSharePost = ({ user }: { user: string }) => {
         prompt: message.text
           ? message.text
           : message.imagePrompt
-            ? message.imagePrompt
-            : "",
+          ? message.imagePrompt
+          : "",
         photo: `data:image/jpeg;base64,${message.image}`,
         email: "",
       });

@@ -5,13 +5,15 @@ import { lazy, Suspense } from "react";
 import { Loader } from "./components";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ProtectedRoute } from "./components/Containers/ProtectedRoute";
-import { ChatWidget } from "./components/ChatWidget/ChatWidget";
-import WebSocketChat from "./pages/WebSocketChat";
+import { ChatWidget } from "./Modules/Chat/ChatWidget/Components/ChatWidget";
+import WebSocketChat from "./Modules/Chat/WebSocketChat/pages/WebSocketChat";
 
-const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./Modules/DisplayImages/pages/Home"));
 const CreatePost = lazy(() => import("./pages/CreatePost"));
 const About = lazy(() => import("./pages/About"));
-const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
+const MyPostsAndFavourite = lazy(
+  () => import("./Modules/DisplayImages/pages/MyPostsAndFavourite")
+);
 
 export const Content = () => {
   const { isAuthenticated } = useAuth0();

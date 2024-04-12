@@ -2,13 +2,13 @@ import "./ChatWidget.css";
 
 import React, { useState, useRef, useEffect } from "react";
 import "./ChatWidget.css";
-import { useChatWidget } from "../../hooks/useChatWidget";
+import { useChatWidget } from "../hooks/useChatWidget";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
-import { ChatCommands } from "../../hooks/useWebSocketChat";
-import { ChatInputArea } from "../ChatWebSockets/ChatInputArea";
-import { useSharePost } from "../../hooks/useSharePost";
+import { ChatInputArea } from "../../Components/ChatInputArea";
+import { useSharePost } from "../../../../hooks/useSharePost";
 import { useAuth0 } from "@auth0/auth0-react";
-import { MessageArea } from "../ChatWebSockets/MessageArea";
+import { MessageArea } from "../../Components/MessageArea";
+import { ChatCommands } from "../../types/types";
 
 export const ChatWidget = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);

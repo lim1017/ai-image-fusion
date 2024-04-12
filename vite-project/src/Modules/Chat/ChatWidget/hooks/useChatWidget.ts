@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { useTypingAnimation } from "./useTypingAnimation";
-import { ChatCommands, Message } from "./useWebSocketChat";
+import { useTypingAnimation } from "../../hooks/useTypingAnimation";
+import {
+  ChatCommands,
+  Message,
+} from "../../WebSocketChat/hooks/useWebSocketChat";
 
 export const useChatWidget = ({
   userName,
@@ -29,7 +32,6 @@ export const useChatWidget = ({
 
   const { completedTyping, displayResponse } = useTypingAnimation({ chatLog });
   const sendQuery = async () => {
-    console.log({ chatText, command });
     if (!chatText) return;
     setLoading(true);
     try {
@@ -46,12 +48,10 @@ export const useChatWidget = ({
       const json = await result.json();
       setChatLog((prev) => [...prev, json]);
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.log("err:", err);
       const json = await err.json();
-      console.log(json);
       setChatLog((prev) => [...prev, json]);
-
       setLoading(false);
     }
   };
