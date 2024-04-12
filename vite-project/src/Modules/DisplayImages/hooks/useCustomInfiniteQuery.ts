@@ -1,8 +1,6 @@
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-import { fetchPosts, fetchPostsById } from "../../../lib/api";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { PostsResponse, QueryFetchMode } from "../lib/types";
-
-// Assuming these are the necessary imports or definitions
+import { fetchPosts, fetchPostsById } from "../lib/api";
 
 interface useCustomInfiniteQueryProps {
   mode: QueryFetchMode;
@@ -10,7 +8,6 @@ interface useCustomInfiniteQueryProps {
   favourites?: string[];
 }
 
-// Custom hook definition
 export const useCustomInfiniteQuery = ({
   mode,
   user,

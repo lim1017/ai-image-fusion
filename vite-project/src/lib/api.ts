@@ -1,4 +1,4 @@
-import { postData } from "./types";
+import { postData } from "../Modules/DisplayImages/lib/types";
 
 export const fetchUser = async (email: string, token: string) => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/`, {
@@ -54,67 +54,6 @@ export const createPost = async (data: postData) => {
     }
   } catch (e) {
     console.log(e, "create post error");
-  }
-};
-
-export const fetchPostsById = async ({
-  pageParam = 1,
-  pageSize = 8,
-  userFavorites = [],
-}) => {
-  console.log(userFavorites);
-
-  let url = `${import.meta.env.VITE_API_URL}/api/v1/post/favourites`;
-
-  url += `?page=${pageParam}&limit=${pageSize}`;
-
-  if (userFavorites.length > 0) {
-    const favoritesQueryParam = userFavorites.join(",");
-    console.log(favoritesQueryParam, "favoritesQueryParam");
-    url += `&userFavorites=${favoritesQueryParam}`;
-  } else {
-    url += `&userFavorites=${""}`;
-  }
-
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (res.ok) {
-    const result = await res.json();
-    return result;
-  } else {
-    throw new Error("Something went wrong");
-  }
-};
-
-export const fetchPosts = async ({
-  pageParam = 1,
-  pageSize = 8,
-  userEmail = "",
-}) => {
-  let url = `${import.meta.env.VITE_API_URL}/api/v1/post`;
-
-  if (userEmail) {
-    url += `?userEmail=${userEmail}&page=${pageParam}&limit=${pageSize}`;
-  } else {
-    url += `?page=${pageParam}&limit=${pageSize}`;
-  }
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (res.ok) {
-    const result = await res.json();
-    return result;
-  } else {
-    throw new Error("Something went wrong");
   }
 };
 

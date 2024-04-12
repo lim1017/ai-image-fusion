@@ -1,38 +1,19 @@
-import { useState, useEffect } from "react";
 import { Loader, FormField } from "../../../components";
-import { useLocation } from "react-router-dom";
 import { QueryFetchMode } from "../lib/types";
 import { RenderCards } from "../components/Cards";
 import { useFetchFilterImages } from "../hooks/useFetchFilterImages";
-
+//TOO check mypost count, seems inaccurate
 const MyPostsAndFavourite = () => {
-  const { pathname } = useLocation();
-
-  const [mode, setMode] = useState<QueryFetchMode>(
-    pathname === "/my-posts"
-      ? QueryFetchMode.MY_POSTS
-      : QueryFetchMode.FAVOURITES
-  );
-
   const {
     handleSearchChange,
     isLoading,
     isFetchingNextPage,
-    user,
     isAuthenticated,
     searchText,
     searchedResults,
     allPostsz,
-  } = useFetchFilterImages(mode);
-
-  useEffect(() => {
-    //useEffect require for when navigating from /my-posts to /favourites, as it uses the same component
-    setMode(
-      pathname === "/my-posts"
-        ? QueryFetchMode.MY_POSTS
-        : QueryFetchMode.FAVOURITES
-    );
-  }, [pathname]);
+    mode,
+  } = useFetchFilterImages();
 
   return (
     <section className="max-w-7xl mx-auto">
