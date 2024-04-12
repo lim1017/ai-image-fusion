@@ -14,25 +14,31 @@ export const useFavouriteImg = (id: string) => {
   const isFavourite = favourites ? favourites.includes(id) : false;
 
   const handleFavClick = async () => {
-    const token = await getAccessTokenSilently();
-    console.log(token);
-    favouriteImage(id, token)
-      .then((res) => {
-        console.log(res, "from adding fav");
-        if (isFavourite) {
-          dispatch({
-            type: userActions.REMOVEFAV,
-            payload: id,
-          });
-          return;
-        } else {
-          dispatch({
-            type: userActions.ADDFAV,
-            payload: id,
-          });
-        }
-      })
-      .catch((err) => console.log(err, "something went wrong adding fav"));
+    console.log("in handle favclick");
+    try {
+      const token = await getAccessTokenSilently();
+
+      console.log(token);
+      favouriteImage(id, token)
+        .then((res) => {
+          console.log(res, "from adding fav");
+          if (isFavourite) {
+            dispatch({
+              type: userActions.REMOVEFAV,
+              payload: id,
+            });
+            return;
+          } else {
+            dispatch({
+              type: userActions.ADDFAV,
+              payload: id,
+            });
+          }
+        })
+        .catch((err) => console.log(err, "something went wrong adding fav"));
+    } catch (error) {
+      console.log(error, "error getting token");
+    }
   };
 
   return {

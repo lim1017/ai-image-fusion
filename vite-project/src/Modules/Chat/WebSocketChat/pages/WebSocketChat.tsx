@@ -80,7 +80,6 @@ export default function WebSocketChat() {
 
         {/* Chat Area */}
         <div className="flex-1 flex flex-col">
-          {/* Message Display Area */}
           <MessageArea
             messageLog={messageLog}
             chatUser={chatUser}
@@ -92,19 +91,16 @@ export default function WebSocketChat() {
             completedTyping={completedTyping}
           />
 
-          <form onSubmit={handleSendMessage} className="w-full">
-            {/* Message Input Area */}
-            <ChatInputArea
-              handleSendMessage={handleSendMessage}
-              command={command}
-              setCommand={setCommand}
-              isUserJoined={isUserJoined}
-              additionalText={additionalText}
-              newMessage={newMessage}
-              handleInputChange={handleInputChange}
-              handleKeyDown={handleKeyDown}
-            />
-          </form>
+          <ChatInputArea
+            handleSendMessage={handleSendMessage}
+            command={command}
+            setCommand={setCommand}
+            isUserJoined={isUserJoined}
+            additionalText={additionalText}
+            newMessage={newMessage}
+            handleInputChange={handleInputChange}
+            handleKeyDown={handleKeyDown}
+          />
         </div>
       </div>
     </div>

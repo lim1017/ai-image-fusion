@@ -135,21 +135,19 @@ export const ChatWidget = () => {
           completedTyping={completedTyping}
           ref={containerRef}
         />
-        <div className="chat-input">
-          <form onSubmit={handleSubmit} className="w-full">
-            <ChatInputArea
-              ref={inputRef}
-              hideButton={true}
-              handleSendMessage={handleSubmit}
-              command={command}
-              setCommand={setCommand}
-              isUserJoined={true}
-              additionalText={additionalText}
-              newMessage={chatText}
-              handleInputChange={handleTextChange}
-              handleKeyDown={handleTextareaKeyPress}
-            />
-          </form>
+        <div className="chat-input w-full">
+          <ChatInputArea
+            ref={inputRef}
+            hideButton={true}
+            handleSendMessage={handleSubmit}
+            command={command}
+            setCommand={setCommand}
+            isUserJoined={true}
+            additionalText={additionalText}
+            newMessage={chatText}
+            handleInputChange={handleTextChange}
+            handleKeyDown={handleTextareaKeyPress}
+          />
         </div>
       </div>
     </div>

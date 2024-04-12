@@ -36,7 +36,6 @@ const MyPostsAndFavourite = () => {
   useEffect(() => {
     setMode(pathname === "/my-posts" ? Mode.MY_POSTS : Mode.FAVOURITES);
   }, [pathname]);
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery<PostsResponse>({
       queryKey: [mode === Mode.MY_POSTS ? "my-posts" : "favourites"],
@@ -116,7 +115,9 @@ const MyPostsAndFavourite = () => {
   return (
     <section className="max-w-7xl mx-auto">
       <div className="flex justify-center flex-col">
-        <h1 className="font-extrabold text-[#222328] text-[32px]">My Posts</h1>
+        <h1 className="font-extrabold text-[#222328] text-[32px]">
+          {mode === Mode.MY_POSTS ? "My Posts" : "Favourites"}
+        </h1>
       </div>
 
       <div className="mt-16">

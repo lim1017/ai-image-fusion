@@ -7,7 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 export const useFetchFilterImages = () => {
   const { isAuthenticated } = useAuth0();
-
+  console.log(isAuthenticated, "isAuthenticated");
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
     null
