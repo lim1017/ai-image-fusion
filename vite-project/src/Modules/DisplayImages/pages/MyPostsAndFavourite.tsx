@@ -2,7 +2,6 @@ import { Loader, FormField } from "../../../components";
 import { QueryFetchMode } from "../lib/types";
 import { RenderCards } from "../components/Cards";
 import { useFetchFilterImages } from "../hooks/useFetchFilterImages";
-//TOO check mypost count, seems inaccurate
 const MyPostsAndFavourite = () => {
   const {
     handleSearchChange,

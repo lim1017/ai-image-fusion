@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPost } from "../lib/api";
 import { useState } from "react";
 import { SinglePost, postData } from "../Modules/DisplayImages/lib/types";
 import { Message } from "../Modules/Chat/types/types";
+import { createPost } from "../Modules/CreateImage/lib/api";
 
 /**
  * Creates a custom hook for sharing a post.

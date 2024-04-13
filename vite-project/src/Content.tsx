@@ -9,7 +9,7 @@ import { ChatWidget } from "./Modules/Chat/ChatWidget/Components/ChatWidget";
 import WebSocketChat from "./Modules/Chat/WebSocketChat/pages/WebSocketChat";
 
 const Home = lazy(() => import("./Modules/DisplayImages/pages/Home"));
-const CreatePost = lazy(() => import("./pages/CreatePost"));
+const CreatePost = lazy(() => import("./Modules/CreateImage/pages/CreatePost"));
 const About = lazy(() => import("./pages/About"));
 const MyPostsAndFavourite = lazy(
   () => import("./Modules/DisplayImages/pages/MyPostsAndFavourite")

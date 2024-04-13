@@ -1,4 +1,4 @@
-import AudioRecorder from "../AudioRecorder";
+import AudioRecorder from "../../../components/AudioRecorder";
 
 type Props = {
   retrieveWhipserText: (text: string) => void;

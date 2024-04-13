@@ -1,5 +1,5 @@
-import ChipInput from "../ChipInput";
-import Card from "../Card";
+import ChipInput from "../../../components/ChipInput";
+import Card from "../../../components/Card";
 
 type Props = {
   chips: string[];
