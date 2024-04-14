@@ -25,7 +25,7 @@ export const ShareOptionsComponent = ({
 }: Props) => {
   const containerStyle = openModal
     ? "flex gap-4"
-    : "mr-8 p-3 mb-4 border-4 border-gray rounded-md  flex gap-4";
+    : "p-3 mb-4 border-4 border-gray rounded-md  flex gap-4";
 
   return (
     <div className={containerStyle}>

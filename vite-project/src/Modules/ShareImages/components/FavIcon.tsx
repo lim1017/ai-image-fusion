@@ -1,11 +1,17 @@
 import React from "react";
 
-const FavIcon = ({ selected }: { selected: boolean }) => {
+const FavIcon = ({
+  selected,
+  size = 30,
+}: {
+  selected: boolean;
+  size?: number;
+}) => {
   return (
     <svg
       className="hover:cursor-pointer"
-      width="25"
-      height="22"
+      width={size}
+      height={size}
       viewBox="0 0 24 19"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

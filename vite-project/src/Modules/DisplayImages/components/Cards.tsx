@@ -110,7 +110,14 @@ const SinglePhotoCard = ({
           />
         ) : (
           <div>
-            <div className="flex justify-end">
+            <div className="flex justify-between items-center px-8">
+              <FavButton
+                size={40}
+                onClick={handleFavClick}
+                selected={isFavourite}
+                isAuthenticated={isAuthenticated}
+              />
+
               <ShareOptionsComponent
                 id={_id}
                 setEmailOrPhone={setEmailOrPhone}
