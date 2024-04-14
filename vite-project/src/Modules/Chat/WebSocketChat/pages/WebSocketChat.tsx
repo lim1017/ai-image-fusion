@@ -7,7 +7,7 @@ import ChatModalContent from "../../../../components/ModalComponents/ChatModalCo
 import { SideBar } from "../../Components/SideBar";
 import { MessageArea } from "../../Components/MessageArea";
 import { ChatInputArea } from "../../Components/ChatInputArea";
-import { useSharePost } from "../../../../hooks/useSharePost";
+import { useCreatePost } from "../../../CreateImage/hooks/useCreatePost";
 import Button from "../../../../components/Button";
 import { User, Users } from "../../types/types";
 
@@ -46,7 +46,7 @@ export default function WebSocketChat() {
     displayResponse,
   } = useWebSocketChat(user);
 
-  const { handleShare, submitPostLoading, sharedImagesArr } = useSharePost({
+  const { handleShare, submitPostLoading, sharedImagesArr } = useCreatePost({
     user: chatUser,
     email: user?.email || "",
   });

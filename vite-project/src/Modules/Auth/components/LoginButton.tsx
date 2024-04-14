@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import Button from "./Button";
+import Button from "../../../components/Button";
 import { useLocation } from "react-router-dom";
 
 interface LoginBtnProps {

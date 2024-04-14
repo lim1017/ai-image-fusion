@@ -5,7 +5,7 @@ import "./ChatWidget.css";
 import { useChatWidget } from "../hooks/useChatWidget";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 import { ChatInputArea } from "../../Components/ChatInputArea";
-import { useSharePost } from "../../../../hooks/useSharePost";
+import { useCreatePost } from "../../../CreateImage/hooks/useCreatePost";
 import { useAuth0 } from "@auth0/auth0-react";
 import { MessageArea } from "../../Components/MessageArea";
 import { ChatCommands } from "../../types/types";
@@ -16,7 +16,7 @@ export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth0();
   const userName = user?.nickname || "User";
-  const { handleShare, submitPostLoading, sharedImagesArr } = useSharePost({
+  const { handleShare, submitPostLoading, sharedImagesArr } = useCreatePost({
     user: userName,
     email: user?.email || "",
   });

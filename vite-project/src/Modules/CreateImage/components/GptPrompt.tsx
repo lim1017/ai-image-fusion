@@ -1,4 +1,4 @@
-import ChipInput from "../../../components/ChipInput";
+import ChipInput from "./ChipInput";
 import Card from "../../../components/Card";
 
 type Props = {

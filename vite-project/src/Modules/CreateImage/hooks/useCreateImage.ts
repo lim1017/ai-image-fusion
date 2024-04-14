@@ -2,7 +2,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useModal } from "../../../hooks/useModal";
 import { getRandomPrompt, removeTextBeforeColon } from "../../../utils/helper";
 import { SinglePost, postData } from "../../DisplayImages/lib/types";
 import { createPost, getGptPrompt, requestGenerateImage } from "../lib/api";

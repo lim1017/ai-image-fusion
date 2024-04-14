@@ -1,8 +1,8 @@
 import React from "react";
 import { BiDownload } from "react-icons/bi";
 import { BsFillChatTextFill } from "react-icons/bs";
-import { closeIcon } from "../assets";
-import { downloadImage } from "../utils/helper";
+import { closeIcon } from "../../../assets";
+import { downloadImage } from "../../../utils/helper";
 import { Tooltip } from "@mui/material";
 import { ShareOptions } from "../hooks/useShareMedia";
 

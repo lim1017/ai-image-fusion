@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import Button from "./Button";
-import { useTimer } from "../hooks/useTimer";
-import Card from "./Card";
-import MuiLoader from "./MuiLoader";
-import { uploadAudioFile } from "../Modules/CreateImage/lib/api";
+import Button from "../../../components/Button";
+import { useTimer } from "../../../hooks/useTimer";
+import Card from "../../../components/Card";
+import MuiLoader from "../../../components/MuiLoader";
+import { uploadAudioFile } from "../lib/api";
 const mimeType = "audio/webm";
 const LoadingEnum = {
   idle: "idle",

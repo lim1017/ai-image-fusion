@@ -1,8 +1,8 @@
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
-import Input from "./Input";
-import Card from "./Card";
-import Button from "./Button";
-import MuiLoader from "./MuiLoader";
+import Input from "../../../components/Input";
+import Card from "../../../components/Card";
+import Button from "../../../components/Button";
+import MuiLoader from "../../../components/MuiLoader";
 import { ShareOptions } from "../hooks/useShareMedia";
 
 interface ShareFormProps {

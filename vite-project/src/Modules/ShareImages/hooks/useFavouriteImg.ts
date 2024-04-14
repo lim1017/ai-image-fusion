@@ -1,9 +1,9 @@
 import type { Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../redux/selectors";
-import { userActions } from "../redux/userReducer";
-import { favouriteImage } from "../lib/api";
+import { selectUser } from "../../../redux/selectors";
+import { userActions } from "../../../redux/userReducer";
 import { useAuth0 } from "@auth0/auth0-react";
+import { favouriteImage } from "../lib/api";
 
 export const useFavouriteImg = (id: string) => {
   const dispatch: Dispatch = useDispatch();
@@ -14,7 +14,6 @@ export const useFavouriteImg = (id: string) => {
   const isFavourite = favourites ? favourites.includes(id) : false;
 
   const handleFavClick = async () => {
-    console.log("in handle favclick");
     try {
       const token = await getAccessTokenSilently();
 

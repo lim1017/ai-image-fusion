@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import { Chip } from "@mui/material";
-import Input from "./Input";
-import Countdown from "./Countdown";
-import MuiLoader from "./MuiLoader";
+import Input from "../../../components/Input";
+import Countdown from "../../../components/Countdown";
+import MuiLoader from "../../../components/MuiLoader";
 
 interface ChipInputProps {
   labelName: string;

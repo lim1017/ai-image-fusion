@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { SinglePost, postData } from "../Modules/DisplayImages/lib/types";
-import { Message } from "../Modules/Chat/types/types";
-import { createPost } from "../Modules/CreateImage/lib/api";
+import { SinglePost, postData } from "../../DisplayImages/lib/types";
+import { Message } from "../../Chat/types/types";
+import { createPost } from "../lib/api";
 
 /**
  * Creates a custom hook for sharing a post.
@@ -13,7 +13,7 @@ import { createPost } from "../Modules/CreateImage/lib/api";
  * @return {boolean} return.submitPostLoading - Indicates if the post submission is loading.
  * @return {number[]} return.sharedImagesArr - The array of shared image IDs.
  */
-export const useSharePost = ({
+export const useCreatePost = ({
   user,
   email,
 }: {

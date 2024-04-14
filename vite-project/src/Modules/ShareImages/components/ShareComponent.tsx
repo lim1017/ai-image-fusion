@@ -1,6 +1,6 @@
 import React from "react";
-import { shareIcon } from "../assets";
-import Modal from "./Modal";
+import { shareIcon } from "../../../assets";
+import Modal from "../../../components/Modal";
 import ShareForm from "./ShareForm";
 import { Tooltip } from "@mui/material";
 import { ShareOptionsComponent } from "./ShareOptionsComponent";

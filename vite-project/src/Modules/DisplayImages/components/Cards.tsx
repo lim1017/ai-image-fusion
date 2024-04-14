@@ -1,12 +1,15 @@
 import { Loader } from "../../../components";
-import FavButton from "../../../components/FavButton";
+import FavButton from "../../ShareImages/components/FavButton";
 import Modal from "../../../components/Modal";
-import ShareComponent from "../../../components/ShareComponent";
-import ShareForm from "../../../components/ShareForm";
-import { ShareOptionsComponent } from "../../../components/ShareOptionsComponent";
-import { useFavouriteImg } from "../../../hooks/useFavouriteImg";
+import ShareComponent from "../../ShareImages/components/ShareComponent";
+import ShareForm from "../../ShareImages/components/ShareForm";
+import { ShareOptionsComponent } from "../../ShareImages/components/ShareOptionsComponent";
+import { useFavouriteImg } from "../../ShareImages/hooks/useFavouriteImg";
 import { useModal } from "../../../hooks/useModal";
-import { useShareMedia, ShareOptions } from "../../../hooks/useShareMedia";
+import {
+  useShareMedia,
+  ShareOptions,
+} from "../../ShareImages/hooks/useShareMedia";
 import { truncateString } from "../../../utils/helper";
 import { SinglePost } from "../lib/types";
 import { useEffect } from "react";

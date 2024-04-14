@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./Modules/Auth/components/Header";
 
 import { lazy, Suspense } from "react";
 import { Loader } from "./components";

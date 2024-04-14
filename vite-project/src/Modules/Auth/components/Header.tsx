@@ -1,17 +1,17 @@
-import { logo } from "../assets";
+import { logo } from "../../../assets";
 import { Link } from "react-router-dom";
 
-import Button from "../components/Button";
+import Button from "../../../components/Button";
 import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
-import DropdownMenu from "./DropdownMenu";
+import DropdownMenu from "../../../components/DropdownMenu";
 import { useEffect, useState } from "react";
 
 import { FaHamburger } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
 import { useDispatch } from "react-redux";
-import { userActions } from "../redux/userReducer";
-import { fetchUser } from "../lib/api";
+import { userActions } from "../../../redux/userReducer";
+import { fetchUser } from "../../../lib/api";
 
 export default function Header() {
   const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
