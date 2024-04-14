@@ -35,7 +35,7 @@ export const ChatInputArea = React.forwardRef<
     ref
   ) => {
     return (
-      <div className="p-1 border-t-2">
+      <div className="p-1 border-t-2 w-full">
         <form onSubmit={handleSendMessage}>
           <div className="flex items-center  w-full p-2">
             {command && (

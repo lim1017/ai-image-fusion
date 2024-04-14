@@ -43,9 +43,7 @@ export const useFetchFilterImages = () => {
   const allPostsz = postData?.pages.flatMap((page) => page.data) ?? [];
 
   const fetchMorePosts = () => {
-    if (hasNextPage) {
-      fetchNextPage();
-    }
+    if (hasNextPage) fetchNextPage();
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +69,6 @@ export const useFetchFilterImages = () => {
         window.innerHeight + document.documentElement.scrollTop >=
         document.documentElement.offsetHeight - 100
       ) {
-        console.log("fetching");
         fetchMorePosts();
       }
     }, 500);

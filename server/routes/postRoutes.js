@@ -78,7 +78,6 @@ router.route("/favourites").get(async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(startIndex)
       .limit(limit);
-
     const securePosts = posts.map((post) => {
       const securePhotoUrl = post.photo.replace("http://", "https://");
       return { ...post._doc, photo: securePhotoUrl };

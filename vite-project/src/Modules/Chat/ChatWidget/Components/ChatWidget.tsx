@@ -8,12 +8,12 @@ import { ChatInputArea } from "../../Components/ChatInputArea";
 import { useCreatePost } from "../../../CreateImage/hooks/useCreatePost";
 import { useAuth0 } from "@auth0/auth0-react";
 import { MessageArea } from "../../Components/MessageArea";
-import { ChatCommands } from "../../types/types";
+import Button from "../../../../components/Button";
 
 export const ChatWidget = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const { user } = useAuth0();
   const userName = user?.nickname || "User";
   const { handleShare, submitPostLoading, sharedImagesArr } = useCreatePost({
@@ -22,73 +22,21 @@ export const ChatWidget = () => {
   });
 
   const {
-    sendQuery,
     loading,
     chatLog,
     chatText,
-    setChatText,
-    setChatLog,
     completedTyping,
     displayResponse,
     command,
     setCommand,
     additionalText,
-    setAdditionalText,
+    handleTextChange,
+    handleTextareaKeyPress,
+    handleSubmit,
   } = useChatWidget({ userName, email: user?.email || "" });
 
   const toggleChat = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    const commandMatch = value.match(/^\/(image|query)\s*/);
-
-    if (commandMatch) {
-      setCommand(commandMatch[1] as ChatCommands);
-      setAdditionalText(value.slice(commandMatch[0].length));
-    } else {
-      if (command) {
-        setAdditionalText(value);
-      } else {
-        setChatText(value);
-      }
-    }
-
-    setChatText(value);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setChatLog((prev) => [
-      ...prev,
-      {
-        text: chatText,
-        sender: userName,
-        id: Math.floor(Math.random() * 100000),
-        time: new Date().toLocaleTimeString(),
-        command,
-        room: "",
-      },
-    ]);
-    sendQuery();
-
-    setChatText("");
-    setCommand("");
-  };
-
-  const handleTextareaKeyPress = (
-    event: React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault(); // Prevents new line and submits
-
-      handleSubmit(event as unknown as React.FormEvent<HTMLFormElement>);
-    }
-    if (event.key === "Backspace" && command && additionalText.length === 0) {
-      setCommand("");
-      setChatText(`/${command}`);
-    }
+    setIsChatOpen(!isChatOpen);
   };
 
   useEffect(() => {
@@ -110,14 +58,19 @@ export const ChatWidget = () => {
   }, [containerRef, displayResponse]);
 
   return (
-    <div className={`chat-widget ${isOpen ? "open" : ""}`}>
+    <div className={`chat-widget ${isChatOpen ? "open" : ""}`}>
       <div className="chat-icon" onClick={toggleChat}></div>
       <div className="chat-window">
-        <div className="chat-header" onClick={toggleChat}>
-          <span>AI Chat Assistance</span>
+        <div className="chat-header">
+          <span className="text-[5] font-bold">
+            AI Chat Assistance{" "}
+            <Button size="small" intent={"secondary"}>
+              Help
+            </Button>
+          </span>
 
-          <button onClick={toggleChat}>
-            {isOpen ? (
+          <button className="chat-header-icon" onClick={toggleChat}>
+            {isChatOpen ? (
               <AiOutlineArrowUp size={20} className="mr-2" />
             ) : (
               <AiOutlineArrowDown size={20} className="mr-2" />

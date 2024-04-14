@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { useTypingAnimation } from "../../hooks/useTypingAnimation";
-import {
-  ChatCommands,
-  Message,
-} from "../../WebSocketChat/hooks/useWebSocketChat";
+import { ChatCommands, Message } from "../../types/types";
 
 export const useChatWidget = ({
   userName,
@@ -56,6 +53,57 @@ export const useChatWidget = ({
     }
   };
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    const commandMatch = value.match(/^\/(image|query)\s*/);
+
+    if (commandMatch) {
+      setCommand(commandMatch[1] as ChatCommands);
+      setAdditionalText(value.slice(commandMatch[0].length));
+    } else {
+      if (command) {
+        setAdditionalText(value);
+      } else {
+        setChatText(value);
+      }
+    }
+
+    setChatText(value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setChatLog((prev) => [
+      ...prev,
+      {
+        text: chatText,
+        sender: userName,
+        id: Math.floor(Math.random() * 100000),
+        time: new Date().toLocaleTimeString(),
+        command,
+        room: "",
+      },
+    ]);
+    sendQuery();
+
+    setChatText("");
+    setCommand("");
+  };
+
+  const handleTextareaKeyPress = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevents new line and submits
+
+      handleSubmit(event as unknown as React.FormEvent<HTMLFormElement>);
+    }
+    if (event.key === "Backspace" && command && additionalText.length === 0) {
+      setCommand("");
+      setChatText(`/${command}`);
+    }
+  };
+
   return {
     sendQuery,
     loading,
@@ -70,5 +118,8 @@ export const useChatWidget = ({
     setCommand,
     additionalText,
     setAdditionalText,
+    handleTextChange,
+    handleTextareaKeyPress,
+    handleSubmit,
   };
 };

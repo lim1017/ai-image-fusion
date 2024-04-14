@@ -13,7 +13,6 @@ export const fetchPostsById = async ({
 
   if (userFavorites.length > 0) {
     const favoritesQueryParam = userFavorites.join(",");
-    console.log(favoritesQueryParam, "favoritesQueryParam");
     url += `&userFavorites=${favoritesQueryParam}`;
   } else {
     url += `&userFavorites=${""}`;

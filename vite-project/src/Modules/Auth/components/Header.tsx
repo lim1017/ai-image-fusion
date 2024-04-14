@@ -11,7 +11,7 @@ import { FaHamburger } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../../redux/userReducer";
-import { fetchUser } from "../../../lib/api";
+import { fetchUser } from "../lib/api";
 
 export default function Header() {
   const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
