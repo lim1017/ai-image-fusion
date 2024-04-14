@@ -1,5 +1,6 @@
 import { openai } from "../apis/openai.js";
 import { queryIntentActions } from "./queryIntentActions.js";
+import { IntentArray } from "./queryIntentActions.js";
 
 export const generateImage = async (prompt) => {
   const aiRes = await openai.createImage({
@@ -16,18 +17,13 @@ export const generateImage = async (prompt) => {
 };
 
 export const getIntentNLP = async (query) => {
+  const stringIntents = JSON.stringify(IntentArray);
   try {
     const response = await openai.createCompletion({
       model: "gpt-3.5-turbo-instruct",
       prompt: `This query should be mapped to an intent for use to query a mongo database.  I want you to map the query to an intent from the following array of intents. 
       
-      intents: [
-        'count_users',
-        'count_posts',
-        'posts_by_userX',
-        'user_by_email',
-        'count_posts_by_user',
-      ];
+      intents: ${stringIntents};
       
       If you cannot map the query to an intent, just return "unknown". 
       
