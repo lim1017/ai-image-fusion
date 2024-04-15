@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useWebSocketChat } from "../hooks/useWebSocketChat";
 import { useModal } from "../../../../hooks/useModal";
 import Modal from "../../../../components/Modal";
-import ChatModalContent from "../../../../components/ModalComponents/ChatModalContent";
+import ChatHelpModalContent from "../../Components/ChatHelpModalContent";
 import { SideBar } from "../../Components/SideBar";
 import { MessageArea } from "../../Components/MessageArea";
 import { ChatInputArea } from "../../Components/ChatInputArea";
@@ -54,7 +54,7 @@ export default function WebSocketChat() {
   return (
     <div className="overflow-y-hidden">
       <Modal isOpen={isOpen} closeModal={closeModal}>
-        <ChatModalContent />
+        <ChatHelpModalContent />
       </Modal>
       <div>
         <form onSubmit={handleJoinChat}>

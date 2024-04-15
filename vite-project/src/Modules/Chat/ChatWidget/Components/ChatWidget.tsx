@@ -9,6 +9,9 @@ import { useCreatePost } from "../../../CreateImage/hooks/useCreatePost";
 import { useAuth0 } from "@auth0/auth0-react";
 import { MessageArea } from "../../Components/MessageArea";
 import Button from "../../../../components/Button";
+import { useModal } from "../../../../hooks/useModal";
+import Modal from "../../../../components/Modal";
+import ChatHelpModalContent from "../../Components/ChatHelpModalContent";
 
 export const ChatWidget = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -35,6 +38,8 @@ export const ChatWidget = () => {
     handleSubmit,
   } = useChatWidget({ userName, email: user?.email || "" });
 
+  const { isOpen, openModal, closeModal } = useModal();
+
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
@@ -59,12 +64,15 @@ export const ChatWidget = () => {
 
   return (
     <div className={`chat-widget ${isChatOpen ? "open" : ""}`}>
+      <Modal isOpen={isOpen} closeModal={closeModal}>
+        <ChatHelpModalContent />
+      </Modal>
       <div className="chat-icon" onClick={toggleChat}></div>
       <div className="chat-window">
         <div className="chat-header">
           <span className="text-[5] font-bold">
             AI Chat Assistance{" "}
-            <Button size="small" intent={"secondary"}>
+            <Button size="small" intent={"secondary"} onClick={openModal}>
               Help
             </Button>
           </span>
