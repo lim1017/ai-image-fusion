@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@tanstack/react-query": "^4.29.5",
     "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/user-event": "^14.5.2",
     "@types/twilio": "^3.19.3",
     "babel-preset-vite": "^1.1.0",
     "class-variance-authority": "^0.6.0",
