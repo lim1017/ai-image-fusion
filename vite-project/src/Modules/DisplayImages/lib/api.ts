@@ -39,23 +39,26 @@ export const fetchPosts = async ({
   userEmail = "",
 }) => {
   let url = `${import.meta.env.VITE_API_URL}/api/v1/post`;
-
   if (userEmail) {
     url += `?userEmail=${userEmail}&page=${pageParam}&limit=${pageSize}`;
   } else {
     url += `?page=${pageParam}&limit=${pageSize}`;
   }
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 
-  if (res.ok) {
-    const result = await res.json();
-    return result;
-  } else {
-    throw new Error("Something went wrong");
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      const result = await res.json();
+      return result;
+    } else {
+      throw new Error("Something went wrong");
+    }
+  } catch (err) {
+    console.log(err);
   }
 };

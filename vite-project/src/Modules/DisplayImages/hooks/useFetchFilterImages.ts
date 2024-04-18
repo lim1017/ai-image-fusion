@@ -38,9 +38,10 @@ export const useFetchFilterImages = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useCustomInfiniteQuery({ mode, user, favourites });
-
-  const postData = data as InfiniteData<PostsResponse>;
-  const allPostsz = postData?.pages.flatMap((page) => page.data) ?? [];
+  const allPostsz =
+    data?.pages.flatMap((page) => {
+      return page.data;
+    }) ?? [];
 
   const fetchMorePosts = () => {
     if (hasNextPage) fetchNextPage();

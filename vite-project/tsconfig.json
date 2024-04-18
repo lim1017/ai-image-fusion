@@ -31,7 +31,7 @@
     "./test-utils/**/*.ts",
     "src/Modules/DisplayImages/tests/mocks/handlers.js",
     "src/Modules/tests/setupTests.js",
-    "src/Modules/DisplayImages/tests/Home.test.js"
+    "src/Modules/DisplayImages/tests/Home.test.jsx"
   ],
   "exclude": [
     "node_modules",

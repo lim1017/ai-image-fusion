@@ -47,7 +47,7 @@ const SinglePhotoCard = ({
   }, [isOpen]);
 
   return (
-    <div className="card animate075 zoomIn relative">
+    <div data-testid="single-card" className="card animate075 zoomIn relative">
       <div className="absolute top-10 left-10 z-50">
         <FavButton
           onClick={handleFavClick}

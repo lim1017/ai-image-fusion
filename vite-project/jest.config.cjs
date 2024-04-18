@@ -16,8 +16,7 @@ module.exports = {
     // Map your module aliases here if necessary, but no specific mapping for 'msw/node'
   },
   transform: {
-    "^.+\\.(js|jsx)$": "babel-jest",
-    "^.+\\.(ts|tsx)$": "ts-jest",
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
     "^.+\\.svg$": "<rootDir>/svgTransForm.cjs",
     ".+\\.(css|scss|png|jpg)$": "jest-transform-stub",
   },

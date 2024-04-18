@@ -1,15 +1,32 @@
-import { http, HttpResponse } from "msw";
+// fetchMockHandlers.js
 
-// Export handlers to be used in both development and test setups
-export const handlers = [
-  http.get("/api/v1/post", () => {
-    console.log("in GET api posts");
-    return HttpResponse.json(
-      [
-        { id: 1, title: "First Post" },
-        { id: 2, title: "Second Post" },
-      ],
-      { status: 200 }
-    );
-  }),
-];
+import { postsData } from "./mockData";
+
+const baseUrl = `${import.meta.env.VITE_API_URL}`;
+
+const mockResponses = {
+  [`${baseUrl}/api/v1/post`]: {
+    status: 200,
+    body: JSON.stringify(postsData),
+  },
+  "https://api.example.com/api/v1/user": {
+    status: 200,
+    body: JSON.stringify({
+      id: 1,
+      name: "John Doe",
+    }),
+  },
+  // Add more routes and responses as needed
+};
+
+export const setupFetchStub = (url) => {
+  const response = mockResponses[url];
+  console.log("in setupFetchStubssssssssssss");
+  if (response) {
+    fetch.mockResponseOnce(response.body, { status: response.status });
+  } else {
+    fetch.mockResponseOnce(JSON.stringify({ message: "Not Found" }), {
+      status: 404,
+    });
+  }
+};
