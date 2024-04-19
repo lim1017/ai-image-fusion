@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index"
+    "start": "nodemon --experimental-specifier-resolution=node index"
   },
   "engines": {
     "node": "18.x"
@@ -39,6 +39,7 @@
     "openai": "^3.1.0",
     "path": "^0.12.7",
     "socket.io": "^4.7.4",
+    "tslog": "^4.9.2",
     "twilio": "^4.10.0"
   },
   "devDependencies": {

@@ -1,7 +1,10 @@
 import { rateLimit } from "express-rate-limit";
+import { Logger } from "tslog";
 
 export const customRateLimiter = (min, limit) => {
-  console.log("in custom limiter", min, limit);
+  const logger = new Logger({ name: "tom" });
+  logger.silly("in custom limiter", min, limit);
+
   return rateLimit({
     windowMs: min * 60 * 1000,
     max: limit,

@@ -59,11 +59,14 @@ router.route("/favourites").get(async (req, res) => {
 
     const userFavorites = req.query.userFavorites;
 
+    if (!userFavorites) {
+      return res.status(200).json({ success: true, data: [] });
+    }
+
     const count = await Post.countDocuments();
     const totalPages = Math.ceil(count / limit);
 
     const startIndex = (page - 1) * limit;
-
     const favoritesArray = userFavorites.split(",");
 
     //start query and add filter by email if email is provided
@@ -75,13 +78,12 @@ router.route("/favourites").get(async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(startIndex)
       .limit(limit);
-
     const securePosts = posts.map((post) => {
       const securePhotoUrl = post.photo.replace("http://", "https://");
       return { ...post._doc, photo: securePhotoUrl };
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: securePosts,
       currentPage: page,

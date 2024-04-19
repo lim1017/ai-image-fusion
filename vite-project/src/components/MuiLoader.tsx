@@ -17,6 +17,14 @@ export default function MuiLoader({
   color = "primary",
   size = 18,
   thickness = 8,
+  ...rest
 }: Props) {
-  return <CircularProgress color={color} size={size} thickness={thickness} />;
+  return (
+    <CircularProgress
+      color={color}
+      size={size}
+      thickness={thickness}
+      {...rest}
+    />
+  );
 }

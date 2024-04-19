@@ -1,20 +1,22 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./Modules/Auth/components/Header";
 
 import { lazy, Suspense } from "react";
 import { Loader } from "./components";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ProtectedRoute } from "./components/Containers/ProtectedRoute";
-import { ChatWidget } from "./components/ChatWidget/ChatWidget";
-import WebSocketChat from "./pages/WebSocketChat";
+import { ChatWidget } from "./Modules/Chat/ChatWidget/Components/ChatWidget";
+import WebSocketChat from "./Modules/Chat/WebSocketChat/pages/WebSocketChat";
 
-const Home = lazy(() => import("./pages/Home"));
-const CreatePost = lazy(() => import("./pages/CreatePost"));
+const Home = lazy(() => import("./Modules/DisplayImages/pages/Home"));
+const CreatePost = lazy(() => import("./Modules/CreateImage/pages/CreatePost"));
 const About = lazy(() => import("./pages/About"));
-const MyPostsAndFavourite = lazy(() => import("./pages/MyPostsAndFavourite"));
+const MyPostsAndFavourite = lazy(
+  () => import("./Modules/DisplayImages/pages/MyPostsAndFavourite")
+);
 
 export const Content = () => {
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const location = useLocation();
   return (
     <>
@@ -49,10 +51,10 @@ export const Content = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<p>There's nothing here: 404!</p>} />
+            <Route path="*" element={<div>There's nothing here: 404!</div>} />
           </Routes>
         </Suspense>
-        {location.pathname !== "/chat" && <ChatWidget name={user?.nickname} />}
+        {location.pathname !== "/chat" && <ChatWidget />}
       </main>
     </>
   );

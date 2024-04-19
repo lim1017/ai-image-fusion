@@ -1,4 +1,4 @@
-import Home from "./Home";
-import CreatePost from "./CreatePost";
+import Home from "../Modules/DisplayImages/pages/Home";
+import CreatePost from "../Modules/CreateImage/pages/CreatePost";
 
 export { Home, CreatePost };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../Modules/Auth/components/LogoutButton";
 import { Link } from "react-router-dom";
 import { FaHamburger } from "react-icons/fa";
 import Button from "./Button";
