@@ -37,14 +37,11 @@ export const useCreateImage = () => {
     }
 
     if (form.prompt) {
-      console.log(form.prompt, "form prompt");
       try {
         setGeneratingImg(true);
         const photo = await requestGenerateImage(form.prompt);
-        console.log(photo, "phtooooo");
         setForm({ ...form, photo });
       } catch (error) {
-        console.log(error, "error from create image");
         alert(error);
       } finally {
         setChips([]);

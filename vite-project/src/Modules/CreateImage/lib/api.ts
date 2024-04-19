@@ -28,7 +28,6 @@ export const createPost = async (data: postData) => {
       },
       body: JSON.stringify(data),
     });
-
     if (res.ok) {
       const result = await res.json();
       return result;

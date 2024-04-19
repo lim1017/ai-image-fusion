@@ -7,18 +7,24 @@ import userEvent from "@testing-library/user-event";
 
 beforeEach(() => {
   jest.useFakeTimers();
+  fetch.mockResponse((req) => {
+    if (req.url.includes("/api/v1/dalle")) {
+      return Promise.resolve(JSON.stringify({ photo: "User1" }));
+    } else if (req.url.includes("/api/v1/post")) {
+      return Promise.resolve(JSON.stringify({ data: [1, 2, 3] }));
+    }
+    return Promise.reject(new Error("Not Found"));
+  });
 });
 
 afterEach(() => {
   jest.useRealTimers();
 });
 
-it("Creates an image", async () => {
+it("Creates an image with random prompt", async () => {
   const user = userEvent.setup({ delay: null });
 
-  const { getAllByTestId, getByTestId, getByText, debug } = customRender(
-    <CreatePost />
-  );
+  const { getByTestId } = customRender(<CreatePost />);
 
   const title = getByTestId("create-post-title");
 
@@ -43,12 +49,26 @@ it("Creates an image", async () => {
     user.click(generateImgBtn);
   });
 
-  // const genreateImgLoader = getByTestId("generate-img-loader");
-
   await waitFor(() => {
     const loadingText = screen.getByText("Generating...");
     expect(loadingText).toBeInTheDocument();
-
-    //   expect(genreateImgLoader).toBeInTheDocument();
   });
+
+  await waitFor(() => {
+    const doneLoadingText = screen.getByText("Generate");
+
+    expect(doneLoadingText).toBeInTheDocument();
+  });
+
+  const submitBtn = getByTestId("create-post-submit-btn");
+  await act(async () => {
+    user.click(submitBtn);
+  });
+
+  await waitFor(
+    () => {
+      expect(window.location.pathname).toBe("/");
+    },
+    { timeout: 5000 }
+  );
 });
