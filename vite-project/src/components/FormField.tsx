@@ -40,6 +40,7 @@ const FormField = ({
             type="button"
             onClick={handleSurpriseMe}
             className="font-semibold text-xs bg-[#6469ff] py-1 px-2 rounded-[5px] text-black"
+            data-testid="random-prompt-btn"
           >
             Get Random Prompt
           </button>

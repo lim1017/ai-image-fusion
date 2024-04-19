@@ -12,7 +12,7 @@ import MuiLoader from "../../../components/MuiLoader";
 import AnimatedWrapper from "../../../components/Containers/AnimatedWrapper";
 import { useCreateImage } from "../hooks/useCreateImage";
 
-const CreatePage = () => {
+const CreatePost = () => {
   const { isOpen, openModal, closeModal } = useModal();
 
   const {
@@ -36,7 +36,10 @@ const CreatePage = () => {
     <AnimatedWrapper>
       <section className="max-w-7xl mx-auto">
         <div className="flex justify-center flex-col">
-          <h1 className="font-extrabold text-[#666e75] text-[32px]">
+          <h1
+            data-testid="create-post-title"
+            className="font-extrabold text-[#666e75] text-[32px]"
+          >
             Three exciting ways to generate an image... More to come!
           </h1>
 
@@ -57,6 +60,7 @@ const CreatePage = () => {
               handleChange={handleChange}
               error={errors.name}
               disabled={user?.nickname ? true : false}
+              data-testid="create-post-name-input"
             />
 
             <TabComponent
@@ -95,6 +99,7 @@ const CreatePage = () => {
               value={form.prompt}
               handleChange={handleChange}
               error={errors.prompt}
+              data-testid="create-post-prompt-input"
             />
 
             <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
@@ -127,7 +132,7 @@ const CreatePage = () => {
               type="button"
               intent="action"
               onClick={generateImage}
-              className=""
+              data-testid="generate-img-btn"
             >
               {generatingImg ? "Generating..." : "Generate"}
             </Button>
@@ -142,9 +147,14 @@ const CreatePage = () => {
               disabled={isLoading}
               type="submit"
               intent="primary"
-              className="mt-3 "
+              className="mt-3"
+              data-testid="create-post-submit-btn"
             >
-              {isLoading ? <MuiLoader /> : "Share with the Community"}
+              {isLoading ? (
+                <MuiLoader data-testid="generate-img-loader" />
+              ) : (
+                "Share with the Community"
+              )}
             </Button>
           </div>
         </form>
@@ -163,4 +173,4 @@ const CreatePage = () => {
   );
 };
 
-export default CreatePage;
+export default CreatePost;

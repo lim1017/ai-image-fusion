@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { waitFor, act } from "@testing-library/react";
 import Home from "../pages/Home";
 import "@testing-library/jest-dom";

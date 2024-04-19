@@ -51,7 +51,7 @@ export const Content = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<p>There's nothing here: 404!</p>} />
+            <Route path="*" element={<div>There's nothing here: 404!</div>} />
           </Routes>
         </Suspense>
         {location.pathname !== "/chat" && <ChatWidget />}
