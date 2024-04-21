@@ -1,4 +1,4 @@
-import { User } from "../WebSocketChat/hooks/useWebSocketChat";
+import { User } from "../types/types";
 
 interface SideBarProps {
   userList: User[];

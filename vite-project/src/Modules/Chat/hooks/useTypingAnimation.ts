@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Message } from "../WebSocketChat/hooks/useWebSocketChat";
+import { Message } from "../types/types";
 
 export const useTypingAnimation = ({ chatLog }: { chatLog: Message[] }) => {
   //typing anmiation

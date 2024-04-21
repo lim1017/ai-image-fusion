@@ -1,7 +1,6 @@
-import { InfiniteData } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
-import { PostsResponse, QueryFetchMode, SinglePost } from "../lib/types";
+import { QueryFetchMode, SinglePost } from "../lib/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCustomInfiniteQuery } from "./useCustomInfiniteQuery";
 import { useSelector } from "react-redux";
