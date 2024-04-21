@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { Users } from "./useWebSocketChat";
 import { User as Auth0User } from "@auth0/auth0-react";
+import { Users } from "../../types/types";
 
 export const useChatUserManagement = (
   socket: Socket | undefined,
